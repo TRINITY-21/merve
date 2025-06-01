@@ -11,7 +11,7 @@ import {
   View,
   ViewStyle
 } from 'react-native';
-import { GHANA_LOCATIONS } from '../constant';
+import { GHANA_LOCATIONS } from '../constant/index';
 import { colors } from '../constant/theme/colors';
 import { Typography } from './Typography';
 

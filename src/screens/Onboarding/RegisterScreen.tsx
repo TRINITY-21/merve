@@ -511,6 +511,9 @@ const RegisterScreen: React.FC = () => {
                     disabled={loading}
                     autoComplete="email"
                 />
+
+              
+                
                 <LocationPicker
                     label="Location"
                     value={formData.location}
@@ -665,7 +668,7 @@ const RegisterScreen: React.FC = () => {
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={{
                     paddingHorizontal: 20,
-                    paddingBottom: 12,
+                    paddingBottom: 0,
                     borderBottomWidth: 1,
                     borderBottomColor: 'rgba(255,255,255,0.1)',
                 }}>
@@ -691,6 +694,7 @@ const RegisterScreen: React.FC = () => {
                             backgroundColor: 'rgba(255,255,255,0.3)',
                             borderRadius: 2,
                             overflow: 'hidden',
+                            marginBottom: 8
                         }}>
                             <Animated.View
                                 style={[{
@@ -714,22 +718,20 @@ const RegisterScreen: React.FC = () => {
                     </View>
                 </View>
 
-                <KeyboardAwareScrollView
-                    style={{ flex: 1 }}
-                    contentContainerStyle={{
-                        flexGrow: 1,
-                        paddingHorizontal: 16,
-                        paddingVertical: 16,
-                        justifyContent: 'space-between',
-                    }}
-                    showsVerticalScrollIndicator={false}
-                    enableOnAndroid={true}
-                    keyboardShouldPersistTaps="handled"
-                    extraScrollHeight={Platform.OS === 'ios' ? 10 : 20}
-                    enableAutomaticScroll={Platform.OS === 'ios'}
-                    enableResetScrollToCoords={true}
+                              <KeyboardAwareScrollView
+                    style={{ flex: 1, backgroundColor: 'transparent', 
+                        paddingHorizontal: 16, 
+                        paddingVertical: 10
+
+                     }} // Set a background color for the scroll view
+                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 0 }} // Add padding here
                     resetScrollToCoords={{ x: 0, y: 0 }}
-                    keyboardOpeningTime={250}
+                    enableAutomaticScroll={true}
+                    extraHeight={Platform.OS === 'ios' ? 50 : 20} // Adjust extra height for iOS/Android
+                    extraScrollHeight={Platform.OS === 'ios' ? 10 : 20} // Adjust extra scroll height
+                    enableResetScrollToCoords={true}
+                    keyboardShouldPersistTaps="handled" // Important for inputs to stay focused
+                    showsVerticalScrollIndicator={false}
                 >
                     <View> 
                         {currentStep === 1 ? renderStep1() : renderStep2()}
@@ -740,7 +742,7 @@ const RegisterScreen: React.FC = () => {
                         justifyContent: 'center',
                         alignItems: 'center',
                         paddingVertical: 20,
-                        marginTop: 0, 
+                        marginTop: 30, 
                         borderTopWidth: 1,
                         borderTopColor: 'rgba(255,255,255,0.1)',
                     }}>

@@ -4,13 +4,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Animated,
-    KeyboardAvoidingView,
     Platform,
     ScrollView,
     TextInput,
     TouchableOpacity,
     View
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-toast-message';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -41,7 +41,6 @@ const LoginScreen: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [phoneError, setPhoneError] = useState<string>('');
     const [pinError, setPinError] = useState<string>('');
-
     const shakeAnimation = useRef(new Animated.Value(0)).current;
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const phoneRef = useRef<TextInput>(null);
@@ -205,10 +204,18 @@ const handleForgotPasswordSuccess = (): void => {
             colors={[colors.gradient.primary[0], colors.gradient.primary[1]]}
             style={{ flex: 1 }}
         >
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={{ flex: 1 }}
-            >
+                <KeyboardAwareScrollView
+      style={{ flex: 1, backgroundColor: 'transparent' }} // Set a background color for the scroll view
+      contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 0 }} // Add padding here
+      resetScrollToCoords={{ x: 0, y: 0 }}
+      enableAutomaticScroll={true}
+      extraHeight={Platform.OS === 'ios' ? 100 : 200} // Adjust extra height for iOS/Android
+      extraScrollHeight={Platform.OS === 'ios' ? 10 : 200} // Adjust extra scroll height
+      enableResetScrollToCoords={true}
+      keyboardShouldPersistTaps="handled" // Important for inputs to stay focused
+      showsVerticalScrollIndicator={false}
+    >
+        
                 <ScrollView
                     contentContainerStyle={{
                         flexGrow: 1,
@@ -305,6 +312,10 @@ const handleForgotPasswordSuccess = (): void => {
                                 disabled={loading}
                                 containerStyle={{ marginBottom: 20 }}
                             />
+                             
+
+
+                
 
                             {/* PIN Input */}
                             <Input
@@ -427,7 +438,7 @@ const handleForgotPasswordSuccess = (): void => {
 
                     </Animated.View>
                 </ScrollView>
-            </KeyboardAvoidingView>
+            </KeyboardAwareScrollView>
 
             <ForgotPasswordModal
     ref={forgotPasswordRef}
@@ -435,6 +446,9 @@ const handleForgotPasswordSuccess = (): void => {
     onClose={handleForgotPasswordClose}
     onSuccess={handleForgotPasswordSuccess}
 />
+
+
+         
         </LinearGradient>
     );
 };

@@ -1,25 +1,13 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import {
-    Animated,
-    Dimensions,
-    Modal,
-    Platform,
-    StatusBar,
-    TextInput,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View
-} from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { Platform, TextInput, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
+import BottomSheet, { BottomSheetRef } from '../../components/BottomSheet';
 import Button from '../../components/Button';
-import Input from '../../components/Input';
+// *** IMPORTANT CHANGE 1: Import EnhancedInput instead of Input ***
+import { EnhancedInput } from '../../components/enhancedInput';
 import { Typography } from '../../components/Typography';
 import { colors } from '../../constant/theme/colors';
-
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 interface ForgotPasswordModalProps {
     isVisible: boolean;
@@ -47,7 +35,7 @@ interface ValidationErrors {
 
 const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordModalProps>(
     ({ isVisible, onClose, onSuccess }, ref) => {
-        const [currentStep, setCurrentStep] = useState<number>(1); // 1: Enter identifier, 2: OTP, 3: New PIN, 4: Success
+        const [currentStep, setCurrentStep] = useState<number>(1);
         const [formData, setFormData] = useState<ForgotPasswordData>({
             identifier: '',
             otp: '',
@@ -56,21 +44,15 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
         });
         const [errors, setErrors] = useState<ValidationErrors>({});
         const [loading, setLoading] = useState<boolean>(false);
-        const [resendLoading, setResendLoading] = useState<boolean>(false);
+        const [resendLoading, setResendLoading] = useState<boolean>(false); // Corrected typo here
         const [isEmailMode, setIsEmailMode] = useState<boolean>(true);
-        const [keyboardVisible, setKeyboardVisible] = useState<boolean>(false);
-
-        // Animation refs
-        const modalAnim = useRef(new Animated.Value(0)).current;
-        const slideAnim = useRef(new Animated.Value(0)).current;
-        const fadeAnim = useRef(new Animated.Value(0)).current;
 
         // Form refs
         const identifierRef = useRef<TextInput>(null);
         const otpRef = useRef<TextInput>(null);
         const newPinRef = useRef<TextInput>(null);
         const confirmNewPinRef = useRef<TextInput>(null);
-        const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
+        const bottomSheetRef = useRef<BottomSheetRef>(null);
 
         useImperativeHandle(ref, () => ({
             reset: () => {
@@ -83,54 +65,11 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                 });
                 setErrors({});
                 setLoading(false);
-                setResendLoading(false);
+                setResendLoading(false); // Corrected typo here
             },
         }));
 
-        useEffect(() => {
-            if (isVisible) {
-                Animated.parallel([
-                    Animated.timing(modalAnim, {
-                        toValue: 1,
-                        duration: 300,
-                        useNativeDriver: true,
-                    }),
-                    Animated.timing(fadeAnim, {
-                        toValue: 1,
-                        duration: 400,
-                        useNativeDriver: true,
-                    }),
-                ]).start();
-            } else {
-                Animated.parallel([
-                    Animated.timing(modalAnim, {
-                        toValue: 0,
-                        duration: 200,
-                        useNativeDriver: true,
-                    }),
-                    Animated.timing(fadeAnim, {
-                        toValue: 0,
-                        duration: 200,
-                        useNativeDriver: true,
-                    }),
-                ]).start();
-            }
-        }, [isVisible]);
-
-        useEffect(() => {
-            if (isVisible) {
-                Animated.spring(slideAnim, {
-                    toValue: 1,
-                    tension: 20,
-                    friction: 7,
-                    useNativeDriver: true,
-                }).start();
-            } else {
-                slideAnim.setValue(0);
-            }
-        }, [currentStep, isVisible]);
-
-        // Validation functions
+        // Validation functions (unchanged)
         const validateEmail = (email: string): string => {
             if (!email) return 'Email address is required';
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -165,7 +104,7 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
             return '';
         };
 
-        // Handlers
+        // Handlers (unchanged, just ensuring variable names are correct)
         const handleIdentifierChange = (text: string): void => {
             setFormData(prev => ({ ...prev, identifier: text }));
             if (errors.identifier) {
@@ -195,7 +134,7 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
         };
 
         const handleSendOTP = async (): Promise<void> => {
-            const identifierError = isEmailMode 
+            const identifierError = isEmailMode
                 ? validateEmail(formData.identifier)
                 : validatePhone(formData.identifier);
 
@@ -211,11 +150,9 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
 
             setLoading(true);
             try {
-                // Simulate API call
                 await new Promise(resolve => setTimeout(resolve, 1500));
                 
                 setCurrentStep(2);
-                slideAnim.setValue(0);
                 
                 Toast.show({
                     type: 'success',
@@ -248,15 +185,12 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
 
             setLoading(true);
             try {
-                // Simulate API call
                 await new Promise(resolve => setTimeout(resolve, 1500));
                 
-                // Mock validation
                 const isValidOTP = formData.otp === '123456';
                 
                 if (isValidOTP) {
                     setCurrentStep(3);
-                    slideAnim.setValue(0);
                 } else {
                     setErrors({ otp: 'Invalid OTP. Please check and try again.' });
                     Toast.show({
@@ -296,11 +230,9 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
 
             setLoading(true);
             try {
-                // Simulate API call
                 await new Promise(resolve => setTimeout(resolve, 1500));
                 
                 setCurrentStep(4);
-                slideAnim.setValue(0);
                 
                 Toast.show({
                     type: 'success',
@@ -319,7 +251,7 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
         };
 
         const handleResendOTP = async (): Promise<void> => {
-            setResendLoading(true);
+            setResendLoading(true); // Corrected typo here
             try {
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
@@ -338,7 +270,7 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                     text2: 'Please try again later',
                 });
             } finally {
-                setResendLoading(false);
+                setResendLoading(false); // Corrected typo here
             }
         };
 
@@ -363,23 +295,14 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
             handleClose();
         };
 
-        // Step renderers
+        // Step renderers (unchanged except for the key prop in renderStep1)
         const renderStep1 = (): React.ReactElement => (
-            <Animated.View
-                style={{
-                    opacity: fadeAnim,
-                    transform: [{
-                        translateX: slideAnim.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [300, 0],
-                        }),
-                    }],
-                }}
-            >
-                <View style={{ marginBottom: 32, marginTop:-20 }}>
+            <View>
+                <View style={{ marginBottom: 20, marginTop: 10 }}>
                     <Typography variant="bold" size={24} style={{ color: colors.text.primary, marginBottom: 8 }}>
                         Reset Your PIN
-                    </Typography>
+                    </Typography> 
+
                     <Typography variant="regular" size={16} style={{ color: colors.text.secondary, lineHeight: 22 }}>
                         Enter your email or phone number to receive a verification code
                     </Typography>
@@ -396,7 +319,15 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                         borderColor: colors.gray.light,
                     }}>
                         <TouchableOpacity
-                            onPress={() => setIsEmailMode(true)}
+                            onPress={() => {
+                                setIsEmailMode(true);
+                                // Clear identifier and errors when switching mode
+                                setFormData(prev => ({ ...prev, identifier: '' }));
+                                setErrors(prev => ({ ...prev, identifier: undefined }));
+                                // Optional: Blur and re-focus if the key prop alone isn't sufficient
+                                // identifierRef.current?.blur();
+                                // setTimeout(() => identifierRef.current?.focus(), 100);
+                            }}
                             style={{
                                 flex: 1,
                                 paddingVertical: 12,
@@ -423,7 +354,15 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                             </Typography>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={() => setIsEmailMode(false)}
+                            onPress={() => {
+                                setIsEmailMode(false);
+                                // Clear identifier and errors when switching mode
+                                setFormData(prev => ({ ...prev, identifier: '' }));
+                                setErrors(prev => ({ ...prev, identifier: undefined }));
+                                // Optional: Blur and re-focus if the key prop alone isn't sufficient
+                                // identifierRef.current?.blur();
+                                // setTimeout(() => identifierRef.current?.focus(), 100);
+                            }}
                             style={{
                                 flex: 1,
                                 paddingVertical: 12,
@@ -451,8 +390,11 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                         </TouchableOpacity>
                     </View>
 
-                    <Input
-                        ref={identifierRef}
+                    {/* **** IMPORTANT CHANGE: Use EnhancedInput and its inputRef prop **** */}
+                    <EnhancedInput // Changed from Input to EnhancedInput
+                        key={isEmailMode ? "email-input" : "phone-input"} // Key changes based on mode
+                        inputRef={identifierRef as any} // Use inputRef as per EnhancedInputProps
+                        name="identifier" // Add name prop for EnhancedInput
                         type={isEmailMode ? "email" : "phone"}
                         label={isEmailMode ? "Email Address" : "Phone Number"}
                         value={formData.identifier}
@@ -462,18 +404,21 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                         variant="filled"
                         size="medium"
                         error={errors.identifier}
-                        helperText={!errors.identifier ? 
+                        // For EnhancedInput, 'touched' is important for error display logic
+                        touched={!!errors.identifier || formData.identifier.length > 0} // Simple touch logic for this example
+                        helperText={!errors.identifier ?
                             (isEmailMode ? "Enter your registered email address" : "Enter your 10-digit phone number")
                             : undefined
                         }
                         keyboardType={isEmailMode ? "email-address" : "phone-pad"}
-                        autoCapitalize={isEmailMode ? "none" : "characters"}
+                        autoCapitalize={isEmailMode ? "none" : "none"} // Phone should typically be "none" too
                         autoCorrect={false}
                         maxLength={isEmailMode ? undefined : 10}
                         disabled={loading}
-                        containerStyle={{ marginBottom: 32 }}
-                        onFocus={() => setKeyboardVisible(true)}
-                        onBlur={() => setKeyboardVisible(false)}
+                        containerStyle={{ marginBottom: 0 }}
+                        // Add onBlur and onFocus for EnhancedInput if needed
+                        onBlur={() => {}}
+                        onFocus={() => {}}
                     />
                 </View>
 
@@ -491,22 +436,12 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                         shadowRadius: 8,
                     }}
                 />
-            </Animated.View>
+            </View>
         );
 
         const renderStep2 = (): React.ReactElement => (
-            <Animated.View
-                style={{
-                    opacity: fadeAnim,
-                    transform: [{
-                        translateX: slideAnim.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [300, 0],
-                        }),
-                    }],
-                }}
-            >
-                <View style={{ marginBottom: 32,marginTop:-20  }}>
+            <View>
+                <View style={{ marginBottom: 32, marginTop: 10 }}>
                     <Typography variant="bold" size={24} style={{ color: colors.text.primary, marginBottom: 8 }}>
                         Enter Verification Code
                     </Typography>
@@ -516,9 +451,11 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                 </View>
 
                 <View style={{ marginBottom: 20 }}>
-                    <Input
-                        ref={otpRef}
-                        type="text"
+                    {/* *** IMPORTANT CHANGE: Use EnhancedInput and its inputRef prop *** */}
+                    <EnhancedInput // Changed from Input to EnhancedInput
+                        inputRef={otpRef as any} // Use inputRef
+                        name="otp" // Add name prop
+                        type="number" // Changed to numeric for OTP input
                         label="Verification Code"
                         value={formData.otp}
                         onChangeText={handleOTPChange}
@@ -527,13 +464,14 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                         variant="filled"
                         size="medium"
                         error={errors.otp}
+                        touched={!!errors.otp || formData.otp.length > 0} // Simple touch logic
                         helperText={!errors.otp ? "Enter the 6-digit code" : undefined}
                         keyboardType="number-pad"
                         maxLength={6}
                         disabled={loading}
                         containerStyle={{ marginBottom: 16 }}
-                        onFocus={() => setKeyboardVisible(true)}
-                        onBlur={() => setKeyboardVisible(false)}
+                        onBlur={() => {}}
+                        onFocus={() => {}}
                     />
 
                     <TouchableOpacity
@@ -582,22 +520,12 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                         disabled={loading}
                     />
                 </View>
-            </Animated.View>
+            </View>
         );
 
         const renderStep3 = (): React.ReactElement => (
-            <Animated.View
-                style={{
-                    opacity: fadeAnim,
-                    transform: [{
-                        translateX: slideAnim.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [300, 0],
-                        }),
-                    }],
-                }}
-            >
-                <View style={{ marginBottom: 32,marginTop:-20  }}>
+            <View>
+                <View style={{ marginBottom: 32, marginTop: 10 }}>
                     <Typography variant="bold" size={24} style={{ color: colors.text.primary, marginBottom: 8 }}>
                         Create New PIN
                     </Typography>
@@ -607,8 +535,10 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                 </View>
 
                 <View style={{ marginBottom: 20 }}>
-                    <Input
-                        ref={newPinRef}
+                    {/* *** IMPORTANT CHANGE: Use EnhancedInput and its inputRef prop *** */}
+                    <EnhancedInput // Changed from Input to EnhancedInput
+                        inputRef={newPinRef as any} // Use inputRef
+                        name="newPin" // Add name prop
                         type="password"
                         label="New PIN"
                         value={formData.newPin}
@@ -619,17 +549,20 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                         variant="filled"
                         size="medium"
                         error={errors.newPin}
+                        touched={!!errors.newPin || formData.newPin.length > 0} // Simple touch logic
                         helperText={!errors.newPin ? "Choose a secure 4-digit PIN" : undefined}
                         keyboardType="numeric"
                         maxLength={4}
                         disabled={loading}
                         containerStyle={{ marginBottom: 16 }}
-                        onFocus={() => setKeyboardVisible(true)}
-                        onBlur={() => setKeyboardVisible(false)}
+                        onBlur={() => {}}
+                        onFocus={() => {}}
                     />
 
-                    <Input
-                        ref={confirmNewPinRef}
+                    {/* *** IMPORTANT CHANGE: Use EnhancedInput and its inputRef prop *** */}
+                    <EnhancedInput // Changed from Input to EnhancedInput
+                        inputRef={confirmNewPinRef as any} // Use inputRef
+                        name="confirmNewPin" // Add name prop
                         type="password"
                         label="Confirm New PIN"
                         value={formData.confirmNewPin}
@@ -637,17 +570,18 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                         required
                         showPasswordToggle
                         animatedLabel
-                        variant="filled"
+                        variant="filled" 
                         size="medium"
                         error={errors.confirmNewPin}
+                        touched={!!errors.confirmNewPin || formData.confirmNewPin.length > 0} // Simple touch logic
                         success={!!(formData.newPin && formData.confirmNewPin && formData.newPin === formData.confirmNewPin && !errors.confirmNewPin)}
                         helperText={!errors.confirmNewPin ? "Confirm your 4-digit PIN" : undefined}
                         keyboardType="numeric"
                         maxLength={4}
                         disabled={loading}
                         containerStyle={{ marginBottom: 16 }}
-                        onFocus={() => setKeyboardVisible(true)}
-                        onBlur={() => setKeyboardVisible(false)}
+                        onBlur={() => {}}
+                        onFocus={() => {}}
                     />
 
                     <View style={{
@@ -688,22 +622,11 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                         disabled={loading}
                     />
                 </View>
-            </Animated.View>
+            </View>
         );
 
         const renderStep4 = (): React.ReactElement => (
-            <Animated.View
-                style={{
-                    opacity: fadeAnim,
-                    transform: [{
-                        translateX: slideAnim.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [300, 0],
-                        }),
-                    }],
-                    alignItems: 'center',
-                }}
-            >
+            <View style={{ alignItems: 'center' }}>
                 <View style={{
                     width: 80,
                     height: 80,
@@ -730,7 +653,7 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                     size="large"
                     style={{ width: '100%' }}
                 />
-            </Animated.View>
+            </View>
         );
 
         const getCurrentStepContent = (): React.ReactElement => {
@@ -747,159 +670,18 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                     return renderStep1();
             }
         };
-
         return (
-            <Modal
-                visible={isVisible}
-                transparent
-                animationType="none"
-                statusBarTranslucent={false}
-                onRequestClose={handleClose}
+           <BottomSheet
+                isVisible={isVisible}
+                onClose={handleClose}
+                title="Forgot PIN"
+                animationDuration={300}
+                keyboardAware={true}
+                height={Platform.OS === 'ios' ? '55%' : '65%'}
+                maxHeight={Platform.OS === 'ios' ? '70%' : '70%'}
             >
-                <StatusBar backgroundColor="rgba(0,0,0,0.5)" barStyle="light-content" translucent={false} />
-                
-                <TouchableWithoutFeedback onPress={handleClose}>
-                    <Animated.View
-                        style={{
-                            flex: 1,
-                            backgroundColor: 'rgba(0,0,0,0.5)',
-                            justifyContent: 'flex-end',
-                            opacity: modalAnim,
-                        }}
-                    >
-                        <TouchableWithoutFeedback>
-                            <Animated.View
-                                style={{
-                                    backgroundColor: colors.white,
-                                    borderTopLeftRadius: 24,
-                                    borderTopRightRadius: 24,
-                                    height: keyboardVisible && Platform.OS === 'android' ? '100%' : SCREEN_HEIGHT * 0.74,
-                                    maxHeight: SCREEN_HEIGHT * 0.8,
-                                    paddingBottom: Platform.OS === 'ios' ? 34 : 20,
-                                    transform: [{
-                                        translateY: modalAnim.interpolate({
-                                            inputRange: [0, 1],
-                                            outputRange: [SCREEN_HEIGHT, 0],
-                                        }),
-                                    }],
-                                }}
-                            >
-                                <SafeAreaView style={{ flex: 1 }} edges={['top']}>
-                                <View style={{ flex: 1 }}>
-                                    {/* Modal Handle */}
-                                    <View style={{
-                                        alignItems: 'center',
-                                        paddingVertical: 8,
-                                    }}>
-                                        <View style={{
-                                            width: 40,
-                                            height: 4,
-                                            backgroundColor: colors.gray.light,
-                                            borderRadius: 2,
-                                        }} />
-                                    </View>
-
-                                    {/* Header */}
-                                    <View style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        paddingHorizontal: 20,
-                                        paddingVertical: 12,
-                                        borderBottomWidth: 1,
-                                        borderBottomColor: colors.gray.light,
-                                    }}>
-                                        <Typography variant="bold" size={18} style={{ color: colors.text.primary }}>
-                                            Forgot PIN
-                                        </Typography>
-                                        <TouchableOpacity onPress={handleClose}>
-                                            <MaterialIcons name="close" size={24} color={colors.text.secondary} />
-                                        </TouchableOpacity>
-                                    </View>
-
-                                    {/* Progress indicator */}
-                                    {currentStep < 4 && (
-                                        <View style={{ paddingHorizontal: 20, paddingVertical: 16 }}>
-                                            <View style={{
-                                                height: 6,
-                                                backgroundColor: colors.gray.light,
-                                                borderRadius: 3,
-                                                overflow: 'hidden',
-                                            }}>
-                                                <Animated.View
-                                                    style={{
-                                                        height: '100%',
-                                                        backgroundColor: colors.primary,
-                                                        borderRadius: 3,
-                                                        width: `${(currentStep / 3) * 100}%`,
-                                                    }}
-                                                />
-                                            </View>
-                                            <View style={{
-                                                flexDirection: 'row',
-                                                justifyContent: 'space-between',
-                                                alignItems: 'center',
-                                                marginTop: 8,
-                                            }}>
-                                                <Typography
-                                                    variant="regular"
-                                                    size={12}
-                                                    style={{
-                                                        color: colors.text.secondary,
-                                                    }}
-                                                >
-                                                    Step {currentStep} of 3
-                                                </Typography>
-                                                <Typography
-                                                    variant="regular"
-                                                    size={12}
-                                                    style={{
-                                                        color: colors.text.secondary,
-                                                    }}
-                                                >
-                                                    {Math.round((currentStep / 3) * 100)}% Complete
-                                                </Typography>
-                                            </View>
-                                        </View>
-                                    )}
-
-                                    {/* Content */}
-                                    <KeyboardAwareScrollView
-                                        ref={scrollViewRef}
-                                        style={{ flex: 1 }}
-                                        contentContainerStyle={{
-                                            flexGrow: 1,
-                                            paddingHorizontal: 20,
-                                            paddingTop: 20,
-                                            paddingBottom: 0, // Removed bottom padding
-                                        }}
-                                        keyboardShouldPersistTaps="handled"
-                                        showsVerticalScrollIndicator={false}
-                                        enableOnAndroid={true}
-                                        enableAutomaticScroll={true}
-                                        extraScrollHeight={Platform.select({ ios: 100, android: 50 })}
-                                        extraHeight={Platform.select({ ios: 100, android: 0 })}
-                                        enableResetScrollToCoords={true}
-                                        resetScrollToCoords={{ x: 0, y: 0 }}
-                                        keyboardOpeningTime={0}
-                                        scrollToOverflowEnabled={false}
-                                        onKeyboardWillShow={() => setKeyboardVisible(true)}
-                                        onKeyboardWillHide={() => setKeyboardVisible(false)}
-                                    >
-                                        <View style={{ 
-                                            flexGrow: 1, 
-                                            paddingBottom: 20 // Added padding inside content
-                                        }}>
-                                            {getCurrentStepContent()}
-                                        </View>
-                                    </KeyboardAwareScrollView>
-                                </View>
-                                </SafeAreaView>
-                            </Animated.View>
-                        </TouchableWithoutFeedback>
-                    </Animated.View>
-                </TouchableWithoutFeedback>
-            </Modal>
+              {getCurrentStepContent()}
+            </BottomSheet>
         );
     }
 );

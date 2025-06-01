@@ -12,7 +12,7 @@
     "**/*.ts",
     "**/*.tsx",
     "nativewind-env.d.ts"
-  ],
+, "src/constant/index.tsx"  ],
   "exclude": [
     "node_modules"
   ]

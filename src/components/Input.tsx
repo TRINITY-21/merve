@@ -19,7 +19,7 @@ type IconName = keyof typeof MaterialIcons.glyphMap;
 export interface InputProps extends Omit<TextInputProps, 'style'> {
   // Basic Props
   label?: string;
-//   placeholder?: string;
+  placeholder?: string;
   value?: string;
   onChangeText?: (text: string) => void;
   
@@ -451,7 +451,7 @@ const Input = forwardRef<TextInput, InputProps>(({
         <Animated.View
           style={{
             position: 'absolute',
-            left: (config.leftIcon || leftIcon) ? 48 : 16,
+            left: (config.leftIcon || leftIcon) ? 40 : 16,
             zIndex: 1,
             transform: [
               {
@@ -501,7 +501,7 @@ const Input = forwardRef<TextInput, InputProps>(({
           size={14} 
           style={{ 
             color: colors.text.primary, 
-            marginBottom: 8 
+            marginBottom: 8
           }}
         >
           {label}{required && ' *'}
