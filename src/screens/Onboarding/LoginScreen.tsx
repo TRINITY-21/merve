@@ -46,31 +46,30 @@ const LoginScreen: React.FC = () => {
     const phoneRef = useRef<TextInput>(null);
     const pinRef = useRef<TextInput>(null);
     const [showForgotPassword, setShowForgotPassword] = useState<boolean>(false);
-const forgotPasswordRef = useRef<ForgotPasswordModalRef>(null);
+    const forgotPasswordRef = useRef<ForgotPasswordModalRef>(null);
 
 
-// Add these handlers after your existing functions
-const handleForgotPasswordOpen = (): void => {
-    setShowForgotPassword(true);
-};
+    const handleForgotPasswordOpen = (): void => {
+        setShowForgotPassword(true);
+    };
 
-const handleForgotPasswordClose = (): void => {
-    setShowForgotPassword(false);
-    forgotPasswordRef.current?.reset();
-};
+    const handleForgotPasswordClose = (): void => {
+        setShowForgotPassword(false);
+        forgotPasswordRef.current?.reset();
+    };
 
-const handleForgotPasswordSuccess = (): void => {
-    Toast.show({
-        type: 'success',
-        text1: 'PIN Reset Complete',
-        text2: 'You can now login with your new PIN',
-    });
-    // Clear the current login form
-    setPhone('');
-    setPin('');
-    setPhoneError('');
-    setPinError('');
-};
+    const handleForgotPasswordSuccess = (): void => {
+        Toast.show({
+            type: 'success',
+            text1: 'PIN Reset Complete',
+            text2: 'You can now login with your new PIN',
+        });
+        // Clear the current login form
+        setPhone('');
+        setPin('');
+        setPhoneError('');
+        setPinError('');
+    };
 
     useEffect(() => {
         Animated.timing(fadeAnim, {
@@ -146,7 +145,6 @@ const handleForgotPasswordSuccess = (): void => {
     };
 
     const handleLogin = async (): Promise<void> => {
-        // Validate inputs
         const phoneValidationError = validatePhone(phone);
         const pinValidationError = validatePin(pin);
 
@@ -165,7 +163,6 @@ const handleForgotPasswordSuccess = (): void => {
 
         setLoading(true);
 
-        // Simulate network delay
         setTimeout(() => {
             const result = login(phone, pin);
             setLoading(false);
@@ -201,21 +198,20 @@ const handleForgotPasswordSuccess = (): void => {
 
     return (
         <LinearGradient
-            colors={[colors.gradient.primary[0], colors.gradient.primary[1]]}
+            colors={[colors.gradient.primary[1], colors.gradient.primary[0]]}
             style={{ flex: 1 }}
         >
-                <KeyboardAwareScrollView
-      style={{ flex: 1, backgroundColor: 'transparent' }} // Set a background color for the scroll view
-      contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 0 }} // Add padding here
-      resetScrollToCoords={{ x: 0, y: 0 }}
-      enableAutomaticScroll={true}
-      extraHeight={Platform.OS === 'ios' ? 100 : 200} // Adjust extra height for iOS/Android
-      extraScrollHeight={Platform.OS === 'ios' ? 10 : 200} // Adjust extra scroll height
-      enableResetScrollToCoords={true}
-      keyboardShouldPersistTaps="handled" // Important for inputs to stay focused
-      showsVerticalScrollIndicator={false}
-    >
-        
+            <KeyboardAwareScrollView
+                style={{ flex: 1, backgroundColor: 'transparent' }}
+                contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 0 }}
+                resetScrollToCoords={{ x: 0, y: 0 }}
+                enableAutomaticScroll={true}
+                extraHeight={Platform.OS === 'ios' ? 10 : 10}
+                extraScrollHeight={Platform.OS === 'ios' ? 10 : 20}
+                enableResetScrollToCoords={true}
+                keyboardShouldPersistTaps="handled"
+            >
+
                 <ScrollView
                     contentContainerStyle={{
                         flexGrow: 1,
@@ -242,7 +238,7 @@ const handleForgotPasswordSuccess = (): void => {
                         {/* Logo Container */}
                         <View style={{
                             alignItems: 'center',
-                            marginBottom: 5
+                            marginBottom: 20
                         }}>
                             <View
                                 style={{
@@ -252,7 +248,7 @@ const handleForgotPasswordSuccess = (): void => {
                                     backgroundColor: 'rgba(255,255,255,0.2)',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    marginBottom: 10,
+                                    marginBottom: 20,
                                 }}
                             >
                                 <MaterialIcons name="account-balance-wallet" size={60} color={colors.white} />
@@ -279,8 +275,8 @@ const handleForgotPasswordSuccess = (): void => {
                                 {
                                     transform: [{ translateX: shakeAnimation }],
                                     backgroundColor: colors.white,
-                                    borderRadius: 30,
-                                    padding: 30,
+                                    borderRadius: 20,
+                                    padding: 20,
                                     shadowColor: '#000',
                                     shadowOffset: {
                                         width: 0,
@@ -288,7 +284,6 @@ const handleForgotPasswordSuccess = (): void => {
                                     },
                                     shadowOpacity: 0.2,
                                     shadowRadius: 20,
-                                    // elevation: 10,
                                 },
                             ]}
                         >
@@ -297,7 +292,6 @@ const handleForgotPasswordSuccess = (): void => {
                                 ref={phoneRef}
                                 type="phone"
                                 label="Phone Number"
-                                // placeholder="Enter your phone number"
                                 value={phone}
                                 onChangeText={handlePhoneChange}
                                 maxLength={10}
@@ -312,17 +306,12 @@ const handleForgotPasswordSuccess = (): void => {
                                 disabled={loading}
                                 containerStyle={{ marginBottom: 20 }}
                             />
-                             
-
-
-                
 
                             {/* PIN Input */}
                             <Input
                                 ref={pinRef}
                                 type="password"
                                 label="PIN"
-                                // placeholder="Enter your 4-digit PIN"
                                 value={pin}
                                 onChangeText={handlePinChange}
                                 maxLength={4}
@@ -340,18 +329,18 @@ const handleForgotPasswordSuccess = (): void => {
                             />
 
                             {/* Forgot PIN */}
-<TouchableOpacity 
-    style={{ alignSelf: 'flex-end', marginBottom: 5, marginTop: 20 }}
-    onPress={handleForgotPasswordOpen}
->
-    <Typography
-        variant="semibold"
-        size={14}
-        style={{ color: colors.primary }}
-    >
-        Forgot PIN?
-    </Typography>
-</TouchableOpacity>
+                            <TouchableOpacity
+                                style={{ alignSelf: 'flex-end', marginBottom: 10, marginTop: 20 }}
+                                onPress={handleForgotPasswordOpen}
+                            >
+                                <Typography
+                                    variant="semibold"
+                                    size={14}
+                                    style={{ color: colors.primary }}
+                                >
+                                    Forgot PIN?
+                                </Typography>
+                            </TouchableOpacity>
 
                             {/* Login Button */}
                             <Button
@@ -359,7 +348,7 @@ const handleForgotPasswordSuccess = (): void => {
                                 onPress={handleLogin}
                                 gradient
                                 size="large"
-                                style={{ marginBottom: 20 }}
+                                style={{ marginBottom: 10 }}
                                 disabled={loading}
                                 loading={loading}
                                 startIcon='login'
@@ -369,7 +358,7 @@ const handleForgotPasswordSuccess = (): void => {
                             <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
-                                marginBottom: 5
+                                marginBottom: 10
                             }}>
                                 <View style={{
                                     flex: 1,
@@ -381,7 +370,7 @@ const handleForgotPasswordSuccess = (): void => {
                                     size={14}
                                     style={{
                                         color: colors.gray.medium,
-                                        marginHorizontal: 15
+                                        marginHorizontal: 10
                                     }}
                                 >
                                     OR
@@ -400,8 +389,8 @@ const handleForgotPasswordSuccess = (): void => {
                                 variant="outline"
                                 size="large"
                                 style={{
-                                    borderColor: colors.gray.light,
-                                    backgroundColor: 'rgba(30, 58, 95, 0.1)'
+                                    borderColor: colors.gray.medium,
+                                    backgroundColor: colors.gray.light
                                 }}
                                 textStyle={{ color: colors.white }}
                                 onPress={handleBiometricLogin}
@@ -412,12 +401,12 @@ const handleForgotPasswordSuccess = (): void => {
                         <View style={{
                             flexDirection: 'row',
                             justifyContent: 'center',
-                            marginTop: 10
+                            marginTop: 20
                         }}>
                             <Typography
                                 variant="regular"
                                 size={16}
-                                style={{ color: 'rgba(255,255,255,0.8)' }}
+                                style={{ color: colors.white }}
                             >
                                 Don't have an account?{' '}
                             </Typography>
@@ -429,7 +418,7 @@ const handleForgotPasswordSuccess = (): void => {
                                         color: colors.white,
                                         textDecorationLine: 'underline'
                                     }}
-                                    
+
                                 >
                                     Register Now
                                 </Typography>
@@ -441,14 +430,11 @@ const handleForgotPasswordSuccess = (): void => {
             </KeyboardAwareScrollView>
 
             <ForgotPasswordModal
-    ref={forgotPasswordRef}
-    isVisible={showForgotPassword}
-    onClose={handleForgotPasswordClose}
-    onSuccess={handleForgotPasswordSuccess}
-/>
-
-
-         
+                ref={forgotPasswordRef}
+                isVisible={showForgotPassword}
+                onClose={handleForgotPasswordClose}
+                onSuccess={handleForgotPasswordSuccess}
+            />
         </LinearGradient>
     );
 };

@@ -47,7 +47,6 @@ interface IFormDataWithLocation extends Omit<IFormData, 'location'> {
 const RegisterScreen: React.FC = () => {
     const navigation = useNavigation() as NavigationType;
     const { register } = useStore() as StoreType;
-
     const [formData, setFormData] = useState<IFormDataWithLocation>({
         name: '',
         phone: '',
@@ -63,10 +62,10 @@ const RegisterScreen: React.FC = () => {
     const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
     const [otpLoading, setOtpLoading] = useState<boolean>(false);
     const [otpError, setOtpError] = useState<string>('');
+
     const slideAnim = useRef(new Animated.Value(0)).current;
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
-    // Form refs for navigation
     const nameRef = useRef<TextInput>(null);
     const phoneRef = useRef<TextInput>(null);
     const emailRef = useRef<TextInput>(null);
@@ -75,6 +74,8 @@ const RegisterScreen: React.FC = () => {
     const otpRef = useRef<OTPVerificationRef>(null);
 
     useEffect(() => {
+        fadeAnim.setValue(0);
+        slideAnim.setValue(0);
         Animated.parallel([
             Animated.timing(fadeAnim, {
                 toValue: 1,
@@ -88,9 +89,20 @@ const RegisterScreen: React.FC = () => {
                 useNativeDriver: true,
             }),
         ]).start();
+
+        const focusInput = () => {
+            if (currentStep === 1) {
+                setTimeout(() => nameRef.current?.focus(), 100);
+            } else if (currentStep === 2) {
+                setTimeout(() => pinRef.current?.focus(), 100);
+            }
+        };
+
+        TextInput.State.blurTextInput(TextInput.State.currentlyFocusedInput());
+        focusInput();
+
     }, [currentStep, fadeAnim, slideAnim]);
 
-    // Validation functions
     const validateName = (name: string): string => {
         if (!name.trim()) {
             return 'Full name is required';
@@ -172,9 +184,10 @@ const RegisterScreen: React.FC = () => {
             pin: undefined,
             confirmPin: undefined,
         }));
+        pinRef.current?.clear();
+        confirmPinRef.current?.clear();
     };
 
-    // Individual form data handlers with proper field isolation
     const handleNameChange = (text: string): void => {
         setFormData(prevData => ({ ...prevData, name: text }));
         if (errors.name) {
@@ -204,16 +217,15 @@ const RegisterScreen: React.FC = () => {
     };
 
     const handlePinChange = (text: string): void => {
-        console.log('PIN changing to:', text); // Debug log
+        console.log('PIN changing to:', text);
         setFormData(prevData => ({ ...prevData, pin: text }));
         if (errors.pin) {
             setErrors(prev => ({ ...prev, pin: undefined }));
         }
     };
 
-
     const handleConfirmPinChange = (text: string): void => {
-        console.log('Confirm PIN changing to:', text); // Debug log
+        console.log('Confirm PIN changing to:', text);
         setFormData(prevData => ({ ...prevData, confirmPin: text }));
         if (errors.confirmPin) {
             setErrors(prev => ({ ...prev, confirmPin: undefined }));
@@ -221,24 +233,19 @@ const RegisterScreen: React.FC = () => {
     };
 
     const handleNext = (): void => {
-        console.log('Next button pressed');
         if (validateStep1()) {
-            console.log('Moving to Step 2');
+            TextInput.State.blurTextInput(TextInput.State.currentlyFocusedInput());
             clearStep2Data();
             setCurrentStep(2);
-            fadeAnim.setValue(0);
-            slideAnim.setValue(0);
         }
     };
 
     const handleRegister = async (): Promise<void> => {
         const pinError = validatePin(formData.pin);
         const confirmPinError = validateConfirmPin(formData.confirmPin, formData.pin);
-
         const newErrors: ValidationErrors = {};
         if (pinError) newErrors.pin = pinError;
         if (confirmPinError) newErrors.confirmPin = confirmPinError;
-
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length > 0) {
@@ -251,17 +258,15 @@ const RegisterScreen: React.FC = () => {
         }
 
         setLoading(true);
-
         setTimeout(() => {
             const result = register({
                 name: formData.name,
                 phone: formData.phone,
                 email: formData.email,
                 pin: formData.pin,
-                // Include location data if needed
                 region: formData.location?.region,
                 town: formData.location?.town,
-                fullLocation: formData.location ? `${formData.location.town}, ${formData.location.region}` : '',
+                location: formData.location ? `${formData.location.town}, ${formData.location.region}` : '',
             } as IRegisterData);
 
             setLoading(false);
@@ -272,6 +277,7 @@ const RegisterScreen: React.FC = () => {
                     text1: 'Registration Successful!',
                     text2: 'Welcome to MoMoGo',
                 });
+
             } else {
                 Toast.show({
                     type: 'error',
@@ -283,9 +289,8 @@ const RegisterScreen: React.FC = () => {
     };
 
     const goBackToStep1 = (): void => {
+        TextInput.State.blurTextInput(TextInput.State.currentlyFocusedInput());
         setCurrentStep(1);
-        fadeAnim.setValue(0);
-        slideAnim.setValue(0);
     };
 
     const validateStep1 = (): boolean => {
@@ -307,7 +312,6 @@ const RegisterScreen: React.FC = () => {
         setErrors(newErrors);
 
         const hasErrors = Object.keys(newErrors).length > 0;
-
         if (hasErrors) {
             Toast.show({
                 type: 'error',
@@ -341,19 +345,16 @@ const RegisterScreen: React.FC = () => {
     const handleOTPVerifySuccess = async (otp: string): Promise<void> => {
         setOtpLoading(true);
         setOtpError('');
-
         try {
             console.log('Verifying OTP:', otp, 'for phone:', formData.phone);
-
             await new Promise(resolve => setTimeout(resolve, 2000));
 
-            const isValidOTP = otp === '123456'; // Mock validation
+            const isValidOTP = otp === '123456';
 
             if (isValidOTP) {
                 setIsPhoneVerified(true);
                 setShowOTPVerification(false);
                 setOtpLoading(false);
-
                 Toast.show({
                     type: 'success',
                     text1: 'Phone Verified!',
@@ -374,15 +375,12 @@ const RegisterScreen: React.FC = () => {
     const handleOTPResend = async (): Promise<void> => {
         try {
             console.log('Resending OTP to:', formData.phone);
-
             await new Promise(resolve => setTimeout(resolve, 1000));
-
             Toast.show({
                 type: 'success',
                 text1: 'OTP Sent',
                 text2: 'A new verification code has been sent to your phone',
             });
-
             setOtpError('');
             otpRef.current?.clearOTP();
         } catch (error) {
@@ -401,15 +399,14 @@ const RegisterScreen: React.FC = () => {
 
     const renderStep1 = (): React.ReactElement => (
         <Animated.View
+            key="step1-content"
             style={[{
                 backgroundColor: colors.white,
-                borderRadius: 24,
-                padding: 24,
-                shadowColor: '#000',
+                borderRadius: 20,
+                padding: 20,
                 shadowOffset: { width: 0, height: 8 },
                 shadowOpacity: 0.15,
                 shadowRadius: 16,
-                elevation: 8,
                 opacity: fadeAnim,
                 transform: [{
                     translateX: slideAnim.interpolate({
@@ -419,7 +416,7 @@ const RegisterScreen: React.FC = () => {
                 }],
             }]}
         >
-            <View style={{ marginBottom: 25 }}>
+            <View style={{ marginBottom: 30 }}>
                 <Typography variant="bold" size={22} style={{ color: colors.text.primary, marginBottom: 4 }}>
                     Personal Information
                 </Typography>
@@ -427,11 +424,11 @@ const RegisterScreen: React.FC = () => {
                     Let's get to know you
                 </Typography>
             </View>
-
             {/* Form content */}
             <View>
                 <Input
                     ref={nameRef}
+                    key="name-input"
                     type="text"
                     label="Full Name"
                     value={formData.name}
@@ -446,10 +443,10 @@ const RegisterScreen: React.FC = () => {
                     disabled={loading}
                     containerStyle={{ marginBottom: 16 }}
                 />
-
                 <View style={{ marginBottom: 16 }}>
                     <Input
                         ref={phoneRef}
+                        key="phone-input"
                         type="phone"
                         label="Phone Number"
                         value={formData.phone}
@@ -473,7 +470,6 @@ const RegisterScreen: React.FC = () => {
                         disabled={loading}
                         containerStyle={{ marginBottom: 8 }}
                     />
-
                     {!isPhoneVerified && formData.phone.length === 10 && !errors.phone && (
                         <TouchableOpacity
                             onPress={handlePhoneVerification}
@@ -483,7 +479,7 @@ const RegisterScreen: React.FC = () => {
                                 justifyContent: 'center',
                                 paddingVertical: 6,
                                 paddingHorizontal: 12,
-                                backgroundColor: colors.primary + '15',
+                                backgroundColor: colors.primary + '35',
                                 borderRadius: 6,
                                 marginTop: 4,
                             }}
@@ -495,9 +491,9 @@ const RegisterScreen: React.FC = () => {
                         </TouchableOpacity>
                     )}
                 </View>
-
                 <Input
                     ref={emailRef}
+                    key="email-input"
                     type="email"
                     label="Email Address"
                     value={formData.email}
@@ -511,10 +507,8 @@ const RegisterScreen: React.FC = () => {
                     disabled={loading}
                     autoComplete="email"
                 />
-
-              
-                
                 <LocationPicker
+                    key="location-picker"
                     label="Location"
                     value={formData.location}
                     onLocationChange={handleLocationChange}
@@ -525,10 +519,8 @@ const RegisterScreen: React.FC = () => {
                     error={errors.location}
                     helperText={!errors.location ? "Select your region and town" : undefined}
                     disabled={loading}
-                    containerStyle={{ marginBottom: 0 }}
+                    containerStyle={{ marginBottom: 20, marginTop: 5 }}
                 />
-
-                {/* Button positioned to avoid keyboard */}
                 <View style={{ marginTop: 24 }}>
                     <Button
                         title="Next"
@@ -545,15 +537,15 @@ const RegisterScreen: React.FC = () => {
 
     const renderStep2 = (): React.ReactElement => (
         <Animated.View
+            key="step2-content"
             style={[{
                 backgroundColor: colors.white,
                 borderRadius: 24,
-                padding: 24,
+                padding: 20,
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 8 },
                 shadowOpacity: 0.15,
                 shadowRadius: 16,
-                elevation: 8,
                 opacity: fadeAnim,
                 transform: [{
                     translateX: slideAnim.interpolate({
@@ -563,19 +555,19 @@ const RegisterScreen: React.FC = () => {
                 }],
             }]}
         >
-            <View style={{ marginBottom: 20 }}>
-                <Typography variant="bold" size={22} style={{ color: colors.text.primary, marginBottom: 4 }}>
+            <View style={{ marginBottom: 30 }}>
+                <Typography variant="bold" size={22} style={{ color: colors.text.primary, marginBottom: 5 }}>
                     Security Setup
                 </Typography>
                 <Typography variant="regular" size={14} style={{ color: colors.text.secondary }}>
                     Create your secure PIN
                 </Typography>
             </View>
-
             {/* Form inputs section */}
             <View>
                 <Input
                     ref={pinRef}
+                    key="pin-input"
                     type="password"
                     label="Create PIN"
                     value={formData.pin}
@@ -590,11 +582,11 @@ const RegisterScreen: React.FC = () => {
                     helperText={!errors.pin ? "Choose a secure 4-digit PIN" : undefined}
                     keyboardType="numeric"
                     disabled={loading}
-                    containerStyle={{ marginBottom: 16 }}
+                    containerStyle={{ marginBottom: 20 }}
                 />
-
                 <Input
                     ref={confirmPinRef}
+                    key="confirm-pin-input"
                     type="password"
                     label="Confirm PIN"
                     value={formData.confirmPin}
@@ -612,11 +604,10 @@ const RegisterScreen: React.FC = () => {
                     disabled={loading}
                     containerStyle={{ marginBottom: 20 }}
                 />
-
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    backgroundColor: colors.primary + '20',
+                    backgroundColor: colors.primary + '30',
                     padding: 12,
                     borderRadius: 8,
                     marginBottom: 24,
@@ -631,10 +622,9 @@ const RegisterScreen: React.FC = () => {
                     </Typography>
                 </View>
             </View>
-
             {/* Buttons section */}
             <View>
-                <View style={{ flexDirection: 'row', gap: 12 }}>
+                <View style={{ flexDirection: 'row', gap: 50 }}>
                     <Button
                         title="Back"
                         onPress={goBackToStep1}
@@ -644,7 +634,6 @@ const RegisterScreen: React.FC = () => {
                         startIcon="chevron-left"
                         variant='outline'
                     />
-
                     <Button
                         title="Register"
                         onPress={handleRegister}
@@ -660,34 +649,32 @@ const RegisterScreen: React.FC = () => {
 
     return (
         <LinearGradient
-            colors={[colors.gradient.primary[0], colors.gradient.primary[1]]}
+            colors={[colors.gradient.primary[1], colors.gradient.primary[0]]}
             style={{ flex: 1 }}
         >
-            <StatusBar barStyle="light-content" backgroundColor={colors.gradient.primary[0]} />
-
+            <StatusBar barStyle="light-content" backgroundColor={colors.gradient.primary[1]} />
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={{
-                    paddingHorizontal: 20,
-                    paddingBottom: 0,
+                    paddingHorizontal: 16,
+                    paddingBottom: 10,
                     borderBottomWidth: 1,
-                    borderBottomColor: 'rgba(255,255,255,0.1)',
+                    borderBottomColor: colors.white + '30',
                 }}>
                     <View style={{
                         flexDirection: 'row',
                         alignItems: 'center',
-                        paddingVertical: 12,
+                        paddingVertical: 10,
                     }}>
                         <TouchableOpacity
                             onPress={() => navigation.goBack()}
-                            style={{ marginRight: 20 }}
+                            style={{ marginRight: 10, marginBottom: Platform.OS === 'ios' ? 4 : -3 }}
                         >
                             <MaterialIcons name="chevron-left" size={28} color={colors.white} />
                         </TouchableOpacity>
-                        <Typography variant="bold" size={18} style={{ color: colors.white }}>
+                        <Typography variant="bold" size={20} style={{ color: colors.white }}>
                             Create Account
                         </Typography>
                     </View>
-
                     <View style={{ paddingHorizontal: 0 }}>
                         <View style={{
                             height: 4,
@@ -717,39 +704,38 @@ const RegisterScreen: React.FC = () => {
                         </Typography>
                     </View>
                 </View>
-
-                              <KeyboardAwareScrollView
-                    style={{ flex: 1, backgroundColor: 'transparent', 
-                        paddingHorizontal: 16, 
+                <KeyboardAwareScrollView
+                    style={{
+                        flex: 1, backgroundColor: 'transparent',
+                        paddingHorizontal: 16,
                         paddingVertical: 10
-
-                     }} // Set a background color for the scroll view
-                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 0 }} // Add padding here
+                    }}
+                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 0 }}
                     resetScrollToCoords={{ x: 0, y: 0 }}
                     enableAutomaticScroll={true}
-                    extraHeight={Platform.OS === 'ios' ? 50 : 20} // Adjust extra height for iOS/Android
-                    extraScrollHeight={Platform.OS === 'ios' ? 10 : 20} // Adjust extra scroll height
+                    extraHeight={Platform.OS === 'ios' ? 50 : 20}
+                    extraScrollHeight={Platform.OS === 'ios' ? 10 : 20}
                     enableResetScrollToCoords={true}
-                    keyboardShouldPersistTaps="handled" // Important for inputs to stay focused
+                    keyboardShouldPersistTaps="handled"
                     showsVerticalScrollIndicator={false}
                 >
-                    <View> 
+                    <View>
                         {currentStep === 1 ? renderStep1() : renderStep2()}
                     </View>
-
                     <View style={{
                         flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'center',
                         paddingVertical: 20,
-                        marginTop: 30, 
+                        marginTop: 30,
                         borderTopWidth: 1,
-                        borderTopColor: 'rgba(255,255,255,0.1)',
+                        borderTopColor: colors.white + '30',
+                        marginBottom:2
                     }}>
                         <Typography
                             variant="regular"
                             size={14}
-                            style={{ color: 'rgba(255,255,255,0.8)' }}
+                            style={{ color: colors.text.light }}
                         >
                             Already have an account?{' '}
                         </Typography>
@@ -767,9 +753,7 @@ const RegisterScreen: React.FC = () => {
                         </TouchableOpacity>
                     </View>
                 </KeyboardAwareScrollView>
-
             </SafeAreaView>
-
             <OTPVerification
                 ref={otpRef}
                 isVisible={showOTPVerification}

@@ -1,24 +1,14 @@
-// src/navigation/AuthNavigator.tsx
 import { createStackNavigator, StackScreenProps } from '@react-navigation/stack';
 import React from 'react';
 import HomeScreen from '../screens/ HomeScreen';
 import IntroSliderScreen from '../screens/Intro/IntroSliderScreen';
 import LoginScreen from '../screens/Onboarding/LoginScreen';
 import RegisterScreen from '../screens/Onboarding/RegisterScreen';
-
-// Type definitions for authentication flow
-export type AuthStackParamList = {
-    IntroSlider: undefined;
-    Onboarding: undefined;
-    Login: undefined;
-    Register: undefined;
-    Home: undefined;
-};
+import { AuthStackParamList } from '../types';
 
 export type AuthStackScreenProps<Screen extends keyof AuthStackParamList> =
     StackScreenProps<AuthStackParamList, Screen>;
 
-// Props interface for AuthNavigator component
 interface AuthNavigatorProps {
     showIntro: boolean;
 }
@@ -31,7 +21,6 @@ const AuthNavigator: React.FC<AuthNavigatorProps> = ({ showIntro }) => {
             initialRouteName={showIntro ? 'IntroSlider' : 'Login'}
             screenOptions={{
                 headerShown: false,
-                // Custom slide-in animation from right
                 cardStyleInterpolator: ({ current, layouts }) => ({
                     cardStyle: {
                         transform: [
@@ -44,10 +33,6 @@ const AuthNavigator: React.FC<AuthNavigatorProps> = ({ showIntro }) => {
                         ],
                     },
                 }),
-                // Alternative: Use predefined animations
-                // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-
-                // Animation timing configuration
                 transitionSpec: {
                     open: {
                         animation: 'timing',
@@ -70,8 +55,7 @@ const AuthNavigator: React.FC<AuthNavigatorProps> = ({ showIntro }) => {
                         name="IntroSlider"
                         component={IntroSliderScreen}
                         options={{
-                            // Custom options for intro slider if needed
-                            gestureEnabled: false, // Disable swipe back gesture
+                            gestureEnabled: false,
                         }}
                     />
 
@@ -87,12 +71,10 @@ const AuthNavigator: React.FC<AuthNavigatorProps> = ({ showIntro }) => {
                 component={RegisterScreen}
             />
 
-             <Stack.Screen
+            <Stack.Screen
                 name="Home"
                 component={HomeScreen}
             />
-
-
         </Stack.Navigator>
     );
 };

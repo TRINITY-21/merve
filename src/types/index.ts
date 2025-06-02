@@ -1,5 +1,3 @@
-// src/types/index.ts - Complete Unified Types System
-
 import { LocationData } from '../components/LocationPicker';
 
 // Base interfaces
@@ -373,23 +371,30 @@ export interface IIntroSlide {
 
 export type TIntroSlides = IIntroSlide[];
 
-// Splash Screen interfaces
-export interface ISplashScreenProps {
-  onFinish: () => void;
-}
-
-export type RootStackParamList = {
+export type AppStackParamList = {
   MainTabs: undefined;
   Auth: undefined;
   IntroSlider: undefined;
   Onboarding: undefined;
   Login: undefined;
   Register: undefined;
+  Map:undefined;
+  Feed:undefined;
+  Profile:undefined;
   PostDetailsScreen: { postId: string };
   ProductDetailsScreen: { productId: string };
   AgentsProfileScreen: { agentId?: string }
 
 }
+
+
+export type AuthStackParamList = {
+    IntroSlider: undefined;
+    Onboarding: undefined;
+    Login: undefined;
+    Register: undefined;
+    Home: undefined;
+};
 
 export interface IFormData {
   name: string;
@@ -405,6 +410,7 @@ export interface IRegisterData {
   phone: string;
   email: string;
   pin: string;
+  location: LocationData | "";
 }
 
 export interface OTPVerificationProps {

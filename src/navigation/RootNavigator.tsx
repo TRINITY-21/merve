@@ -1,20 +1,15 @@
-// src/navigation/RootNavigator.tsx
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { StatusBar, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// Screen imports
 import AppNavigator from './AppNavigator';
-import AuthNavigator from './AuthNavigator';
 
-// Store import
 import SplashScreen from '../screens/Intro/SplashScreen';
 import useStore from '../store/useStore';
-import type { RootStackParamList } from '../types';
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator();
 
 const RootNavigator: React.FC = () => {
   const { isAuthenticated, setAuthenticated } = useStore();
@@ -23,14 +18,14 @@ const RootNavigator: React.FC = () => {
   const [showIntro, setShowIntro] = useState<boolean>(true);
 
   useEffect(() => {
-    checkAppStatus(); 
-  }, []);  
+    checkAppStatus();
+  }, []);
 
-  const checkAppStatus = async (): Promise<void> => { 
+  const checkAppStatus = async (): Promise<void> => {
     try {
       const hasSeenIntro = await AsyncStorage.getItem('hasSeenIntro');
       const token = await AsyncStorage.getItem('authToken');
-      
+
       setShowIntro(hasSeenIntro !== 'true');
       setAuthenticated(!!token);
     } catch (error) {
@@ -39,7 +34,7 @@ const RootNavigator: React.FC = () => {
     } finally {
       setTimeout(() => {
         setIsLoading(false);
-      }, 2500);
+      }, 1000);
     }
   };
 
@@ -47,7 +42,6 @@ const RootNavigator: React.FC = () => {
     setShowSplash(false);
   };
 
-  // Full screen components (no SafeAreaView)
   if (showSplash) {
     return <SplashScreen onFinish={handleSplashFinish} />;
   }
@@ -58,40 +52,40 @@ const RootNavigator: React.FC = () => {
     );
   }
 
-  // For authenticated users - use SafeAreaView for regular app screens
-  if (isAuthenticated) {
+  // For authenticated users 
+  // if (isAuthenticated) {
     return (
       <>
-        <StatusBar 
-          barStyle="dark-content" 
-          backgroundColor="white" 
+        <StatusBar
+          barStyle="dark-content"
+          backgroundColor="white"
           translucent={false}
         />
         <SafeAreaView className="flex-1 bg-gray-50">
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen 
-              name="MainTabs" 
-              component={AppNavigator}
-              options={{ gestureEnabled: false }}
-            />
-            {/* Add your other authenticated screens here as you create them */}
+            <Stack.Screen
+              name="MainTabs"
+              options={{ gestureEnabled: false, headerShown: false }}
+            >
+              {() => <AppNavigator />}
+            </Stack.Screen>
           </Stack.Navigator>
         </SafeAreaView>
       </>
     );
-  }
+  // }
 
-  // For auth flow - no SafeAreaView to allow full screen intro/auth screens
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen 
-        name="Auth" 
-        options={{ headerShown: false }}
-      > 
-        {() => <AuthNavigator showIntro={showIntro} />}
-      </Stack.Screen>
-    </Stack.Navigator>
-  );
+  // For auth flow
+  // return (
+  //   <Stack.Navigator screenOptions={{ headerShown: false }}>
+  //     <Stack.Screen
+  //       name="Auth"
+  //       options={{ headerShown: false }}
+  //     >
+  //       {() => <AuthNavigator showIntro={showIntro} />}
+  //     </Stack.Screen>
+  //   </Stack.Navigator>
+  // );
 };
 
 export default RootNavigator;

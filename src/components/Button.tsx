@@ -94,6 +94,9 @@ const Button: React.FC<ButtonProps> = ({
   const { paddingVertical, paddingHorizontal, fontSize, subtitleFontSize } = sizes[size];
   const adjustedPaddingVertical = subtitle ? paddingVertical + 4 : paddingVertical;
 
+  // Use a consistent icon spacing
+  const iconSpacing = size === 'small' ? 6 : size === 'medium' ? 8 : 10;
+
   const colorsByVariant = {
     primary: {
       text: colors.white,
@@ -130,7 +133,6 @@ const Button: React.FC<ButtonProps> = ({
   const resolvedStartIconSize = startIconSize || (icon && iconPosition === 'left' ? iconSize : undefined) || defaultIconSize;
   const resolvedEndIconSize = endIconSize || (icon && iconPosition === 'right' ? iconSize : undefined) || defaultIconSize;
 
-  // Decide where to show the loading spinner
   let showSpinnerOn: 'start' | 'end' | null = null;
   if (loading) {
     if (resolvedStartIcon) showSpinnerOn = 'start';
@@ -151,8 +153,8 @@ const Button: React.FC<ButtonProps> = ({
     else if (iconColor) iconColorToUse = iconColor;
 
     let iconStyleToUse: StyleProp<TextStyle> = {
-      marginHorizontal: 8,
-      marginTop: subtitle ? -2 : 0,
+      marginRight: isStart && title ? iconSpacing : 0,
+      marginLeft: !isStart && title ? iconSpacing : 0,
     };
 
     if (isStart && startIconStyle) {
@@ -191,8 +193,9 @@ const Button: React.FC<ButtonProps> = ({
   const endIconElement = renderIcon(resolvedEndIcon, 'end');
 
   const textContent = (
+    // This View already has alignItems: 'center' and justifyContent: 'center'
+    // which centers the title and subtitle relative to each other.
     <View style={{
-      flex: (resolvedStartIcon || resolvedEndIcon) ? 0 : 1,
       alignItems: 'center',
       justifyContent: 'center',
     }}>
@@ -233,9 +236,9 @@ const Button: React.FC<ButtonProps> = ({
   const content = (
     <View style={{
       flexDirection: 'row',
-      alignItems: subtitle ? 'flex-start' : 'center',
+      alignItems: 'center', // <--- CHANGED THIS LINE TO ALWAYS BE 'center'
       justifyContent: 'center',
-      minHeight: subtitle ? resolvedStartIconSize + 4 : resolvedStartIconSize,
+      width: '100%',
     }}>
       {startIconElement}
       {textContent}
@@ -243,30 +246,34 @@ const Button: React.FC<ButtonProps> = ({
     </View>
   );
 
-const commonStyles = {
-  paddingVertical: adjustedPaddingVertical,
-  paddingHorizontal,
-  borderRadius: 12,
-  minHeight: subtitle ? 56 : size === 'large' ? 52 : size === 'medium' ? 48 : 40,
-};
+  const commonStyles = {
+    paddingVertical: adjustedPaddingVertical,
+    paddingHorizontal,
+    borderRadius: 12,
+    minHeight: subtitle ? 56 : size === 'large' ? 52 : size === 'medium' ? 48 : 40,
+    flexDirection: 'row', // Redundant here as content View handles it, but harmless
+    alignItems: 'center', // Redundant here, as content View handles it, but harmless
+    justifyContent: 'center', // Redundant here, as content View handles it, but harmless
+  };
 
   if (gradient && variant !== 'outline') {
     return (
       <TouchableOpacity
         disabled={disabled || loading}
         activeOpacity={0.8}
-        style={[{ borderRadius: 12 }, style]}
+        style={[{ borderRadius: 12, overflow: 'hidden' }, fullWidth && { width: '100%' }, style]}
         {...props}
       >
         <LinearGradient
           colors={currentColors.gradientColors}
           start={[0, 0]}
           end={[1, 1]}
-          style={{
-            ...commonStyles,
-            opacity: disabled ? 0.6 : 1,
-            justifyContent: 'center',
-          }}
+          style={
+            {
+              ...commonStyles,
+              opacity: disabled ? 0.6 : 1,
+            } as ViewStyle
+          }
         >
           {content}
         </LinearGradient>
@@ -285,8 +292,7 @@ const commonStyles = {
           borderWidth: variant === 'outline' ? 1 : 0,
           borderColor: currentColors.border,
           opacity: disabled ? 0.6 : 1,
-          justifyContent: 'center',
-        },
+        } as ViewStyle,
         style,
         fullWidth && { width: '100%' },
       ]}

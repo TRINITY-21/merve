@@ -1,15 +1,9 @@
-// src/components/Typography.tsx
 import React from 'react';
-import { Text, TextProps } from 'react-native';
+import { Text, TextProps, TextStyle } from 'react-native';
 
-type Variant =
-  | 'light'
-  | 'regular'
-  | 'medium'
-  | 'semibold'
-  | 'bold';
+type Variant = 'light' | 'regular' | 'medium' | 'semibold' | 'bold';
 
-const fontMap: Record<Variant, string> = {
+const fontMap: Record<Variant, TextStyle['fontFamily']> = {
   light: 'JosefinSans_300Light',
   regular: 'JosefinSans_400Regular',
   medium: 'JosefinSans_500Medium',
@@ -33,7 +27,10 @@ export const Typography = ({
   return (
     <Text
       style={[
-        { fontFamily: fontMap[variant], fontSize: size },
+        {
+          fontFamily: fontMap[variant],
+          fontSize: size,
+        },
         style,
       ]}
       {...rest}

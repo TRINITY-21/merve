@@ -8,6 +8,7 @@ import React from 'react';
 import { Platform, View } from 'react-native';
 import { Typography } from '../components/Typography';
 import HomeScreen from '../screens/ HomeScreen';
+import MapScreen from '../screens/App/Map/MapScreen';
 
 // Type definitions for navigation
 export type RootTabParamList = {
@@ -103,7 +104,7 @@ const TabIcon: React.FC<TabIconProps> = ({ name, color, focused, label }) => (
 // Stack Navigators (you can expand these as needed)
 const MapStackNavigator: React.FC = () => (
   <MapStack.Navigator screenOptions={{ headerShown: false }}>
-    <MapStack.Screen name="MapHome" component={HomeScreen} />
+    <MapStack.Screen name="MapHome" component={MapScreen} />
   </MapStack.Navigator>
 );
 

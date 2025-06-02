@@ -1,93 +1,67 @@
+import { useNavigation } from '@react-navigation/native'; // Assuming you're using React Navigation
 import React from 'react';
-import { ScrollView, View } from 'react-native';
-import Button from '../components/Button';
-import { Typography } from '../components/Typography';
+import { StyleSheet, View } from 'react-native';
+import IconButton from '../components/IconButton';
+import { colors } from '../constant/theme/colors';
 
-const HomeScreen: React.FC = () => {
-  const handlePress = () => {
-    console.log('Button pressed!');
-  };
+const Home = () => {
+  const navigation = useNavigation();
 
   return (
-    <ScrollView className="flex-1 bg-white">
-      <View className="px-4 py-8">
-        {/* Header */}
-        <View className="mb-8">
+    <View style={styles.container}>
+      {/* This replaces your original TouchableOpacity block */}
+  
+
+      <IconButton
+  icon="chevron-left"
+  onPress={() => navigation.goBack()}
+/>
+<IconButton
+          icon="chevron-left"
+          // onPress={handleBack}
+          // --- Using the 'translucent-white' variant here! ---
+          variant="translucent-white"
+          size="medium" // This gives you a 44x44 button by default
+          // If you strictly need 40x40, you can add:
+          // style={{ width: 40, height: 40 }}
+          style={styles.backButton}
+        />
 
 
-<Typography variant='medium' size={28} >Welcome, Joseph Fernandez</Typography>
-
-          <Typography variant='regular' size={18} className="mt-5">This should be Black 900</Typography>
-
-
-        </View>
-        
-
-        <Typography className="font-black text-2xl">Heading</Typography>
-
-
-        {/* Feature Cards */}
-        <View className="space-y-4 mb-8">
-          <View className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <Typography className="text-lg font-semibold text-blue-900 mb-2">
-              🚀 TypeScript
-            </Typography>
-            <Typography className="text-blue-700">
-              Type-safe development with excellent IntelliSense
-            </Typography>
-          </View>
-
-          <View className="bg-green-50 p-4 rounded-lg border border-green-200">
-            <Typography className="text-lg font-semibold text-green-900 mb-2">
-              🎨 Tailwind CSS
-            </Typography>
-            <Typography className="text-green-700">
-              Utility-first CSS framework via NativeWinds
-            </Typography>
-          </View>
-
-          <View className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-            <Typography className="text-lg font-semibold text-purple-900 mb-2">
-              📱 React Native
-            </Typography>
-            <Typography className="text-purple-700">
-              Cross-platform mobile development
-            </Typography>
-          </View>
-        </View>
-
-        {/* Action Buttons */}
-        <View className="space-y-3">
-          <Button
-            title="Primary Button"
-            onPress={handlePress}
-            variant="primary"
-          />
-          <Button
-            title="Secondary Button"
-            onPress={handlePress}
-            variant="secondary"
-          />
-        </View>
-
-        {/* Stats Grid */}
-        <View className="mt-8 flex-row flex-wrap -mx-2">
-          <View className="w-1/2 px-2 mb-4">
-            <View className="bg-gray-100 p-4 rounded-lg items-center">
-              <Typography className="text-2xl font-bold text-gray-900">100+</Typography>
-              <Typography className="text-gray-600">Components</Typography>
-            </View>
-          </View>
-          <View className="w-1/2 px-2 mb-4">
-            <View className="bg-gray-100 p-4 rounded-lg items-center">
-              <Typography className="text-2xl font-bold text-gray-900">50+</Typography>
-              <Typography className="text-gray-600">Utilities</Typography>
-            </View>
-          </View>
-        </View>
+      {/* Your other screen content */}
+      <View style={styles.content}>
+        {/* ... */}
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
-export default HomeScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // Adjust your container styles as needed, e.g., padding, backgroundColor
+    backgroundColor: colors.background, // Example background
+  },
+  backButton: {
+    // Positioning for your back button, e.g., absolute positioning for a header
+    position: 'absolute',
+    top: 50, // Adjust based on safe area and desired top padding
+    left: 20, // Adjust desired left padding
+    zIndex: 1, // Ensure it's above other content
+    // The width, height, borderRadius, backgroundColor, alignItems, justifyContent
+    // are now primarily handled by the IconButton component's props ('translucent' variant, 'medium' size)
+    // You only need to add custom overrides here if they differ from the IconButton's defaults.
+    // For example, if 'medium' isn't exactly 40x40 and you need that precise size:
+    width: 40,
+    height: 40,
+    // The borderRadius, background, and centering are built into IconButton!
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // ... other content styles
+  },
+});
+
+export default Home;
