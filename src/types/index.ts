@@ -428,3 +428,82 @@ export interface OTPVerificationRef {
   setError: (error: string) => void;
   setLoading: (loading: boolean) => void;
 }
+
+// Types
+export interface IBaseNotification {
+  id: string;
+  title: string;
+  message: string;
+  timestamp: Date;
+  isRead: boolean;
+  actionRequired: boolean;
+  actionType?: string;
+  priority?: 'low' | 'medium' | 'high';
+}
+
+export interface IFollowNotification extends IBaseNotification {
+  type: 'follow';
+  avatar: string;
+  userId: string;
+  userName: string;
+  userVerified: boolean;
+}
+
+export interface ITransactionNotification extends IBaseNotification {
+  type: 'transaction';
+  avatar: string;
+  amount: number;
+  transactionId: string;
+  transactionType: 'credit' | 'debit';
+}
+
+export interface ISocialNotification extends IBaseNotification {
+  type: 'like' | 'comment';
+  avatar: string;
+  postImage?: string;
+  postTitle?: string;
+  likesCount?: number;
+  commentText?: string;
+}
+
+export interface ISystemNotification extends IBaseNotification {
+  type: 'system' | 'security' | 'update' | 'promotion' | 'achievement';
+  icon: string;
+  discount?: string;
+  validUntil?: string;
+  location?: string;
+  device?: string;
+  achievementName?: string;
+  rewardPoints?: number;
+  version?: string;
+  features?: string[];
+}
+
+export interface IAgentNotification extends IBaseNotification {
+  type: 'agent';
+  avatar: string;
+  agentName: string;
+  distance: string;
+  rating: number;
+}
+
+export type INotification = 
+  | IFollowNotification 
+  | ITransactionNotification 
+  | ISocialNotification 
+  | ISystemNotification 
+  | IAgentNotification;
+
+export interface IFilterOption {
+  key: string;
+  label: string;
+  icon: string;
+  color: string;
+}
+
+export interface INotificationGroup {
+  today: INotification[];
+  yesterday: INotification[];
+  thisWeek: INotification[];
+  older: INotification[];
+}

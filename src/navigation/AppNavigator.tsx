@@ -9,6 +9,7 @@ import React from 'react';
 import { Platform, View } from 'react-native';
 import { Typography } from '../components/common/Typography';
 import MapScreen from '../screens/App/Map/MapScreen';
+import NotificationsScreen from '../screens/App/Notification/NotificationsScreen';
 
 // --------- Type Definitions ---------
 export type RootTabParamList = {
@@ -25,6 +26,7 @@ export type RootTabParamList = {
 
 export type MapStackParamList = {
   MapHome: undefined;
+  Notifications: undefined;
 };
 
 export type FeedStackParamList = {
@@ -92,6 +94,7 @@ const TabIcon: React.FC<TabIconProps> = ({ name, color, focused, label }) => (
 const MapStackNavigator: React.FC = () => (
   <MapStack.Navigator screenOptions={{ headerShown: false }}>
     <MapStack.Screen name="MapHome" component={MapScreen} />
+    <MapStack.Screen name="Notifications" component={NotificationsScreen} />
   </MapStack.Navigator>
 );
 

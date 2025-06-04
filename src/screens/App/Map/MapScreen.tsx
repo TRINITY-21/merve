@@ -26,14 +26,11 @@ import { colors } from '../../../constants/theme/colors';
 import { useLocation } from '../../../hooks/useLocation';
 import { useMapNavigation } from '../../../hooks/useMapNavigation';
 import { useQuickCash } from '../../../hooks/useQuickCash';
+import { MapStackParamList } from '../../../navigation/AppNavigator';
 import useStore from '../../../store/useStore';
 import { IAgent } from '../../../types';
 
-type RootStackParamList = {
-    Map: undefined;
-};
-
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type NavigationProp = NativeStackNavigationProp<MapStackParamList>;
 
 const { width, height } = Dimensions.get('window');
 
@@ -336,8 +333,8 @@ const MapScreen: React.FC = () => {
                 onSearchChange={setSearchQuery}
                 selectedFilter={selectedFilter}
                 onFilterChange={handleFilterChange}
-                onNotificationPress={() => { }}
-                onProfilePress={() => navigation.navigate('Map')}
+                onNotificationPress={() => { navigation.navigate("Notifications") }}
+                onProfilePress={() => navigation.navigate('MapHome')}
                 notificationCount={3}
             />
 

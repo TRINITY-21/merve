@@ -35,7 +35,7 @@ const RootNavigator: React.FC = () => {
     } finally {
       setTimeout(() => {
         setIsLoading(false);
-      }, 1000);
+      }, 100);
     }
   };
 
