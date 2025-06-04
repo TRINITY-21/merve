@@ -9,10 +9,10 @@ import {
   Vibration,
   View
 } from 'react-native';
-import BottomSheet from '../../components/BottomSheet';
-import Button from '../../components/Button';
-import { Typography } from '../../components/Typography';
-import { colors } from '../../constant/theme/colors';
+
+import { BottomSheet, Button } from '../../components/common';
+import { Typography } from '../../components/common/Typography';
+import { colors } from '../../constants/theme/colors';
 import { OTPVerificationProps, OTPVerificationRef } from '../../types';
 
 const OTPVerification = forwardRef<OTPVerificationRef, OTPVerificationProps>(({

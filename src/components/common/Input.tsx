@@ -12,7 +12,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { colors } from '../constant/theme/colors';
+import { colors } from '../../constants/theme/colors';
 import { Typography } from './Typography';
 
 type IconName = keyof typeof MaterialIcons.glyphMap;
@@ -52,7 +52,7 @@ export interface InputProps extends Omit<TextInputProps, 'style'> {
   onSubmitEditing?: () => void;
 }
 
-const Input = forwardRef<TextInput, InputProps>(({
+export const Input = forwardRef<TextInput, InputProps>(({
   label,
   placeholder,
   value = '',
@@ -571,7 +571,3 @@ const Input = forwardRef<TextInput, InputProps>(({
     </View>
   );
 });
-
-Input.displayName = 'Input';
-
-export default Input;

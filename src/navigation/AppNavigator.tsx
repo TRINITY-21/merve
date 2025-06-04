@@ -6,8 +6,7 @@ import type { StackScreenProps } from '@react-navigation/stack';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { Platform, View } from 'react-native';
-import { Typography } from '../components/Typography';
-import HomeScreen from '../screens/ HomeScreen';
+import { Typography } from '../components/common/Typography';
 import MapScreen from '../screens/App/Map/MapScreen';
 
 // Type definitions for navigation
@@ -15,6 +14,9 @@ export type RootTabParamList = {
   Map: undefined;
   Feed: undefined;
   Profile: undefined;
+  Agent:undefined;
+  Shop:undefined;
+  
 };
 
 export type MapStackParamList = {
@@ -53,53 +55,43 @@ interface TabIconProps {
 }
 
 const TabIcon: React.FC<TabIconProps> = ({ name, color, focused, label }) => (
-  <View className={`
-    items-center justify-center 
-    py-2 px-0.5 
-    min-h-14 min-w-12 max-w-15 
-    bg-transparent 
-    relative
-    ${focused ? 'bg-transparent' : ''}
-  `}>
-    <View className="
-      w-7 h-7 
-      items-center justify-center 
-      bg-transparent 
-      mb-1
-    ">
-      <MaterialIcons 
-        name={name} 
-        size={22} 
-        color={color}
-      />
+  <View
+    className={`
+      items-center justify-center
+      py-2 px-0.5
+      min-h-14 min-w-12 max-w-15
+      bg-transparent
+      relative
+    `}
+  >
+    <View className="w-6 h-6 items-center justify-center bg-transparent mb-0.5">
+      <MaterialIcons name={name} size={20} color={color} />
     </View>
-    
-    <Typography
-      variant={focused ? 'bold' : 'medium'}
-      className={`
-        text-[10px] 
-        text-center 
-        mt-0.5 
-        max-w-12
-        ${focused ? 'tracking-wide' : 'tracking-normal'}
-      `}
-      style={{ color }}
-      numberOfLines={1}
-      ellipsizeMode="tail"
-    >
-      {label}
-    </Typography>
-    
+
     {focused && (
-      <View className="
-        absolute bottom-0 
-        w-8 h-0.5 
-        bg-yellow-400 
-        rounded-sm
-      " />
+      <Typography
+        variant="medium"
+        className={`
+          text-[9px]
+          text-center
+          mt-0.5
+          max-w-12
+          tracking-wide
+        `}
+        style={{ color }}
+        numberOfLines={1}
+        ellipsizeMode="tail"
+      >
+        {label}
+      </Typography>
+    )} 
+
+    {focused && (
+      <View className="absolute bottom-0 w-6 h-0.5 bg-yellow-400 rounded-sm" />
     )}
   </View>
 );
+
 
 // Stack Navigators (you can expand these as needed)
 const MapStackNavigator: React.FC = () => (
@@ -108,17 +100,6 @@ const MapStackNavigator: React.FC = () => (
   </MapStack.Navigator>
 );
 
-const FeedStackNavigator: React.FC = () => (
-  <FeedStack.Navigator screenOptions={{ headerShown: false }}>
-    <FeedStack.Screen name="FeedHome" component={HomeScreen} />
-  </FeedStack.Navigator>
-);
-
-const ProfileStackNavigator: React.FC = () => (
-  <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
-    <ProfileStack.Screen name="ProfileHome" component={HomeScreen} />
-  </ProfileStack.Navigator>
-);
 
 const AppNavigator: React.FC = () => {
   return (
@@ -158,27 +139,45 @@ const AppNavigator: React.FC = () => {
       />
       
       {/* Add more tabs as needed */}
-      {/* 
+      
       <Tab.Screen
         name="Feed"
-        component={FeedStackNavigator}
+        component={MapScreen}
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="home" color={color} focused={focused} label="Feed" />
+            <TabIcon name="shop" color={color} focused={focused} label="Feed" />
           ),
         }}
       />
       
       <Tab.Screen
         name="Profile"
-        component={ProfileStackNavigator}
+        component={MapScreen}
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="person" color={color} focused={focused} label="Profile" />
+            <TabIcon name="find-in-page" color={color} focused={focused} label="Profile" />
           ),
         }}
       />
-      */}
+        <Tab.Screen
+        name="Shop"
+        component={MapScreen}
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon name="group" color={color} focused={focused} label="Profile" />
+          ),
+        }}
+      />
+            <Tab.Screen
+        name="Agent"
+        component={MapScreen}
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon name="storefront" color={color} focused={focused} label="Profile" />
+          ),
+        }}
+      />
+     
     </Tab.Navigator>
   );
 };

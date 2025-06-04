@@ -12,7 +12,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { colors } from '../constant/theme/colors';
+import { colors } from '../../constants/theme/colors';
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
@@ -64,7 +64,7 @@ const sizes = {
   },
 };
 
-const Button: React.FC<ButtonProps> = ({
+export const Button: React.FC<ButtonProps> = ({
   title,
   subtitle,
   icon,
@@ -302,5 +302,3 @@ const Button: React.FC<ButtonProps> = ({
     </TouchableOpacity>
   );
 };
-
-export default Button;

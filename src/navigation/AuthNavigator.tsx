@@ -1,6 +1,5 @@
 import { createStackNavigator, StackScreenProps } from '@react-navigation/stack';
 import React from 'react';
-import HomeScreen from '../screens/ HomeScreen';
 import IntroSliderScreen from '../screens/Intro/IntroSliderScreen';
 import LoginScreen from '../screens/Onboarding/LoginScreen';
 import RegisterScreen from '../screens/Onboarding/RegisterScreen';
@@ -69,11 +68,6 @@ const AuthNavigator: React.FC<AuthNavigatorProps> = ({ showIntro }) => {
             <Stack.Screen
                 name="Register"
                 component={RegisterScreen}
-            />
-
-            <Stack.Screen
-                name="Home"
-                component={HomeScreen}
             />
         </Stack.Navigator>
     );

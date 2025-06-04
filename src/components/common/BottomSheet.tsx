@@ -1,28 +1,28 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React, {
-    forwardRef,
-    useEffect,
-    useImperativeHandle,
-    useRef,
-    useState,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
 } from 'react';
 import {
-    Animated,
-    Dimensions,
-    Keyboard,
-    KeyboardAvoidingView,
-    Modal,
-    Platform,
-    StatusBar,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View,
-    ViewStyle,
+  Animated,
+  Dimensions,
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  StatusBar,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors } from '../constant/theme/colors';
-import { Typography } from './Typography';
+import { colors } from '../../constants/theme/colors';
+import { Typography } from '../common/Typography';
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -65,7 +65,7 @@ export interface BottomSheetRef {
   toggle: () => void;
 }
 
-const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
+export const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
   (
     {
       isVisible,
@@ -109,7 +109,7 @@ const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
 
     useImperativeHandle(ref, () => ({
       close: () => onClose(),
-      open: () => {},
+      open: () => { },
       toggle: () => onClose(),
     }));
 
@@ -419,6 +419,3 @@ const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
   }
 );
 
-BottomSheet.displayName = 'BottomSheet';
-
-export default BottomSheet;

@@ -1,4 +1,4 @@
-import { colors } from '../constant/theme/colors';
+import { colors } from '../constants/theme/colors';
 import { IActivitiesData, IAgent, IDashboardData, IIntroSlide, IProduct, IVendorStats } from '../types';
 
 export const dummyAgents: IAgent[] = [

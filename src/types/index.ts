@@ -1,4 +1,4 @@
-import { LocationData } from '../components/LocationPicker';
+import { LocationData } from '../components/common/LocationPicker';
 
 // Base interfaces
 export interface ILocation {

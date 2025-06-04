@@ -12,8 +12,8 @@ import {
     View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Button from '../../components/Button';
-import { colors } from '../../constant/theme/colors';
+import { Button } from '../../components/common';
+import { colors } from '../../constants/theme/colors';
 import { IIntroSlide } from '../../types';
 import { introData } from '../../utils/dummyData';
 

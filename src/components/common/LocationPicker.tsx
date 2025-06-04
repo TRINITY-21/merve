@@ -11,8 +11,8 @@ import {
   View,
   ViewStyle
 } from 'react-native';
-import { GHANA_LOCATIONS } from '../constant/index';
-import { colors } from '../constant/theme/colors';
+import { GHANA_LOCATIONS } from '../../constants';
+import { colors } from '../../constants/theme/colors';
 import { Typography } from './Typography';
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
@@ -41,7 +41,7 @@ export interface LocationPickerProps {
 
 type PickerStep = 'region' | 'town';
 
-const LocationPicker = forwardRef<View, LocationPickerProps>(({
+export const LocationPicker = forwardRef<View, LocationPickerProps>(({
   label = 'Location',
   value,
   onLocationChange,
@@ -596,7 +596,3 @@ const LocationPicker = forwardRef<View, LocationPickerProps>(({
     </View>
   );
 });
-
-LocationPicker.displayName = 'LocationPicker';
-
-export default LocationPicker;

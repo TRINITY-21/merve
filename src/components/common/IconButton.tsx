@@ -1,13 +1,13 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import {
-    ActivityIndicator,
-    StyleProp,
-    TouchableOpacity,
-    TouchableOpacityProps,
-    ViewStyle,
+  ActivityIndicator,
+  StyleProp,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  ViewStyle,
 } from 'react-native';
-import { colors } from '../constant/theme/colors'; // Your provided color palette
+import { colors } from '../../constants/theme/colors'; // Your provided color palette
 
 // Define the shape of the props for the IconButton
 interface IconButtonProps extends TouchableOpacityProps {
@@ -76,7 +76,7 @@ const iconButtonSizes = {
   },
 };
 
-const IconButton: React.FC<IconButtonProps> = ({
+export const IconButton: React.FC<IconButtonProps> = ({
   icon,
   variant = 'ghost', // Default to 'ghost' if no variant is specified
   size = 'medium', // Default size
@@ -184,5 +184,3 @@ const IconButton: React.FC<IconButtonProps> = ({
     </TouchableOpacity>
   );
 };
-
-export default IconButton;

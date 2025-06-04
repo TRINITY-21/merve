@@ -13,11 +13,11 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import LocationPicker, { LocationData } from '../../components/LocationPicker';
-import { Typography } from '../../components/Typography';
-import { colors } from '../../constant/theme/colors';
+
+import { Button, Input } from '../../components/common';
+import { LocationData, LocationPicker } from '../../components/common/LocationPicker';
+import { Typography } from '../../components/common/Typography';
+import { colors } from '../../constants/theme/colors';
 import useStore from '../../store/useStore';
 import { IAuthResult, IFormData, IRegisterData, OTPVerificationRef } from '../../types';
 import OTPVerification from './OTPVerification';

@@ -2,11 +2,11 @@ import { MaterialIcons } from '@expo/vector-icons';
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Platform, TextInput, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
-import BottomSheet, { BottomSheetRef } from '../../components/BottomSheet';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import { Typography } from '../../components/Typography';
-import { colors } from '../../constant/theme/colors';
+
+import { Button, Input } from '../../components/common';
+import { BottomSheet, BottomSheetRef } from '../../components/common/BottomSheet';
+import { Typography } from '../../components/common/Typography';
+import { colors } from '../../constants/theme/colors';
 
 interface ForgotPasswordModalProps {
     isVisible: boolean;

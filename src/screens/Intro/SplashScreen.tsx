@@ -9,8 +9,8 @@ import {
     View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Typography } from '../../components/Typography';
-import { colors } from '../../constant/theme/colors';
+import { Typography } from '../../components/common/Typography';
+import { colors } from '../../constants/theme/colors';
 
 interface ISplashScreenProps {
     onFinish: () => void;

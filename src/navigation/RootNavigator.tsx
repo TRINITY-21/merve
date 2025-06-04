@@ -2,12 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { StatusBar, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-import AppNavigator from './AppNavigator';
 
+import { ErrorBoundary } from '../components/common/ErrorBoundary';
 import SplashScreen from '../screens/Intro/SplashScreen';
 import useStore from '../store/useStore';
+import AppNavigator from './AppNavigator';
+import AuthNavigator from './AuthNavigator';
 
 const Stack = createNativeStackNavigator();
 
@@ -53,7 +54,7 @@ const RootNavigator: React.FC = () => {
   }
 
   // For authenticated users 
-  // if (isAuthenticated) {
+  if (isAuthenticated) {
     return (
       <>
         <StatusBar
@@ -61,31 +62,34 @@ const RootNavigator: React.FC = () => {
           backgroundColor="white"
           translucent={false}
         />
-        <SafeAreaView className="flex-1 bg-gray-50">
+        {/* <SafeAreaView className="flex-1 bg-gray-50"> */}
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen
               name="MainTabs"
               options={{ gestureEnabled: false, headerShown: false }}
             >
-              {() => <AppNavigator />}
+              {() => <ErrorBoundary>
+                <AuthNavigator  showIntro={showIntro} />
+                
+                </ErrorBoundary>}
             </Stack.Screen>
           </Stack.Navigator>
-        </SafeAreaView>
+        {/* </SafeAreaView> */}
       </>
     );
-  // }
+  }
 
   // For auth flow
-  // return (
-  //   <Stack.Navigator screenOptions={{ headerShown: false }}>
-  //     <Stack.Screen
-  //       name="Auth"
-  //       options={{ headerShown: false }}
-  //     >
-  //       {() => <AuthNavigator showIntro={showIntro} />}
-  //     </Stack.Screen>
-  //   </Stack.Navigator>
-  // );
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name="Auth"
+        options={{ headerShown: false }}
+      >
+        {() => <AppNavigator />}
+      </Stack.Screen>
+    </Stack.Navigator>
+  );
 };
 
 export default RootNavigator;
