@@ -10,23 +10,29 @@ import { Platform, View } from 'react-native';
 import { Typography } from '../components/common/Typography';
 import MapScreen from '../screens/App/Map/MapScreen';
 import NotificationsScreen from '../screens/App/Notification/NotificationsScreen';
+import UserProfileScreen from '../screens/App/UserProfile/UserProfileScreen';
 
 // --------- Type Definitions ---------
 export type RootTabParamList = {
   Map: undefined;
   AgentsProfile: undefined;
-  Profile: undefined;
+  UserProfile: undefined;
   Agent: undefined;
   Shop: undefined;
   AllAgents: undefined;
   SearchUsers: undefined;
-
-
 };
 
 export type MapStackParamList = {
   MapHome: undefined;
   Notifications: undefined;
+  Map: undefined;
+  AgentsProfile: undefined;
+  UserProfile: undefined;
+  Agent: undefined;
+  Shop: undefined;
+  AllAgents: undefined;
+  SearchUsers: undefined;
 };
 
 export type FeedStackParamList = {
@@ -95,6 +101,7 @@ const MapStackNavigator: React.FC = () => (
   <MapStack.Navigator screenOptions={{ headerShown: false }}>
     <MapStack.Screen name="MapHome" component={MapScreen} />
     <MapStack.Screen name="Notifications" component={NotificationsScreen} />
+    <MapStack.Screen name="UserProfile" component={UserProfileScreen} />
   </MapStack.Navigator>
 );
 

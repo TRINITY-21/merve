@@ -70,7 +70,6 @@ const RootNavigator: React.FC = () => {
             >
               {() => <ErrorBoundary>
                 <AuthNavigator  showIntro={showIntro} />
-                
                 </ErrorBoundary>}
             </Stack.Screen>
           </Stack.Navigator>

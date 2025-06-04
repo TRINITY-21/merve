@@ -1,5 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -14,12 +15,15 @@ import {
 } from 'react-native';
 import { Header } from '../../../components/common';
 import { colors } from '../../../constants/theme/colors';
+import { MapStackParamList } from '../../../navigation/AppNavigator';
 import { IFilterOption, INotification, INotificationGroup } from '../../../types';
 import { dummyNotifications } from '../../../utils/dummyData';
 
+type NotificationsScreenNavigationProp = StackNavigationProp<MapStackParamList, 'Notifications'>;
+
 
 const NotificationsScreen: React.FC = () => {
-    const navigation = useNavigation();
+    const navigation = useNavigation<NotificationsScreenNavigationProp>();
 
     // State management
     const [notifications, setNotifications] = useState<INotification[]>(dummyNotifications);
@@ -65,28 +69,30 @@ const NotificationsScreen: React.FC = () => {
             }),
         ]).start();
     }, []);
+useEffect(() => {
+    // Filter notifications based on selected filter
+    let filtered = [...notifications];
 
-    useEffect(() => {
-        // Filter notifications
-        let filtered = [...notifications];
+    switch (selectedFilter) {
+        case 'unread':
+            filtered = filtered.filter(notif => !notif.isRead);
+            break;
+        case 'transaction':
+            filtered = filtered.filter(notif => notif.type === 'transaction');
+            break;
+        case 'social':
+            filtered = filtered.filter(notif => ['follow', 'like', 'comment'].includes(notif.type));
+            break;
+        case 'system':
+            filtered = filtered.filter(notif => ['system', 'security', 'update', 'promotion'].includes(notif.type));
+            break;
+        default:
+            // 'all' case - no filtering needed
+            break;
+    }
 
-        switch (selectedFilter) {
-            case 'unread':
-                filtered = filtered.filter(notif => !notif.isRead);
-                break;
-            case 'transaction':
-                filtered = filtered.filter(notif => notif.type === 'transaction');
-                break;
-            case 'social':
-                filtered = filtered.filter(notif => ['follow', 'like', 'comment'].includes(notif.type));
-                break;
-            case 'system':
-                filtered = filtered.filter(notif => ['system', 'security', 'update', 'promotion'].includes(notif.type));
-                break;
-        }
-
-        setFilteredNotifications(filtered);
-    }, [selectedFilter, notifications]);
+    setFilteredNotifications(filtered);
+}, [selectedFilter, notifications]);
 
     const handleRefresh = (): void => {
         setRefreshing(true);
@@ -758,68 +764,93 @@ const NotificationsScreen: React.FC = () => {
         );
     };
 
-    const renderGroupedNotifications = () => {
-        if (!filteredNotifications || filteredNotifications.length === 0) {
-            return (
-                <View className="flex-1 items-center justify-center px-6 py-16">
-                    <LinearGradient
-                        colors={colors.gradient.light}
-                        className="rounded-3xl p-12 items-center w-full"
-                    >
-                        <MaterialIcons name="notifications-none" size={80} color={colors.gray.medium} />
-                        <Text className="text-2xl font-bold text-gray-900 mt-6 mb-2">No notifications</Text>
-                        <Text className="text-base text-gray-500 text-center leading-6">
-                            You're all caught up! New notifications will appear here.
-                        </Text>
-                    </LinearGradient>
-                </View>
-            );
-        }
-
-        const groups = groupNotificationsByTime(filteredNotifications);
-        const sections = [
-            { title: 'Today', data: groups.today || [] },
-            { title: 'Yesterday', data: groups.yesterday || [] },
-            { title: 'This Week', data: groups.thisWeek || [] },
-            { title: 'Older', data: groups.older || [] },
-        ].filter(section => section.data.length > 0);
-
+// Update your renderGroupedNotifications function
+const renderGroupedNotifications = () => {
+    // Check if filteredNotifications is empty
+    if (filteredNotifications.length === 0) {
         return (
-            <FlatList
-                data={sections}
-                renderItem={({ item: section }) => (
-                    <View className="mb-6">
-                        <View className="flex-row items-center justify-between mb-3 px-6">
-                            <Text className="text-lg font-bold text-gray-900">{section.title}</Text>
-                            <View className="bg-accent/10 rounded-full px-3 py-1.5">
-                                <Text className="text-xs text-accent font-bold">{section.data.length}</Text>
-                            </View>
-                        </View>
-                        <View className="px-6">
-                            <FlatList
-                                data={section.data}
-                                renderItem={renderNotificationCard}
-                                keyExtractor={(item) => item.id}
-                                scrollEnabled={false}
-                            />
+            <View className="flex-1 items-center justify-center px-6 py-16">
+                <LinearGradient
+                    colors={colors.gradient.light}
+                    className="rounded-3xl p-12 items-center w-full"
+                >
+                    <MaterialIcons name="notifications-none" size={80} color={colors.gray.medium} />
+                    <Text className="text-2xl font-bold text-gray-900 mt-6 mb-2">No notifications</Text>
+                    <Text className="text-base text-gray-500 text-center leading-6">
+                        {selectedFilter === 'all' 
+                            ? "You're all caught up! New notifications will appear here."
+                            : `No ${selectedFilter} notifications found.`}
+                    </Text>
+                </LinearGradient>
+            </View>
+        );
+    }
+
+    // Group the filtered notifications
+    const groups = groupNotificationsByTime(filteredNotifications);
+    
+    // Create sections only for groups that have data
+    const sections = [
+        { title: 'Today', data: groups.today },
+        { title: 'Yesterday', data: groups.yesterday },
+        { title: 'This Week', data: groups.thisWeek },
+        { title: 'Older', data: groups.older },
+    ].filter(section => section.data.length > 0);
+
+    // If all sections are empty (shouldn't happen but just in case)
+    if (sections.length === 0) {
+        return (
+            <View className="flex-1 items-center justify-center px-6 py-16">
+                <LinearGradient
+                    colors={colors.gradient.light}
+                    className="rounded-3xl p-12 items-center w-full"
+                >
+                    <MaterialIcons name="notifications-none" size={80} color={colors.gray.medium} />
+                    <Text className="text-2xl font-bold text-gray-900 mt-6 mb-2">No notifications</Text>
+                    <Text className="text-base text-gray-500 text-center leading-6">
+                        {selectedFilter === 'all' 
+                            ? "You're all caught up! New notifications will appear here."
+                            : `No ${selectedFilter} notifications found.`}
+                    </Text>
+                </LinearGradient>
+            </View>
+        );
+    }
+
+    return (
+        <FlatList
+            data={sections}
+            renderItem={({ item: section }) => (
+                <View className="mb-6">
+                    <View className="flex-row items-center justify-between mb-3 px-6">
+                        <Text className="text-lg font-bold text-gray-900">{section.title}</Text>
+                        <View className="bg-accent/10 rounded-full px-3 py-1.5">
+                            <Text className="text-xs text-accent font-bold">{section.data.length}</Text>
                         </View>
                     </View>
-                )}
-                keyExtractor={(item) => item.title}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 20 }}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={handleRefresh}
-                        colors={[colors.primary]}
-                        tintColor={colors.primary}
-                    />
-                }
-            />
-        );
-    };
-
+                    <View className="px-6">
+                        {section.data.map((item) => (
+                            <View key={item.id} style={{ marginBottom: 12 }}>
+                                {renderNotificationCard({ item, index: 0 })}
+                            </View>
+                        ))}
+                    </View>
+                </View>
+            )}
+            keyExtractor={(item) => item.title}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 20 }}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={handleRefresh}
+                    colors={[colors.primary]}
+                    tintColor={colors.primary}
+                />
+            }
+        />
+    );
+};
 
     const renderFilters = () => (
         <View className="bg-white mb-3 border-b border-gray-100">

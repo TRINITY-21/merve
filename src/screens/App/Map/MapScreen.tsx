@@ -334,7 +334,7 @@ const MapScreen: React.FC = () => {
                 selectedFilter={selectedFilter}
                 onFilterChange={handleFilterChange}
                 onNotificationPress={() => { navigation.navigate("Notifications") }}
-                onProfilePress={() => navigation.navigate('MapHome')}
+                onProfilePress={() => navigation.navigate('UserProfile')}
                 notificationCount={3}
             />
 
