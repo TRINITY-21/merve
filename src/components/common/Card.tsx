@@ -34,7 +34,7 @@ interface CardProps {
 export const Card: React.FC<CardProps> = ({
   children,
   className,
-  onPress, 
+  onPress,
   elevated = true,
   padding = 16,
   borderRadius = 16,
