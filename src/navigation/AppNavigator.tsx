@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
 import { Platform, View } from 'react-native';
 import { Typography } from '../components/common/Typography';
+import ActivityScreen from '../screens/App/Activity/ActivityScreen';
 import MapScreen from '../screens/App/Map/MapScreen';
 import NotificationsScreen from '../screens/App/Notification/NotificationsScreen';
 import UserAccountInfoScreen from '../screens/App/UserProfile/UserAccountInfoScreen';
@@ -38,6 +39,7 @@ export type MapStackParamList = {
   SearchUsers: undefined;
   UserSettings: undefined;
   UserAccountInfo: undefined;
+  Activity: undefined;
 };
 
 export type FeedStackParamList = {
@@ -135,6 +137,7 @@ const MapStackNavigator: React.FC = () => (
     <MapStack.Screen name="UserProfile" component={UserProfileScreen} />
     <MapStack.Screen name="UserSettings" component={UserSettingsScreen} />
     <MapStack.Screen name="UserAccountInfo" component={UserAccountInfoScreen} />
+    <MapStack.Screen name="Activity" component={ActivityScreen} />
 
   </MapStack.Navigator>
 );

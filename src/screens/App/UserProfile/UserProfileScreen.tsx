@@ -936,7 +936,7 @@ const UserProfileScreen: React.FC = () => {
                 </Text>
 
                 <TouchableOpacity
-                    onPress={() => console.log('Filter pressed')}
+                    onPress={() => navigation.navigate('Activity' as never)}
                     activeOpacity={0.7}
                     style={{
                         padding: 8,
