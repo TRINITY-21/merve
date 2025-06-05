@@ -215,6 +215,12 @@ export const dummyFollowers: IFollower[] = [
 export const dummyFollowing: IFollowing[] = [
   { id: 'g1', name: 'Tech Insider', username: '@techinsider', avatar: 'https://i.pravatar.cc/150?img=7', verified: true, category: 'Accra, Tema', followers: '2.4M' },
   { id: 'g2', name: 'Food Network', username: '@foodnetwork', avatar: 'https://i.pravatar.cc/150?img=8', verified: true, category: 'Kumasi', followers: '1.8M' },
+  { id: 'g3', name: 'Food Network', username: '@foodnetwork', avatar: 'https://i.pravatar.cc/150?img=8', verified: true, category: 'Accra', followers: '30M' },
+  { id: 'g5', name: 'Food Network', username: '@foodnetwork', avatar: 'https://i.pravatar.cc/150?img=8', verified: true, category: 'Sunyani', followers: '1K' },
+  { id: 'g6', name: 'Food Network', username: '@foodnetwork', avatar: 'https://i.pravatar.cc/150?img=8', verified: true, category: 'Volta', followers: '1.8M' },
+  { id: 'g7', name: 'Food Network', username: '@foodnetwork', avatar: 'https://i.pravatar.cc/150?img=8', verified: true, category: 'Takoradi', followers: '1.8M' },
+  { id: 'g8', name: 'Food Network', username: '@foodnetwork', avatar: 'https://i.pravatar.cc/150?img=8', verified: true, category: 'Accra', followers: '1.8M' },
+
 ];
 
 export const dummyActivities: IActivity[] = [
@@ -238,12 +244,54 @@ export const dummyActivities: IActivity[] = [
     description: 'You pinned @GodswayAgents222',
     time: '2:15 PM'
   },
+    { 
+    id: 'a3', 
+    type: 'Saved', 
+    date: '2025-05-22', 
+    amount: '', 
+    icon: 'save', 
+    color: colors.success,
+    description: 'You pinned @GodswayAgents222',
+    time: '2:15 PM'
+  },  { 
+    id: 'a4', 
+    type: 'shop', 
+    date: '2025-05-22', 
+    amount: '', 
+    icon: 'shop', 
+    color: colors.secondary,
+    description: 'You pinned @GodswayAgents222',
+    time: '2:15 PM'
+  },  { 
+    id: 'a5', 
+    type: 'Following', 
+    date: '2025-05-22', 
+    amount: '', 
+    icon: 'group', 
+    color: colors.primary,
+    description: 'You pinned @GodswayAgents222',
+    time: '2:15 PM'
+  },  { 
+    id: 'a6', 
+    type: 'Pin', 
+    date: '2025-05-22', 
+    amount: '', 
+    icon: 'trending-up', 
+    color: colors.success,
+    description: 'You pinned @GodswayAgents222',
+    time: '2:15 PM'
+  },
 ];
 
 export const dummyInvites: IInvite[] = [
   { id: 'inv1', phone: '+233 24 555 0001', name: 'John Doe', status: 'pending', sentDate: '2025-05-25' },
   { id: 'inv2', phone: '+233 24 555 0002', name: 'Jane Smith', status: 'accepted', sentDate: '2025-05-24' },
   { id: 'inv3', phone: '+233 24 555 0003', name: 'Mike Johnson', status: 'declined', sentDate: '2025-05-23' },
+  { id: 'inv4', phone: '+233 24 555 0003', name: 'Kofi Johnson', status: 'declined', sentDate: '2025-05-23' },
+  { id: 'inv5', phone: '+233 24 555 0003', name: 'John Johnson', status: 'declined', sentDate: '2025-05-23' },
+  { id: 'inv6', phone: '+233 24 555 0003', name: 'Mike Johnson', status: 'declined', sentDate: '2025-05-23' },
+  { id: 'inv7', phone: '+233 24 555 0003', name: 'Estel Johnson', status: 'accepted', sentDate: '2025-05-23' },
+
 ];
 
 export const dummyPhotos: IPhoto[] = Array.from({ length: 15 }, (_, i) => ({

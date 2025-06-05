@@ -45,7 +45,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 <View className="flex-row items-center px-1">
                     <TouchableOpacity className="relative mr-4 shadow-2xl" activeOpacity={0.8}>
                         <Image
-                            source={{ uri: user.avatar || 'https://i.pravatar.cc/150?img=39' }}
+                            source={{ uri: user.avatar || 'https://i.pravatar.cc/150?img=9' }}
                             className="w-20 h-20 rounded-full border-2 border-white"
                         />
                         <View className="absolute bottom-2 right-2 w-4 h-4 rounded-full bg-green-500 border-2 border-white shadow-lg" />

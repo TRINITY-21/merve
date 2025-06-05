@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import Toast from 'react-native-toast-message';
+import { Typography } from '../../../components/common';
 import { ActivityCard } from '../../../components/userProfile/ActivityCard';
 import { BookingCard } from '../../../components/userProfile/BookingCard';
 import { FilterButtons } from '../../../components/userProfile/FilterButtons';
@@ -31,7 +32,7 @@ import { ProfessionalStatsCard } from '../../../components/userProfile/StatsCard
 import { colors } from '../../../constants/theme/colors';
 import useStore from '../../../store/useStore';
 import { IRoute, IUser } from '../../../types/userProfileTypes';
-import { dummyActivities, dummyFollowers, dummyFollowing, dummyInvites, dummyMarketplaceData, dummyPhotos, dummyRecentBookings } from '../../../utils/userProfileDummyData';
+import { dummyActivities, dummyFollowers, dummyFollowing, dummyInvites, dummyMarketplaceData, dummyRecentBookings } from '../../../utils/userProfileDummyData';
 
 // Get screen dimensions
 const { width: screenWidth } = Dimensions.get('window');
@@ -57,17 +58,16 @@ const UserProfileScreen: React.FC = () => {
     const [refreshing, setRefreshing] = useState<boolean>(false);
 
     // Tab routes
-    const [routes] = useState<IRoute[]>([
+    const [routes] = useState<IRoute[]>([ 
         { key: 'profileInfo', title: 'Profile' },
-        { key: 'bookings', title: 'Bookings' },
-        { key: 'photos', title: 'Gallery' },
+        { key: 'bookings', title: 'Bookings' }, 
         { key: 'followers', title: 'Followers' },
-        { key: 'following', title: 'Pinned Agents' },
+        { key: 'following', title: 'Pinned Agents' }, 
         { key: 'marketplace', title: 'Marketplace' },
-        { key: 'invites', title: 'Invites' },
-        { key: 'activity', title: 'Activity' },
+        { key: 'invites', title: 'Invites' }, 
+        { key: 'activity', title: 'Activity' }, 
     ]);
-
+ 
     // Animated values
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const slideAnim = useRef(new Animated.Value(50)).current;
@@ -203,69 +203,129 @@ const UserProfileScreen: React.FC = () => {
     };
 
     // Marketplace Tab using reusable components
-    const renderMarketplace = () => (
-        <ScrollView
-            contentContainerStyle={{ padding: 14, paddingBottom: 100 }}
-            showsVerticalScrollIndicator={false}
-        >
-            {/* Monthly Overview */}
-            <View className="mb-6">
-                <Text className="text-xl font-extrabold text-gray-900 tracking-wide mb-4">This Month's Activity</Text>
-                <View className="mb-4">
-                    <LinearGradient colors={colors.gradient.light} className="rounded-2xl p-5 shadow-lg">
-                        <View className="flex-row flex-wrap justify-between mb-5">
-                            <View className="w-[48%] items-center mb-4">
-                                <MaterialIcons name="visibility" size={24} color={colors.primary} />
-                                <Text className="text-2xl font-black text-gray-900 mt-2 mb-1 tracking-wide">
-                                    {dummyMarketplaceData.monthlyStats.productsViewed}
-                                </Text>
-                                <Text className="text-xs text-gray-600 font-semibold text-center tracking-wide">Products Viewed</Text>
-                            </View>
-                            <View className="w-[48%] items-center mb-4">
-                                <MaterialIcons name="question-answer" size={24} color={colors.accent} />
-                                <Text className="text-2xl font-black text-gray-900 mt-2 mb-1 tracking-wide">
-                                    {dummyMarketplaceData.monthlyStats.inquiriesMade}
-                                </Text>
-                                <Text className="text-xs text-gray-600 font-semibold text-center tracking-wide">Inquiries Made</Text>
-                            </View>
-                            <View className="w-[48%] items-center mb-4">
-                                <TouchableOpacity onPress={() => navigation.navigate('FavoritesScreen' as never)}>
-                                    <MaterialIcons name="bookmark" size={24} color={colors.error} />
-                                    <Text className="text-2xl font-black text-gray-900 mt-2 mb-1 tracking-wide">
-                                        {dummyMarketplaceData.monthlyStats.favoriteProducts}
-                                    </Text>
-                                    <Text className="text-xs text-gray-600 font-semibold text-center tracking-wide">Saved</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View className="w-[48%] items-center mb-4">
-                                <MaterialIcons name="store" size={24} color={colors.success} />
-                                <Text className="text-2xl font-black text-gray-900 mt-2 mb-1 tracking-wide">
-                                    {dummyMarketplaceData.monthlyStats.agentsContacted}
-                                </Text>
-                                <Text className="text-xs text-gray-600 font-semibold text-center tracking-wide">Agents Contacted</Text>
-                            </View>
-                        </View>
-                    </LinearGradient>
-                </View>
-            </View>
+const renderMarketplace = () => (
+  <ScrollView
+    contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 18, paddingBottom: 120 }}
+    showsVerticalScrollIndicator={false}
+  >
+    {/* Monthly Overview */}
+    <View style={{ marginBottom: 32 }}>
+      <Text style={{
+        fontSize: 20,
+        fontWeight: '800',
+        color: colors.text.primary,
+        letterSpacing: 0.3,
+        marginBottom: 16,
+      }}>
+        This Month's Activity
+      </Text>
 
-            {/* Recently Viewed Products using ProductCard */}
-            <View className="mb-6">
-                <Text className="text-xl font-extrabold text-gray-900 tracking-wide mb-4">Recently Viewed</Text>
-                <View className="gap-3">
-                    {dummyMarketplaceData.recentlyViewed.map((product, index) => (
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                            fadeAnim={fadeAnim}
-                            scaleAnim={scaleAnim}
-                        //   onPress={() => navigation.navigate('ProductDetailsScreen' as never, { product } as never)}
-                        />
-                    ))}
-                </View>
-            </View>
-        </ScrollView>
-    );
+      <LinearGradient
+        colors={colors.gradient.light}
+        style={{
+          borderRadius: 20,
+          padding: 20,
+          shadowColor: '#000',
+          shadowOpacity: 0.1,
+          shadowOffset: { width: 0, height: 6 },
+          shadowRadius: 10,
+          elevation: 4,
+        }}
+      >
+        <View style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+        }}>
+          {[
+            {
+              icon: 'visibility',
+              color: colors.primary,
+              label: 'Products Viewed',
+              value: dummyMarketplaceData.monthlyStats.productsViewed,
+            },
+            {
+              icon: 'question-answer',
+              color: colors.accent,
+              label: 'Inquiries Made',
+              value: dummyMarketplaceData.monthlyStats.inquiriesMade,
+            },
+            {
+              icon: 'bookmark',
+              color: colors.error,
+              label: 'Saved',
+              value: dummyMarketplaceData.monthlyStats.favoriteProducts,
+              onPress: () => navigation.navigate('FavoritesScreen' as never),
+            },
+            {
+              icon: 'store',
+              color: colors.success,
+              label: 'Agents Contacted',
+              value: dummyMarketplaceData.monthlyStats.agentsContacted,
+            },
+          ].map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={item.onPress}
+              activeOpacity={item.onPress ? 0.7 : 1}
+              style={{
+                width: '48%',
+                alignItems: 'center',
+                marginBottom: 20,
+              }}
+            >
+              <MaterialIcons name={item.icon as any} size={24} color={item.color} />
+              <Text style={{
+                fontSize: 22,
+                fontWeight: '900',
+                color: colors.text.primary,
+                marginTop: 8,
+                marginBottom: 4,
+                letterSpacing: 0.5,
+              }}>
+                {item.value}
+              </Text>
+              <Text style={{
+                fontSize: 12,
+                color: colors.text.secondary,
+                fontWeight: '600',
+                textAlign: 'center',
+                letterSpacing: 0.3,
+              }}>
+                {item.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </LinearGradient>
+    </View>
+
+    {/* Recently Viewed */}
+    <View style={{ marginBottom: 40 }}>
+      <Typography style={{
+        fontSize: 20,
+        // fontWeight: '800',
+        // color: colors.text.primary,
+        letterSpacing: 0.3,
+        marginBottom: 16,
+      }}>
+        Recently Viewed
+      </Typography>
+      <View style={{ gap: 12 }}>
+        {dummyMarketplaceData.recentlyViewed.map((product, index) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            fadeAnim={fadeAnim}
+            scaleAnim={scaleAnim}
+            // onPress={() => navigation.navigate('ProductDetailsScreen' as never, { product } as never)}
+          />
+        ))}
+      </View>
+    </View>
+  </ScrollView>
+);
+
 
     // Profile Info Tab using reusable components
     const renderProfileInfo = () => (
@@ -358,15 +418,6 @@ const UserProfileScreen: React.FC = () => {
                 </TouchableOpacity>
             </View>
 
-            {/* <StatsCard
-                title="This Month"
-                stats={[
-                    { label: 'Total Bookings', value: '8' },
-                    { label: 'Completed', value: '6', color: colors.success },
-                    { label: 'Pending', value: '2', color: colors.warning },
-                ]}
-            /> */}
-
 
             <ProfessionalStatsCard
   title="Monthly Overview"
@@ -445,64 +496,6 @@ const UserProfileScreen: React.FC = () => {
         </ScrollView>
     );
 
-    // Photos Tab using FilterButtons
-    const renderPhotos = () => (
-        <ScrollView
-            contentContainerStyle={{ padding: 14, paddingBottom: 100 }}
-            showsVerticalScrollIndicator={false}
-        >
-            <View className="flex-row justify-between items-center mb-5 px-1">
-                <Text className="text-xl font-extrabold text-gray-900 tracking-wide">Photo Gallery</Text>
-                <GradientButton
-                    title="Upload"
-                    onPress={() => console.log('Upload pressed')}
-                    icon="add-a-photo"
-                    size="small"
-                /> 
-            </View>
-
-            <FilterButtons
-                filters={['All', 'Nature', 'Urban', 'Portrait', 'Food', 'Travel']}
-                selectedFilter={selectedFilter}
-                onFilterChange={setSelectedFilter}
-            />
-
-            <View className="flex-row flex-wrap gap-3">
-                {dummyPhotos
-                    .filter(photo => selectedFilter === 'All' || photo.category === selectedFilter)
-                    .map((photo, index) => (
-                        <Animated.View
-                            key={photo.id}
-                            style={{
-                                opacity: fadeAnim,
-                                transform: [{ scale: scaleAnim }],
-                            }}
-                            className={`rounded-2xl overflow-hidden relative shadow-md mb-3 ${index % 7 === 0 || index % 7 === 4 ? 'w-full h-50' : 'w-[48%] h-35'
-                                }`}
-                        >
-                            <TouchableOpacity activeOpacity={0.8}>
-                                <Image source={{ uri: photo.uri }} className="w-full h-full" style={{ resizeMode: 'cover' }} />
-                                <LinearGradient
-                                    colors={['transparent', 'rgba(0,0,0,0.8)']}
-                                    className="absolute bottom-0 left-0 right-0 h-[65%] justify-end"
-                                >
-                                    <View className="flex-row justify-between items-end p-4">
-                                        <View className="flex-1">
-                                            <Text className="text-white text-sm font-extrabold mb-1 tracking-wide">{photo.title}</Text>
-                                            <Text className="text-white/90 text-[11px] font-semibold tracking-wide">{photo.category}</Text>
-                                        </View>
-                                        <View className="flex-row items-center gap-1">
-                                            <MaterialIcons name="favorite" size={14} color={colors.white} />
-                                            <Text className="text-white text-xs font-bold">{photo.likes}</Text>
-                                        </View>
-                                    </View>
-                                </LinearGradient>
-                            </TouchableOpacity>
-                        </Animated.View>
-                    ))}
-            </View>
-        </ScrollView>
-    );
 
     // Followers Tab using FollowerCard
 // ================================
@@ -739,13 +732,19 @@ const renderFollowers = () => {
             contentContainerStyle={{ padding: 14, paddingBottom: 100 }}
             showsVerticalScrollIndicator={false}
         >
-            <View className="flex-row justify-between items-center mb-5 px-1">
-                <Text className="text-xl font-extrabold text-gray-900 tracking-wide">Pinned Agents</Text>
-                <GradientButton
-                    title="View Agents"
-                    onPress={() => navigation.navigate('ViewAllAgentsScreen' as never)}
-                    size="small"
-                />
+
+
+                <View className="flex-row justify-between items-center mb-4 px-1">
+                <Text className="text-xl font-extrabold text-gray-900 tracking-wide">Recent Bookings</Text>
+              
+                <TouchableOpacity className="rounded-2xl items-center justify-center"
+                 activeOpacity={0.7}
+                 onPress={() => navigation.navigate('ViewAllBookingsScreen' as never)}
+                 >
+
+                <Text className="text-md font-normal text-secondary">View All</Text>
+
+                </TouchableOpacity>
             </View>
 
             <FilterButtons
@@ -803,84 +802,238 @@ const renderFollowers = () => {
     );
 
     // Invites Tab
-    const renderInvites = () => (
-        <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }} className="px-4">
-            <View className="flex-row justify-between items-center py-2 mb-3 pt-5">
-                <Text className="text-lg font-extrabold text-gray-900 tracking-wide pr-3">Sent Invites</Text>
-                <GradientButton
-                    title="View Invites"
-                    onPress={() => navigation.navigate('InvitationsScreen' as never)}
-                    icon="send"
-                    size="small"
-                />
-            </View>
-            <View className="gap-0">
-                {dummyInvites.map((invite) => (
-                    <View key={invite.id} className="flex-row justify-between items-center p-4 border-b border-gray-100">
-                        <View className="flex-1">
-                            <Text className="text-base font-bold text-gray-900 mb-1 tracking-wide">{invite.name}</Text>
-                            <Text className="text-sm text-gray-600 mb-1 font-medium">{invite.phone}</Text>
-                            <Text className="text-xs text-gray-600 font-medium">Sent: {invite.sentDate}</Text>
-                        </View>
-                        <View className="px-3 py-2 rounded-2xl" style={{ backgroundColor: getStatusColor(invite.status) + '20' }}>
-                            <Text className="text-xs font-extrabold tracking-wide" style={{ color: getStatusColor(invite.status) }}>
-                                {invite.status.charAt(0).toUpperCase() + invite.status.slice(1)}
-                            </Text>
-                        </View>
-                    </View>
-                ))}
-            </View>
-        </Animated.View>
-    );
+const renderInvites = () => (
+  <ScrollView
+    showsVerticalScrollIndicator={false}
+    contentContainerStyle={{
+      paddingHorizontal: 16,
+      paddingBottom: 100, // enough for safe area or bottom spacing
+    }}
+  >
+    <Animated.View
+      style={{
+        opacity: fadeAnim,
+        transform: [{ translateY: slideAnim }],
+      }}
+    >
+      {/* Header */}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingTop: 20,
+          paddingBottom: 12,
+          marginBottom: 16,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: '800',
+            color: colors.text.primary,
+            letterSpacing: 0.5,
+          }}
+        >
+          Sent Invites
+        </Text>
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate('InvitationsScreen' as never)}
+          activeOpacity={0.7}
+          style={{
+            padding: 8,
+            borderRadius: 999,
+            backgroundColor: colors.gray.light,
+          }}
+        >
+          <MaterialIcons name="send" size={20} color={colors.primary} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Invite List */}
+      {dummyInvites.map((invite) => (
+        <View
+          key={invite.id}
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingVertical: 14,
+            paddingHorizontal: 16,
+            borderBottomWidth: 1,
+            borderBottomColor: colors.gray.light,
+            backgroundColor: colors.background,
+            borderRadius: 12,
+            marginBottom: 8,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.04,
+            shadowRadius: 2,
+            elevation: 1,
+          }}
+        >
+          {/* Info */}
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: '700',
+                color: colors.text.primary,
+                marginBottom: 2,
+                letterSpacing: 0.3,
+              }}
+            >
+              {invite.name}
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                color: colors.text.secondary,
+                marginBottom: 2,
+                fontWeight: '500',
+              }}
+            >
+              {invite.phone}
+            </Text>
+            <Text
+              style={{
+                fontSize: 12,
+                color: colors.text.secondary,
+                fontWeight: '500',
+              }}
+            >
+              Sent: {invite.sentDate}
+            </Text>
+          </View>
+
+          {/* Status Pill */}
+          <View
+            style={{
+              paddingHorizontal: 12,
+              paddingVertical: 6,
+              borderRadius: 999,
+              backgroundColor: getStatusColor(invite.status) + '22',
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 12,
+                fontWeight: '800',
+                letterSpacing: 0.4,
+                color: getStatusColor(invite.status),
+              }}
+            >
+              {invite.status.charAt(0).toUpperCase() + invite.status.slice(1)}
+            </Text>
+          </View>
+        </View>
+      ))}
+    </Animated.View>
+  </ScrollView>
+);
 
     // Activity Tab using ActivityCard
-    const renderActivity = () => (
-        <ScrollView
-            contentContainerStyle={{ padding: 14, paddingBottom: 100 }}
-            showsVerticalScrollIndicator={false}
-        >
-            <View className="flex-row justify-between items-center mb-5 px-1">
-                <Text className="text-xl font-extrabold text-gray-900 tracking-wide">Recent Activity</Text>
-                <GradientButton
-                    title="Filter"
-                    onPress={() => console.log('Filter pressed')}
-                    icon="tune"
-                    size="small"
-                />
-            </View>
+const renderActivity = () => (
+  <ScrollView
+    contentContainerStyle={{
+      paddingHorizontal: 16,
+      paddingTop: 16,
+      paddingBottom: 100,
+    }}
+    showsVerticalScrollIndicator={false}
+  >
+    {/* Header */}
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 18,
+          fontWeight: '800',
+          color: colors.text.primary,
+          letterSpacing: 0.5,
+        }}
+      >
+        Recent Activity
+      </Text>
 
-            {/* <StatsCard
-                title="This Week"
-                stats={[
-                    { label: 'Activities', value: '12' },
-                    { label: 'Followers', value: '18', color: colors.success },
-                    { label: 'Bookings', value: '5', color: colors.error },
-                ]}
-            /> */}
+      <TouchableOpacity
+        onPress={() => console.log('Filter pressed')}
+        activeOpacity={0.7}
+        style={{
+          padding: 8,
+          borderRadius: 999,
+          backgroundColor: colors.gray.light,
+        }}
+      >
+        <MaterialIcons name="tune" size={20} color={colors.primary} />
+      </TouchableOpacity>
+    </View>
+                <ProfessionalStatsCard
+  title="Monthly Overview"
+  subtitle="December 2024" 
+  stats={[
+    { 
+      label: "Activities", 
+      value: "198", 
+      icon: "book",
+      color: "#10b981",
+      trend: "up",
+    },
+    { 
+      label: "Followers", 
+      value: "89", 
+      icon: "done-all",
+      color: colors.success,
+      trend: "up",
+    },
+     { 
+      label: "Bookings", 
+      value: "8", 
+      icon: "pending-actions",
+      color: "#3b82f6",
+      trend: "up",
+    },
+         { 
+      label: "Invites", 
+      value: "34", 
+      icon: "cancel",
+      color: colors.error,
+      trend: "up",
+    }
 
+  ]}
+  onPress={() => console.log('View details')}
+/>
 
+    {/* Activity List */}
+    <View style={{ position: 'relative' }}>
+      {dummyActivities.map((activity, index) => (
+        <ActivityCard
+          key={activity.id}
+          activity={activity}
+          fadeAnim={fadeAnim}
+          slideAnim={slideAnim}
+          index={index}
+          isLast={index === dummyActivities.length - 1}
+          onPress={() => console.log('Activity pressed:', activity.id)}
+        />
+      ))}
+    </View>
+  </ScrollView>
+);
 
-            <View className="relative">
-                {dummyActivities.map((activity, index) => (
-                    <ActivityCard
-                        key={activity.id}
-                        activity={activity}
-                        fadeAnim={fadeAnim}
-                        slideAnim={slideAnim}
-                        index={index}
-                        isLast={index === dummyActivities.length - 1}
-                        onPress={() => console.log('Activity pressed:', activity.id)}
-                    />
-                ))}
-            </View>
-        </ScrollView>
-    );
 
     const renderScene = SceneMap({ 
         profileInfo: renderProfileInfo,
         bookings: renderBookings,
         marketplace: renderMarketplace,
-        photos: renderPhotos,
         followers: renderFollowers,
         following: renderFollowing,
         invites: renderInvites,
@@ -928,7 +1081,7 @@ const renderFollowers = () => {
                 <ProfileHeader
                     user={{
                         name: currentUser?.name || 'Alex Johnson',
-                        avatar: 'https://i.pravatar.cc/150?img=91'
+                        avatar: currentUser?.avatar || 'https://i.pravatar.cc/150?img=9'
                     }}
                     onBack={() => navigation.goBack()}
                     onSettings={() => navigation.navigate('UserSettingsScreen' as never)}

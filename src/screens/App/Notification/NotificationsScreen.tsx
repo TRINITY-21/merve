@@ -13,7 +13,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import { Header } from '../../../components/common';
+import { Header, Typography } from '../../../components/common';
 import { colors } from '../../../constants/theme/colors';
 import { MapStackParamList } from '../../../navigation/AppNavigator';
 import { IFilterOption, INotification, INotificationGroup } from '../../../types';
@@ -69,6 +69,7 @@ const NotificationsScreen: React.FC = () => {
             }),
         ]).start();
     }, []);
+
 useEffect(() => {
     // Filter notifications based on selected filter
     let filtered = [...notifications];
@@ -852,93 +853,114 @@ const renderGroupedNotifications = () => {
     );
 };
 
-    const renderFilters = () => (
-        <View className="bg-white mb-3 border-b border-gray-100">
-            <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                className="py-4"
-                contentContainerStyle={{
-                    paddingHorizontal: 16,
-                    paddingVertical: 0,
-                    gap: 10
-                }}
-            >
-                <View className="flex-row" style={{ gap: 10 }}>
-                    {filterOptions.map((filter) => (
-                        <TouchableOpacity
-                            key={filter.key}
-                            className={`
-                            rounded-xl border transition-all duration-200
-                            ${selectedFilter === filter.key
-                                    ? 'border-primary bg-primary shadow-sm'
-                                    : 'border-gray-200 bg-white hover:border-gray-300'
-                                }
-                        `}
-                            onPress={() => setSelectedFilter(filter.key)}
-                            activeOpacity={0.8}
+const renderFilters = () => (
+    <View className="bg-white mb-3 border-b border-gray-100">
+        <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className="py-4"
+            contentContainerStyle={{
+                paddingHorizontal: 16,
+                alignItems: 'center',
+                paddingVertical: 0,
+            }}
+            style={{
+                flexGrow: 0,
+            }}
+        >
+            {filterOptions.map((filter, index) => (
+                <TouchableOpacity
+                    key={filter.key}
+                    style={[
+                        {
+                            paddingHorizontal: 14,
+                            paddingVertical: 8,
+                            borderRadius: 16,
+                            marginRight: 8,
+                            marginLeft: index === 0 ? 0 : 0,
+                            minHeight: 36,
+                            height: 32,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderWidth: 1,
+                            flexDirection: 'row',
+                            // Solid backgrounds like MapHeader
+                            backgroundColor: selectedFilter === filter.key 
+                                ? colors.primary 
+                                : '#FFFFFF',
+                            borderColor: selectedFilter === filter.key 
+                                ? colors.primary 
+                                : 'rgba(0, 0, 0, 0.08)',
+                            // Enhanced shadows
+                            shadowColor: '#000',
+                            shadowOffset: {
+                                width: 0,
+                                height: selectedFilter === filter.key ? 6 : 4,
+                            },
+                            shadowOpacity: selectedFilter === filter.key ? 0.25 : 0.15,
+                            shadowRadius: selectedFilter === filter.key ? 12 : 8,
+                            elevation: selectedFilter === filter.key ? 12 : 6,
+                        },
+                        // Add glow effect for selected state
+                        selectedFilter === filter.key && {
+                            shadowColor: colors.primary,
+                            shadowOpacity: 0.3,
+                        }
+                    ]}
+                    onPress={() => setSelectedFilter(filter.key)}
+                    activeOpacity={0.8}
+                >
+                    <View className="flex-row items-center justify-center" style={{ gap: 6 }}>
+                        <MaterialIcons
+                            name={filter.icon as any}
+                            size={16}
+                            color={selectedFilter === filter.key ? colors.white : colors.text.secondary}
+                        />
+                        <Typography
                             style={{
-                                minHeight: 0,
-                                paddingHorizontal: 14,
-                                paddingVertical: 5,
-                                shadowColor: selectedFilter === filter.key ? colors.primary : 'transparent',
-                                shadowOffset: { width: 0, height: 2 },
-                                shadowOpacity: selectedFilter === filter.key ? 0.1 : 0,
-                                shadowRadius: 4,
-                                elevation: selectedFilter === filter.key ? 2 : 0,
+                                color: selectedFilter === filter.key ? colors.white : colors.secondary,
+                                fontSize: 14,
+                                // fontWeight: '700',
+                                letterSpacing: 0.2,
+                                lineHeight: 16,
+                                textAlign: 'center',
                             }}
+                            numberOfLines={1}
                         >
-                            <View className="flex-row items-center justify-center" style={{ gap: 8 }}>
-                                <MaterialIcons
-                                    name={filter.icon as any}
-                                    size={18}
-                                    color={selectedFilter === filter.key ? colors.white : colors.text.secondary}
-                                    style={{ marginTop: 1 }}
-                                />
-                                <Text
-                                    className={`
-                                    text-sm font-medium leading-none
+                            {filter.label}
+                        </Typography>
+                        {filter.key === 'unread' && (
+                            <View
+                                className={`
+                                    rounded-full min-w-[20px] h-5 px-1.5 
+                                    items-center justify-center
                                     ${selectedFilter === filter.key
-                                            ? 'text-white'
-                                            : 'text-gray-700'
-                                        }
+                                        ? 'bg-white'
+                                        : 'bg-red-500'
+                                    }
                                 `}
-                                    numberOfLines={1}
+                                style={{ marginLeft: 2 }} 
+                            > 
+                                <Typography
+                                size={10}
+                                    style={{
+                                        color: selectedFilter === filter.key ? colors.primary : colors.white,
+                                        fontSize: 11,
+                                        // fontWeight: 'bold',
+                                        lineHeight: 16,
+                                    }}
                                 >
-                                    {filter.label}
-                                </Text>
-                                {filter.key === 'unread' && (
-                                    <View
-                                        className={`
-                                        rounded-full min-w-[20px] h-5 px-1.5 
-                                        items-center justify-center
-                                        ${selectedFilter === filter.key
-                                                ? 'bg-white'
-                                                : 'bg-red-500'
-                                            }
-                                    `}
-                                        style={{ marginLeft: 4 }}
-                                    >
-                                        <Text
-                                            className={`
-                                            text-xs font-bold leading-none
-                                            ${selectedFilter === filter.key
-                                                    ? 'text-primary'
-                                                    : 'text-white'
-                                                }
-                                        `}
-                                        >
-                                            {notifications.filter(n => !n.isRead).length}
-                                        </Text>
-                                    </View>
-                                )}
+                                    {notifications.filter(n => !n.isRead).length}
+                                </Typography>
                             </View>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            </ScrollView>
-        </View>
-    );
+                        )}
+                    </View>
+                </TouchableOpacity>
+            ))}
+        </ScrollView>
+    </View>
+);
+    
     const renderHeader = () => (
         <Animated.View
             style={{ transform: [{ scale: headerScaleAnim }] }}
@@ -971,7 +993,7 @@ const renderGroupedNotifications = () => {
                                     color: colors.secondary
                                 }
                             ]
-                            : [
+                            : [ 
                                 {
                                     name: 'done-all',
                                     onPress: markAllAsRead,

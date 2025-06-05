@@ -16,9 +16,10 @@ interface EmergencyButtonProps {
   quickCash: {
     show: (event?: GestureResponderEvent) => void;
   };
+  setShowUrgentSheet: (value: boolean) => void;
 }
 
-const EmergencyButton: React.FC<EmergencyButtonProps> = ({ quickCash }) => {
+const EmergencyButton: React.FC<EmergencyButtonProps> = ({ quickCash,setShowUrgentSheet }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const opacityAnim = useRef(new Animated.Value(1)).current;
 
@@ -55,7 +56,7 @@ const EmergencyButton: React.FC<EmergencyButtonProps> = ({ quickCash }) => {
 
   return (
     <TouchableOpacity
-      onPress={quickCash.show}
+      onPress={() => {quickCash.show; setShowUrgentSheet(true);}}
       activeOpacity={0.85}
       className={`absolute left-1.5 z-0 ${Platform.OS === 'ios' ? 'bottom-24' : 'bottom-20'} pb-2`}
     >

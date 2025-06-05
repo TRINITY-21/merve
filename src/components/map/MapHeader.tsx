@@ -203,23 +203,3 @@ export const MapHeader: React.FC<MapHeaderProps> = ({
     </View>
   );
 };
-
-// ===============================================
-// USAGE EXAMPLE:
-// ===============================================
-/*
-<MapHeader
-  searchQuery={searchQuery}
-  onSearchChange={setSearchQuery}
-  onSearchSubmit={handleSearch}
-  selectedFilter={selectedFilter}
-  onFilterChange={setSelectedFilter}
-  onProfilePress={() => navigation.navigate('Profile')}
-  searchPlaceholder="Search locations near you"
-  
-  // Profile props for Google Maps style
-  userAvatarUrl="https://example.com/user-avatar.jpg"
-  userName="John Doe"
-  showAvatar={true}
-/>
-*/

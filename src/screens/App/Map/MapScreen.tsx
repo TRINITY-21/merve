@@ -14,7 +14,7 @@ import {
     View
 } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
-import { Typography } from '../../../components/common';
+import { BottomSheet, Typography } from '../../../components/common';
 import EmergencyButton from '../../../components/common/EmergencyButton';
 import ListToggleButton from '../../../components/common/ListToggleButton';
 import { AgentListItem, MapHeader, NavigationOverlay, SelectedAgentCard, ZoomControls } from '../../../components/map';
@@ -47,6 +47,7 @@ const MapScreen: React.FC = () => {
     const [zoomLevel, setZoomLevel] = useState<number>(0.0922);
     const [showAgentNotification, setShowAgentNotification] = useState<boolean>(false);
     const [requestData, setRequestData] = useState<any>(null);
+    const [showUrgentSheet, setShowUrgentSheet] = useState<boolean>(false);
 
     const mapRef = useRef<MapView>(null);
     const slideAnim = useRef(new RNAnimated.Value(height)).current;
@@ -138,6 +139,7 @@ const MapScreen: React.FC = () => {
 
     const handleQuickCashRequest = async (service: string, amount: string) => {
         await quickCash.requestAgent(service, amount);
+        setShowUrgentSheet(true);
         setTimeout(() => {
             const selectedServiceData = defaultServiceTypes.find(s => s.id === service);
             if (selectedServiceData) {
@@ -216,6 +218,13 @@ const MapScreen: React.FC = () => {
             setSelectedFilter('all');
         }
     }
+
+
+    const handleUrgetSheetClose = (): void => {
+        setShowUrgentSheet(false);
+    };
+
+    console.log(showUrgentSheet, "show ur")
 
     return ( 
         <View className="flex-1">
@@ -326,7 +335,7 @@ const MapScreen: React.FC = () => {
                 ))}
             </MapView>
 
-
+ 
             <MapHeader
   searchQuery={searchQuery}
   onSearchChange={setSearchQuery}
@@ -342,14 +351,15 @@ const MapScreen: React.FC = () => {
   showAvatar={true}
 />
 
+
+
             <ZoomControls
                 onZoomIn={handleZoomIn}
                 onZoomOut={handleZoomOut}
                 onResetZoom={handleResetZoom}
             />
 
-
-            <EmergencyButton quickCash={quickCash} />
+               <EmergencyButton quickCash={quickCash} setShowUrgentSheet={setShowUrgentSheet} />
 
 
             <ListToggleButton toggleList={toggleList} />
@@ -416,6 +426,20 @@ const MapScreen: React.FC = () => {
                 onDecline={handleAgentDecline}
             />
 
+    <BottomSheet
+      isVisible={showUrgentSheet}
+      onClose={handleUrgetSheetClose}
+        title = 'Quick Cash Help'
+        subtitle = 'Get instant assistance from verified agents nearby'
+      animationDuration={300}
+      keyboardAware={true}
+      height={Platform.OS === 'ios' ? '60%' : '60%'}
+      maxHeight={Platform.OS === 'ios' ? '80%' : '90%'}
+      showCloseButton={true}
+      closeIcon="close" 
+      statusBarStyle="dark-content"  
+      statusBarTranslucent={false} 
+    >
             <QuickCashBottomSheet
                 visible={quickCash.isVisible}
                 onClose={() => {
@@ -433,7 +457,7 @@ const MapScreen: React.FC = () => {
                 }}
                 onGetDirections={() => {
                     if (quickCash.acceptedAgent && mapRef.current) {
-                        quickCash.hide();
+                        // quickCash.show();
                         setTimeout(() => {
                             mapRef.current?.animateToRegion({
                                 latitude: quickCash.acceptedAgent.latitude,
@@ -458,6 +482,7 @@ const MapScreen: React.FC = () => {
 
                 ]}
             />
+            </BottomSheet>
         </View>
     );
 };

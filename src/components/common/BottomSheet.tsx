@@ -31,6 +31,7 @@ export interface BottomSheetProps {
   onClose: () => void;
   children: React.ReactNode;
   title?: string;
+  subtitle?: string;
   height?: number | string;
   maxHeight?: number | string;
   showHeader?: boolean;
@@ -72,6 +73,7 @@ export const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
       onClose,
       children,
       title,
+      subtitle,
       height = SCREEN_HEIGHT * 0.72,
       maxHeight = SCREEN_HEIGHT * 0.9,
       showHeader = true,
@@ -222,47 +224,75 @@ export const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
         </View>
       );
     };
+const renderHeader = (): React.ReactElement | null => {
+  if (!showHeader && !title) return null;
 
-    const renderHeader = (): React.ReactElement | null => {
-      if (!showHeader && !title) return null;
-      return (
-        <View
-          style={[
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingHorizontal: 20,
-              paddingVertical: 12,
-              borderBottomWidth: 1,
-              borderBottomColor: colors.gray.light,
-            },
-            headerStyle,
-          ]}
-        >
-          {title ? (
+  return (
+    <View
+      style={[
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingHorizontal: 20,
+          paddingTop: 18,
+          paddingBottom: 14,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.gray.light, // Consider softening this color if too harsh
+          // backgroundColor: colors.background,   // Optional: Add elegant background
+        },
+        headerStyle,
+      ]}
+    >
+      {title ? (
+        <View style={{ flex: 1 }}>
+          <Typography
+            variant="bold"
+            size={18}
+            style={{ color: colors.text.primary }}
+          >
+            {title}
+          </Typography>
+
+          {subtitle && (
             <Typography
-              variant="bold"
-              size={18}
-              style={{ color: colors.text.primary }}
+              variant="regular"
+              size={14}
+              style={{
+                color: colors.text.secondary,
+                marginTop: 2, // Adds a nice vertical rhythm
+              }}
             >
-              {title}
+              {subtitle}
             </Typography>
-          ) : (
-            <View />
-          )}
-          {showCloseButton && (
-            <TouchableOpacity onPress={onClose}>
-              <MaterialIcons
-                name={closeIcon as any}
-                size={24}
-                color={colors.text.secondary}
-              />
-            </TouchableOpacity>
           )}
         </View>
-      );
-    };
+      ) : (
+        <View style={{ flex: 1 }} />
+      )}
+
+      {showCloseButton && (
+        <TouchableOpacity
+          onPress={onClose}
+          style={{
+            marginLeft: 12,
+            padding: 6,
+            borderRadius: 20,
+            backgroundColor: colors.gray.light, // Subtle touch button bg
+          }}
+          activeOpacity={0.7}
+        >
+          <MaterialIcons
+            name={closeIcon as any}
+            size={20}
+            color={colors.text.secondary}
+          />
+        </TouchableOpacity>
+      )}
+    </View>
+  );
+};
+
 
     const renderProgress = (): React.ReactElement | null => {
       if (!showProgress) return null;

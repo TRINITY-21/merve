@@ -1,8 +1,7 @@
 // components/quickcash/QuickCashBottomSheet.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef } from 'react';
-import { Dimensions, Platform, Animated as RNAnimated, TouchableOpacity, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Dimensions, Animated as RNAnimated, TouchableOpacity, View } from 'react-native';
 import { LoadingOverlay, NearbyAgent } from '../common/LoadingOverlay';
 import { AmountInputSection } from './AmountInputSection';
 import { ServiceSelectionGrid, ServiceType } from './ServiceSelectionGrid';
@@ -127,12 +126,7 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
   if (!visible) return null;
 
   return (
-    <RNAnimated.View
-      className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-50"
-      style={{
-        height: Platform.OS === 'ios' ? height * 0.65 : height * 0.7,
-        transform: [{ translateY: slideAnim }],
-      }}
+    <View
     >
       {/* Loading Overlay */}
       <LoadingOverlay
@@ -145,57 +139,9 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
 
       {!agentAccepted ? (
         <>
-          {/* Header */}
-          <View className="px-5 pt-4 pb-2 border-b border-gray-100">
-            <View className="w-9 h-1 bg-gray-300 rounded-full self-center mb-2" />
-            <View className="flex-row">
-              <View className="flex-1">
-                <View className="flex-row items-center mb-1">
-                  <MaterialIcons name="flash-on" size={24} color={colors.primary} />
-                  <Typography variant="bold" size={20} className="text-gray-900 ml-2 tracking-tight">
-                    {title}
-                  </Typography>
-                </View>
-                <Typography variant="regular" size={14} className="text-gray-600 leading-5">
-                  {subtitle}
-                </Typography>
-              </View>
-              <TouchableOpacity
-                onPress={onClose}
-                className="w-8 h-8 rounded-full bg-gray-100 items-center justify-center"
-              >
-                <MaterialIcons name="close" size={20} color={colors.gray.medium} />
-              </TouchableOpacity>
-            </View>
-          </View>
 
-          <KeyboardAwareScrollView
-            className="flex-1"
-            enableAutomaticScroll={true}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-            enableResetScrollToCoords={false}
-            extraScrollHeight={Platform.OS === 'ios' ? 150 : 100}
-            extraHeight={Platform.OS === 'ios' ? 150 : 100}
-            enableOnAndroid={true}
-            keyboardOpeningTime={250}
-            viewIsInsideTabBar={false}
-            resetScrollToCoords={{ x: 0, y: 0 }}
-            scrollEventThrottle={16}
-            nestedScrollEnabled={true}
-            contentContainerStyle={{ 
-              flexGrow: 1,
-              justifyContent: 'flex-start',
-              paddingTop: 0,
-              paddingBottom: Platform.OS === 'android' ? 120 : 180
-            }}
-            style={{ 
-              flex: 1,
-              backgroundColor: 'transparent'
-            }}
-          >
             {/* Service Selection */}
-            <View className="px-5 pt-4 pb-4">
+            <View className="px-0 pt-1 pb-4">
               <Typography variant="semibold" size={16} className="text-gray-900 mb-4 tracking-tight">
                 Select Service
               </Typography>
@@ -208,7 +154,7 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
             </View>
 
             {/* Amount Input */}
-            <View className="px-5 py-2">
+            <View className="px-0 py-2">
               <AmountInputSection
                 amount={cashAmount}
                 onAmountChange={setCashAmount}
@@ -220,19 +166,16 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
             </View>
 
             {/* Request Button */}
-            <View className="px-5 py-3 mt-auto">
+            <View className="px-0 py-3 mt-auto">
              <Button title="Request Agent Now" onPress={handleRequestAgent}
              startIcon='flash-on'  
              />
             </View>
-          </KeyboardAwareScrollView>
         </>
       ) : (
         // Agent Accepted View
-        <View className="flex-1 p-5">
-          <View className="w-9 h-1 bg-gray-300 rounded-full self-center mb-2.5" />
-
-          <View className="items-center py-2.5 mb-6">
+        <View className="flex-1 p-0">
+          <View className="items-center py-2 mb-6">
             <View className="mb-4">
               <MaterialIcons name="check-circle" size={48} color="#4CAF50" />
             </View>
@@ -276,7 +219,7 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
                         </Typography>
                       </View>
                     </View>
-                  </View>
+                  </View> 
                 </View>
               </View>
 
@@ -333,6 +276,6 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
           </TouchableOpacity>
         </View>
       )}
-    </RNAnimated.View>
+    </View>
   );
 };
