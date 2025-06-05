@@ -404,98 +404,70 @@ const renderMarketplace = () => (
     );
 
     // Bookings Tab using reusable components
-    const renderBookings = () => (
-        <ScrollView
-            contentContainerStyle={{ padding: 14, paddingBottom: 100 }}
-            showsVerticalScrollIndicator={false}
-        >
-            <View className="flex-row justify-between items-center mb-4 px-1">
-                <Text className="text-xl font-extrabold text-gray-900 tracking-wide">Recent Bookings</Text>
-              
-                <TouchableOpacity className="rounded-2xl items-center justify-center shadow-md" activeOpacity={0.7}>
-                <Text className="text-md font-normal text-secondary">View All</Text>
-
-                </TouchableOpacity>
+const renderBookings = () => {
+  return (
+    <FlatList
+      data={dummyRecentBookings}
+      renderItem={({ item }) => (
+        <BookingCard
+          booking={item}
+          fadeAnim={fadeAnim}
+          // onPress={() => navigation.navigate('BookingDetails', { bookingId: item.id })}
+        />
+      )}
+      keyExtractor={(item) => item.id}
+      contentContainerStyle={{ padding: 14, paddingBottom: Platform.OS === 'ios' ? 80 : 70 }}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={[colors.primary]}
+          tintColor={colors.primary}
+        />
+      }
+      ListHeaderComponent={
+        <>
+          <View className="flex-row justify-between items-center mb-4 px-1">
+            <Text className="text-xl font-extrabold text-gray-900 tracking-wide">Recent Bookings</Text>
+            <TouchableOpacity
+              className="rounded-2xl items-center justify-center"
+              activeOpacity={0.7}
+              onPress={() => navigation.navigate('ViewAllBookingsScreen' as never)}
+            >
+              <Text className="text-md font-normal text-secondary">View All</Text>
+            </TouchableOpacity>
+          </View>
+          <ProfessionalStatsCard
+            title="Monthly Overview"
+            subtitle="December 2024"
+            stats={[
+              { label: "Total Bookings", value: "198", icon: "book", color: "#10b981", trend: "up" },
+              { label: "Completed", value: "89", icon: "done-all", color: colors.success, trend: "up" },
+              { label: "Pending", value: "8", icon: "pending-actions", color: "#3b82f6", trend: "up" },
+              { label: "Cancelled", value: "34", icon: "cancel", color: colors.error, trend: "up" }
+            ]}
+            onPress={() => console.log('View details')}
+          />
+          {dummyRecentBookings.length === 0 && (
+            <View className="items-center justify-center py-15">
+              <MaterialIcons name="event-busy" size={64} color={colors.gray.medium} />
+              <Text className="text-xl font-bold text-gray-900 mt-4 mb-2">No Recent Bookings</Text>
+              <Text className="text-sm text-gray-600 text-center px-10 mb-6 leading-5">
+                Your booking history will appear here once you start making appointments
+              </Text>
+              <GradientButton
+                title="Book Appointment"
+                onPress={() => navigation.navigate('BookAppointmentsScreen' as never)}
+                icon="add"
+              />
             </View>
-
-
-            <ProfessionalStatsCard
-  title="Monthly Overview"
-  subtitle="December 2024" 
-  stats={[
-    { 
-      label: "Total Bookings", 
-      value: "198", 
-      icon: "book",
-      color: "#10b981",
-      trend: "up",
-    },
-    { 
-      label: "Completed", 
-      value: "89", 
-      icon: "done-all",
-      color: colors.success,
-      trend: "up",
-    },
-     { 
-      label: "Pending", 
-      value: "8", 
-      icon: "pending-actions",
-      color: "#3b82f6",
-      trend: "up",
-    },
-         { 
-      label: "Cancelled", 
-      value: "34", 
-      icon: "cancel",
-      color: colors.error,
-      trend: "up",
-    }
-
-  ]}
-  onPress={() => console.log('View details')}
-/>
-
-
-            {dummyRecentBookings.length === 0 ? (
-                <View className="items-center justify-center py-15">
-                    <MaterialIcons name="event-busy" size={64} color={colors.gray.medium} />
-                    <Text className="text-xl font-bold text-gray-900 mt-4 mb-2">No Recent Bookings</Text>
-                    <Text className="text-sm text-gray-600 text-center px-10 mb-6 leading-5">
-                        Your booking history will appear here once you start making appointments
-                    </Text>
-                    <GradientButton
-                        title="Book Appointment"
-                        onPress={() => navigation.navigate('BookAppointmentsScreen' as never)}
-                        icon="add"
-                    />
-                </View>
-            ) : (
-                <FlatList
-                    data={dummyRecentBookings}
-                    renderItem={({ item }) => (
-                        <BookingCard
-  booking={item}
-  fadeAnim={fadeAnim}
-//   onPress={() => navigation.navigate('BookingDetails', { bookingId: sampleBooking.id })}
-/>
-                    )}
-                    keyExtractor={(item) => item.id}
-                    contentContainerStyle={{ paddingBottom: Platform.OS === 'ios' ? 80 : 70 }}
-                    showsVerticalScrollIndicator={false}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                            colors={[colors.primary]}
-                            tintColor={colors.primary}
-                        />
-                    }
-                />
-            )}
-        </ScrollView>
-    );
-
+          )}
+        </> 
+      }
+    />
+  );
+};
 
     // Followers Tab using FollowerCard
 // ================================
