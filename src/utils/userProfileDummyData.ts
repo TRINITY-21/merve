@@ -314,7 +314,7 @@ export const accountSections: IAccountSection[] = [
       color: colors.secondary,
       expandable: true,
       items: [
-        { id: 'account-info', title: 'Account Information', icon: 'person', action: 'navigate', screen: 'AccountInfoScreen' },
+        { id: 'account-info', title: 'Account Information', icon: 'person', action: 'navigate', screen: 'UserAccountInfo' },
         { id: 'security', title: 'Security & Privacy', icon: 'security', action: 'navigate', screen: 'Security', badge: 'New' },
         { id: 'payment-methods', title: 'Payment Methods', icon: 'payment', action: 'navigate', screen: 'PaymentMethods' },
         { id: 'preferences', title: 'App Preferences', icon: 'tune', action: 'navigate', screen: 'Preferences' },
@@ -369,7 +369,7 @@ export const accountSections: IAccountSection[] = [
   ];
 
 export const quickActions: IQuickAction[] = [
-    { id: 'my-profile', title: 'My Profile', icon: 'person-outline', action: 'navigate', screen: 'MyProfile', color: colors.primary },
+    { id: 'my-profile', title: 'My Profile', icon: 'person-outline', action: 'navigate', screen: 'UserProfile', color: colors.primary },
     { id: 'help-support', title: 'Help & Support', icon: 'help-outline', action: 'navigate', screen: 'Support', color: colors.accent },
     { id: 'rate-us', title: 'Rate Us', icon: 'star-outline', action: 'rate', color: colors.warning },
     { id: 'invite-friends', title: 'Invite Friends', icon: 'share', action: 'share', color: colors.success },

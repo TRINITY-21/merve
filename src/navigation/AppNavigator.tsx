@@ -10,6 +10,7 @@ import { Platform, View } from 'react-native';
 import { Typography } from '../components/common/Typography';
 import MapScreen from '../screens/App/Map/MapScreen';
 import NotificationsScreen from '../screens/App/Notification/NotificationsScreen';
+import UserAccountInfoScreen from '../screens/App/UserProfile/UserAccountInfoScreen';
 import UserProfileScreen from '../screens/App/UserProfile/UserProfileScreen';
 import UserSettingsScreen from '../screens/App/UserProfile/UserSettingsScreen';
 
@@ -36,6 +37,7 @@ export type MapStackParamList = {
   AllAgents: undefined;
   SearchUsers: undefined;
   UserSettings: undefined;
+  UserAccountInfo: undefined;
 };
 
 export type FeedStackParamList = {
@@ -132,6 +134,8 @@ const MapStackNavigator: React.FC = () => (
     <MapStack.Screen name="Notifications" component={NotificationsScreen} />
     <MapStack.Screen name="UserProfile" component={UserProfileScreen} />
     <MapStack.Screen name="UserSettings" component={UserSettingsScreen} />
+    <MapStack.Screen name="UserAccountInfo" component={UserAccountInfoScreen} />
+
   </MapStack.Navigator>
 );
 

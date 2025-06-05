@@ -71,3 +71,38 @@ export interface IAboutItem {
   screen: string;
   subtitle?: string;
 }
+
+
+// TypeScript interfaces
+export interface IFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  dateOfBirth: string;
+  gender: string;
+  nationality: string;
+  idNumber: string;
+  address: string;
+  city: string;
+  region: string;
+  postalCode: string;
+  emergencyContact: string;
+  emergencyContactName: string;
+  emergencyContactRelation: string;
+  occupation: string;
+  employer: string;
+  monthlyIncome: string;
+}
+
+export interface IProfileSettings {
+  emailVerified: boolean;
+  phoneVerified: boolean;
+  idVerified: boolean;
+  twoFactorEnabled: boolean;
+  profileVisibility: 'Public' | 'Private';
+  contactByEmail: boolean;
+  contactByPhone: boolean;
+  marketingEmails: boolean;
+  transactionSMS: boolean;
+}
