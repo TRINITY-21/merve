@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { Platform, View } from 'react-native';
 import { Typography } from '../components/common/Typography';
 import ActivityScreen from '../screens/App/Activity/ActivityScreen';
+import AgentsProfileScreen from '../screens/App/Agent/AgentsProfileScreen';
 import MapScreen from '../screens/App/Map/MapScreen';
 import NotificationsScreen from '../screens/App/Notification/NotificationsScreen';
 import UserAccountInfoScreen from '../screens/App/UserProfile/UserAccountInfoScreen';
@@ -50,6 +51,10 @@ export type ProfileStackParamList = {
   ProfileHome: undefined;
 };
 
+export type AgentProfileStackParamList = {
+  AgentProfile: undefined;
+};
+
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
   BottomTabScreenProps<RootTabParamList, Screen>;
 
@@ -59,11 +64,17 @@ export type MapStackScreenProps<Screen extends keyof MapStackParamList> =
     RootTabScreenProps<keyof RootTabParamList>
   >;
 
+export type AgentStackScreenProps<Screen extends keyof AgentProfileStackParamList> =
+  CompositeScreenProps<
+    StackScreenProps<AgentProfileStackParamList, Screen>,
+    RootTabScreenProps<keyof RootTabParamList>
+  >;
+
 // --------- Navigators ---------
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const MapStack = createStackNavigator<MapStackParamList>();
+const AgentProfileStack = createStackNavigator<AgentProfileStackParamList>();
 const FeedStack = createStackNavigator<FeedStackParamList>();
-const ProfileStack = createStackNavigator<ProfileStackParamList>();
 
 // --------- Custom Tab Icon with Badge Support ---------
 interface TabIconProps {
@@ -140,6 +151,13 @@ const MapStackNavigator: React.FC = () => (
     <MapStack.Screen name="Activity" component={ActivityScreen} />
 
   </MapStack.Navigator>
+);
+
+const AgentProfileStackNavigator: React.FC = () => (
+  <AgentProfileStack.Navigator screenOptions={{ headerShown: false }}>
+    <AgentProfileStack.Screen name="AgentProfile" component={AgentsProfileScreen} />
+
+  </AgentProfileStack.Navigator>
 );
 
 // --------- Main App Navigator ---------
@@ -245,7 +263,7 @@ const AppNavigator: React.FC = () => {
 
       <Tab.Screen
         name="AgentsProfile"
-        component={MapScreen}
+        component={AgentProfileStackNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => (
             <TabIcon name="storefront" color={color} focused={focused} label="Agent" />
@@ -254,7 +272,7 @@ const AppNavigator: React.FC = () => {
       />
 
       <Tab.Screen
-        name="Notiificatons"
+        name="Notiificatons" 
         component={NotificationsScreen}
         options={{
           tabBarIcon: ({ color, focused }) => (
