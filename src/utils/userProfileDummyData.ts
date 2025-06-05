@@ -1,5 +1,6 @@
 import { colors } from "../constants/theme/colors";
 import { IActivity, IBooking, IFollower, IFollowing, IInvite, IMarketplaceData, IPhoto } from "../types/userProfileTypes";
+import { IAboutItem, IAccountSection, IQuickAction } from "../types/userSettingTypes";
 
 // Dummy data (keeping the same as before)
 export const dummyRecentBookings: IBooking[] = [
@@ -302,3 +303,81 @@ export const dummyPhotos: IPhoto[] = Array.from({ length: 15 }, (_, i) => ({
   date: `2025-05-${Math.floor(Math.random() * 25) + 1}`,
   title: ['Sunset Views', 'City Life', 'Portrait Session', 'Food Art', 'Adventure'][i % 5]
 }));
+
+
+
+export const accountSections: IAccountSection[] = [
+    {
+      id: 'settings',
+      title: 'Settings',
+      icon: 'settings',
+      color: colors.secondary,
+      expandable: true,
+      items: [
+        { id: 'account-info', title: 'Account Information', icon: 'person', action: 'navigate', screen: 'AccountInfoScreen' },
+        { id: 'security', title: 'Security & Privacy', icon: 'security', action: 'navigate', screen: 'Security', badge: 'New' },
+        { id: 'payment-methods', title: 'Payment Methods', icon: 'payment', action: 'navigate', screen: 'PaymentMethods' },
+        { id: 'preferences', title: 'App Preferences', icon: 'tune', action: 'navigate', screen: 'Preferences' },
+        { id: 'language', title: 'Language & Region', icon: 'language', action: 'navigate', screen: 'Language', subtitle: 'English (Ghana)' },
+        { id: 'backup', title: 'Backup & Sync', icon: 'backup', action: 'navigate', screen: 'Backup' },
+      ],
+    },
+    {
+      id: 'notifications',
+      title: 'Notifications',
+      icon: 'notifications',
+      color: colors.warning,
+      expandable: true,
+      items: [
+        { id: 'push-notif', title: 'Push Notifications', icon: 'notifications-active', action: 'toggle', key: 'pushNotifications' },
+        { id: 'email-notif', title: 'Email Notifications', icon: 'email', action: 'toggle', key: 'emailNotifications' },
+        { id: 'sms-notif', title: 'SMS Notifications', icon: 'sms', action: 'toggle', key: 'smsNotifications' },
+        { id: 'transaction-alerts', title: 'Transaction Alerts', icon: 'account-balance-wallet', action: 'toggle', key: 'transactionAlerts' },
+        { id: 'social-updates', title: 'Social Updates', icon: 'people', action: 'toggle', key: 'socialUpdates' },
+        { id: 'promo-offers', title: 'Promotional Offers', icon: 'local-offer', action: 'toggle', key: 'promotionalOffers' },
+      ],
+    },
+    {
+      id: 'agent',
+      title: 'Agent Services', 
+      icon: 'store',
+      color: colors.accent,
+      expandable: true,
+      items: [
+        { id: 'become-agent', title: 'Become an Agent', icon: 'business', action: 'navigate', screen: 'BecomeAgent', highlight: true },
+        { id: 'agent-dashboard', title: 'Agent Dashboard', icon: 'dashboard', action: 'navigate', screen: 'AgentDashboard' },
+        { id: 'agent-earnings', title: 'Earnings & Reports', icon: 'assessment', action: 'navigate', screen: 'AgentEarnings' },
+        { id: 'agent-support', title: 'Agent Support', icon: 'support-agent', action: 'navigate', screen: 'AgentSupport' },
+        { id: 'commission-rates', title: 'Commission Rates', icon: 'trending-up', action: 'navigate', screen: 'CommissionRates' },
+      ],
+    },
+    {
+      id: 'privacy',
+      title: 'Privacy & Security',
+      icon: 'privacy-tip',
+      color: colors.error,
+      expandable: true,
+      items: [
+        { id: 'profile-visibility', title: 'Profile Visibility', icon: 'visibility', action: 'toggle', key: 'profileVisibility' },
+        { id: 'location-sharing', title: 'Location Sharing', icon: 'location-on', action: 'toggle', key: 'locationSharing' },
+        { id: 'activity-status', title: 'Activity Status', icon: 'circle', action: 'toggle', key: 'activityStatus' },
+        { id: 'contact-sync', title: 'Contact Sync', icon: 'contacts', action: 'toggle', key: 'contactSync' },
+        { id: 'data-download', title: 'Download My Data', icon: 'download', action: 'navigate', screen: 'DataDownload' },
+        { id: 'delete-account', title: 'Delete Account', icon: 'delete-forever', action: 'navigate', screen: 'DeleteAccount', warning: true },
+      ],
+    },
+  ];
+
+export const quickActions: IQuickAction[] = [
+    { id: 'my-profile', title: 'My Profile', icon: 'person-outline', action: 'navigate', screen: 'MyProfile', color: colors.primary },
+    { id: 'help-support', title: 'Help & Support', icon: 'help-outline', action: 'navigate', screen: 'Support', color: colors.accent },
+    { id: 'rate-us', title: 'Rate Us', icon: 'star-outline', action: 'rate', color: colors.warning },
+    { id: 'invite-friends', title: 'Invite Friends', icon: 'share', action: 'share', color: colors.success },
+  ];
+
+ export const aboutItems: IAboutItem[] = [
+    { id: 'about-app', title: 'About App', icon: 'info-outline', action: 'navigate', screen: 'About', subtitle: 'Version 2.1.0' },
+    { id: 'terms-service', title: 'Terms of Service', icon: 'description', action: 'navigate', screen: 'Terms' },
+    { id: 'privacy-policy', title: 'Privacy Policy', icon: 'policy', action: 'navigate', screen: 'PrivacyPolicy' },
+    { id: 'licenses', title: 'Open Source Licenses', icon: 'code', action: 'navigate', screen: 'Licenses' },
+  ];

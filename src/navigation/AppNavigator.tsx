@@ -11,6 +11,7 @@ import { Typography } from '../components/common/Typography';
 import MapScreen from '../screens/App/Map/MapScreen';
 import NotificationsScreen from '../screens/App/Notification/NotificationsScreen';
 import UserProfileScreen from '../screens/App/UserProfile/UserProfileScreen';
+import UserSettingsScreen from '../screens/App/UserProfile/UserSettingsScreen';
 
 // --------- Type Definitions ---------
 export type RootTabParamList = {
@@ -34,6 +35,7 @@ export type MapStackParamList = {
   Shop: undefined;
   AllAgents: undefined;
   SearchUsers: undefined;
+  UserSettings: undefined;
 };
 
 export type FeedStackParamList = {
@@ -129,6 +131,7 @@ const MapStackNavigator: React.FC = () => (
     <MapStack.Screen name="MapHome" component={MapScreen} />
     <MapStack.Screen name="Notifications" component={NotificationsScreen} />
     <MapStack.Screen name="UserProfile" component={UserProfileScreen} />
+    <MapStack.Screen name="UserSettings" component={UserSettingsScreen} />
   </MapStack.Navigator>
 );
 
