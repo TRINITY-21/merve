@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import type { CompositeScreenProps } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Platform, View } from 'react-native';
 import { Typography } from '../components/common/Typography';
 import MapScreen from '../screens/App/Map/MapScreen';
@@ -21,6 +21,7 @@ export type RootTabParamList = {
   Shop: undefined;
   AllAgents: undefined;
   SearchUsers: undefined;
+  Notiificatons: undefined;
 };
 
 export type MapStackParamList = {
@@ -58,16 +59,24 @@ const MapStack = createStackNavigator<MapStackParamList>();
 const FeedStack = createStackNavigator<FeedStackParamList>();
 const ProfileStack = createStackNavigator<ProfileStackParamList>();
 
-// --------- Custom Tab Icon ---------
+// --------- Custom Tab Icon with Badge Support ---------
 interface TabIconProps {
   name: keyof typeof MaterialIcons.glyphMap;
   color: string;
   focused: boolean;
   label: string;
+  showBadge?: boolean;
+  badgeCount?: number;
 }
 
-
-const TabIcon: React.FC<TabIconProps> = ({ name, color, focused, label }) => (
+const TabIcon: React.FC<TabIconProps> = ({ 
+  name, 
+  color, 
+  focused, 
+  label,
+  showBadge = false,
+  badgeCount = 0
+}) => (
   <View
     className="
     items-center justify-center
@@ -77,10 +86,28 @@ const TabIcon: React.FC<TabIconProps> = ({ name, color, focused, label }) => (
   "
   >
     <MaterialIcons name={name} size={22} color={color} />
+    
+    {/* Notification Badge */}
+    {showBadge && badgeCount > 0 && (
+      <View
+        style={{
+          position: 'absolute',
+          top: 14,
+          right: 24,
+          width: 6,
+          height: 6,
+          borderRadius: 4,
+          backgroundColor: '#EF4444',
+          borderWidth: 1,
+          borderColor: '#FFFFFF',
+        }}
+      />
+    )}
+    
     {focused && (
       <>
         <Typography
-          size={12}
+          size={10}
           variant="regular"
           className="text-sm text-center mt-0.5 max-w-[48px] leading-tight tracking-tight"
           style={{ color }}
@@ -107,6 +134,33 @@ const MapStackNavigator: React.FC = () => (
 
 // --------- Main App Navigator ---------
 const AppNavigator: React.FC = () => {
+  // Notification state management
+  const [notificationCount, setNotificationCount] = useState<number>(5);
+
+  // Simulate fetching notifications (replace with your actual API call)
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      // Replace this with your actual API call
+      // const response = await api.getUnreadNotifications();
+      // setNotificationCount(response.unreadCount);
+      
+      // For demo purposes, using a mock count
+      setNotificationCount(7);
+    } catch (error) {
+      console.error('Failed to fetch notifications:', error);
+      setNotificationCount(0);
+    }
+  };
+
+  // Function to clear/update notification count
+  const updateNotificationCount = (newCount: number) => {
+    setNotificationCount(newCount);
+  };
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -114,7 +168,7 @@ const AppNavigator: React.FC = () => {
         tabBarInactiveTintColor: '#8E8E93',
         tabBarShowLabel: false,
         tabBarItemStyle: {
-          minWidth: 64,
+          minWidth: 56,
           maxWidth: 72,
           alignItems: 'center',
           justifyContent: 'center',
@@ -138,7 +192,6 @@ const AppNavigator: React.FC = () => {
         },
         headerShown: false,
       }}
-
     >
       <Tab.Screen
         name="Map"
@@ -187,6 +240,30 @@ const AppNavigator: React.FC = () => {
           tabBarIcon: ({ color, focused }) => (
             <TabIcon name="storefront" color={color} focused={focused} label="Agent" />
           ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Notiificatons"
+        component={NotificationsScreen}
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon 
+              name="notifications" 
+              color={color} 
+              focused={focused} 
+              label="notification"
+              showBadge={true}
+              badgeCount={notificationCount}
+            />
+          ),
+        }}
+        listeners={{
+          // Clear notification count when user taps on notifications tab
+          tabPress: () => {
+            // Optional: Clear notifications when tab is pressed
+            // updateNotificationCount(0);
+          },
         }}
       />
     </Tab.Navigator>

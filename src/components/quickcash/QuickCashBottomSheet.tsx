@@ -130,8 +130,8 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
     <RNAnimated.View
       className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-50"
       style={{
-        // height: Platform.OS === 'ios' ? height * 0.65 : height * 0.8,
-        // transform: [{ translateY: slideAnim }],
+        height: Platform.OS === 'ios' ? height * 0.65 : height * 0.7,
+        transform: [{ translateY: slideAnim }],
       }}
     >
       {/* Loading Overlay */}

@@ -1,13 +1,10 @@
 // components/map/MapHeader.tsx
-import { Ionicons } from '@expo/vector-icons';
-import React, { useRef } from 'react'; // Import useRef
+import React, { useRef } from 'react';
 import { Platform, ScrollView, TouchableOpacity, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { colors } from '../../constants/theme/colors';
-import { Typography } from '../common/Typography';
-// Import the new SearchInput component and its ref interface
 import { SearchInput, SearchInputRef } from '../common/SearchInput';
+import { Typography } from '../common/Typography';
 
 interface FilterOption {
   value: string;
@@ -17,21 +14,18 @@ interface FilterOption {
 interface MapHeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
-  // New prop for when the search is officially "submitted" (e.g., via debounce or enter key)
   onSearchSubmit?: (query: string) => void; 
   selectedFilter: string;
   onFilterChange: (filter: string) => void;
-  onNotificationPress: () => void;
   onProfilePress: () => void;
-  notificationCount?: number;
   searchPlaceholder?: string;
   filters?: FilterOption[];
   showAvatar?: boolean;
-  showNotifications?: boolean;
   showSearch?: boolean;
   showFilters?: boolean;
-  gradientColors?: string[]; // This prop seems unused, can be removed if not needed
   style?: any;
+  userAvatarUrl?: string; // User's profile image URL
+  userName?: string; // For generating initials if no avatar
 }
 
 const defaultFilters: FilterOption[] = [
@@ -45,125 +39,187 @@ const defaultFilters: FilterOption[] = [
 export const MapHeader: React.FC<MapHeaderProps> = ({
   searchQuery,
   onSearchChange,
-  onSearchSubmit, // Destructure new prop
+  onSearchSubmit,
   selectedFilter,
   onFilterChange,
-  onNotificationPress,
   onProfilePress,
-  notificationCount = 0,
   searchPlaceholder = 'Search for locations',
   filters = defaultFilters,
   showAvatar = true,
-  showNotifications = true,
   showSearch = true,
   showFilters = true,
   style,
+  userAvatarUrl,
+  userName = 'User',
 }) => {
   const searchInputRef = useRef<SearchInputRef>(null);
 
-  // You can optionally add a local state for loading if MapHeader needs to control it
-  // const [searchLoading, setSearchLoading] = useState(false);
-
-  // Handle the search submission
   const handleSearchSubmitted = (query: string) => {
     console.log('Search submitted from MapHeader:', query);
-    onSearchSubmit?.(query); // Call the prop if provided
-    // If you had a searchLoading state:
-    // setSearchLoading(true);
-    // Simulate API call and then setSearchLoading(false);
+    onSearchSubmit?.(query);
   };
 
-  // Handle clearing the search
   const handleSearchClear = () => {
-    onSearchChange(''); // Clear the text in the parent state
-    // Any other logic for clearing search results in MapHeader
+    onSearchChange('');
     console.log('MapHeader search cleared');
   };
 
   return (
     <View 
-      className={`absolute top-0 left-0 right-0 z-500 ${Platform.OS === 'ios' ? 'pt-10' : 'pt-10'} pb-4 px-4`}
+      className={`absolute top-0 left-0 right-0 z-500 ${Platform.OS === 'ios' ? 'pt-10' : 'pt-0'} pb-4 px-4`}
       style={style}
     >
-        {/* Notification Bell */}
-        {showNotifications && (
-          <Animated.View
-            entering={FadeInDown.duration(500)}
-            className={`absolute ${Platform.OS === 'ios' ? 'top-14' : 'top-18'} right-6 z-50 w-10 h-10 rounded-full items-center justify-center bg-white bg-opacity-90`}
-          >
-            <TouchableOpacity onPress={onNotificationPress}>
-              <Ionicons name="notifications" size={26} color={colors.secondary} />
-              {notificationCount > 0 && (
-                <View className="absolute -top-2 -right-1 w-4 h-4 rounded-full bg-red-500 items-center justify-center">
-                  <Typography variant="bold" size={10} className="text-white">
-                    {notificationCount > 99 ? '99+' : notificationCount.toString()}
-                  </Typography>
-                </View>
-              )}
-            </TouchableOpacity>
-          </Animated.View>
-        )}
-
-        {/* Avatar Button */}
-        {showAvatar && (
-          <View className="flex-row items-center mt-2 px-0.5 mb-2.5">
-            <TouchableOpacity
-              className="mr-3.5 bg-white bg-opacity-90 rounded-full p-1.5 items-center justify-center"
-              onPress={onProfilePress}
-              activeOpacity={0.7}
-            >
-              <Ionicons name="person-circle-outline" size={30} color={colors.secondary} />
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {/* Search Bar using the new SearchInput component */}
-        {showSearch && (
+      {/* Search Bar with Profile Icon Inside (Google Maps Style) */}
+      {showSearch && (
+        <View className="mt-8 mb-4">
           <SearchInput
-            ref={searchInputRef} // Attach ref if you need to imperatively call focus/blur/clear
+            ref={searchInputRef}
             value={searchQuery}
             onChangeText={onSearchChange}
-            onSearch={handleSearchSubmitted} // Called when debounced or submitted
-            onClear={handleSearchClear} // Called when clear button is pressed
+            onSearch={handleSearchSubmitted}
+            onClear={handleSearchClear}
             placeholder={searchPlaceholder}
             visible={true} 
             icon="location-pin"
-            containerStyle={{ marginBottom: 12 }} 
-            debounceDelay={400} 
-   
+            debounceDelay={400}
+            
+            // Google Maps style profile integration
+            showProfileIcon={showAvatar}
+            profileIconPress={onProfilePress}
+            profileAvatarUrl={userAvatarUrl}
+            userName={userName}
+            profileIconSize={36}
+            
+            // Enhanced card-like styling with full opacity
+            containerStyle={{
+              height: 56, // Fixed height to match profile icon + padding
+              opacity: 1,
+              backgroundColor: '#FFFFFF', // Solid white - no transparency
+              borderRadius: 28, // Full border radius (height/2)
+              paddingHorizontal: 1,
+              paddingVertical: 0, // Remove vertical padding since we have fixed height
+              borderWidth: 0.5,
+              borderColor: 'rgba(0, 0, 0, 0.08)',
+              // Strong card-like elevation
+              shadowColor: '#000',
+              shadowOffset: { 
+                width: 0, 
+                height: 8 
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 20, 
+              elevation: 15,
+              // Additional visual enhancement
+              marginHorizontal: 0,
+              alignItems: 'center', // Ensure content is centered
+              flexDirection: 'row',
+            }}
+            inputStyle={{
+              fontSize: 16,
+              // fontWeight: '500',
+              color: colors.secondary,
+              paddingVertical: 0,
+              lineHeight: 20, // Consistent line height
+            }}
           />
-        )}
+        </View>
+      )}
 
-        {/* Filter Chips */}
-        {showFilters && (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            className="mt-0"
-          >
-            {filters.map((filter) => (
-              <TouchableOpacity
-                key={filter.value}
-                className={`px-4 py-2.5 rounded-full mr-2.5 border ${
-                  selectedFilter === filter.value
-                    ? 'bg-secondary border-white shadow-white'
-                    : 'bg-white border-white border-opacity-40'
-                }`}
-                onPress={() => onFilterChange(filter.value)}
+      {/* Elevated Filter Chips (Google Maps Style) */}
+      {showFilters && (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          className="mt-0"
+          contentContainerStyle={{
+            paddingHorizontal: 4,
+            alignItems: 'center',
+            paddingVertical: 4, // Add vertical padding for better Android alignment
+          }}
+          style={{
+            flexGrow: 0, // Prevent scroll view from expanding
+          }}
+        >
+          {filters.map((filter, index) => (
+            <TouchableOpacity
+              key={filter.value}
+              style={[
+                {
+                  paddingHorizontal: 14,
+                  paddingVertical: 8, // Slightly increased for better touch target
+                  borderRadius: 16,
+                  marginRight: 8,
+                  marginLeft: index === 0 ? 0 : 0,
+                  minHeight: 36,
+                  height: 32, // Fixed height for consistency
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderWidth: 1,
+                  // Ensure consistent alignment across platforms
+                  flexDirection: 'row',
+                  // Google Maps style elevation and colors - SOLID BACKGROUNDS
+                  backgroundColor: selectedFilter === filter.value 
+                    ? colors.secondary 
+                    : '#FFFFFF', // Solid white - no transparency
+                  borderColor: selectedFilter === filter.value 
+                    ? colors.secondary 
+                    : 'rgba(255, 255, 255, 0.8)',
+                  // Enhanced shadow for map overlay
+                  // shadowColor: '#000',
+                  // shadowOffset: {
+                  //   width: 0,
+                  //   height: selectedFilter === filter.value ? 6 : 4,
+                  // },
+                  // shadowOpacity: selectedFilter === filter.value ? 0.25 : 0.15,
+                  // shadowRadius: selectedFilter === filter.value ? 12 : 8,
+                  // elevation: selectedFilter === filter.value ? 12 : 6,
+                },
+                // Add a subtle glow effect for selected state
+                selectedFilter === filter.value && {
+                  shadowColor: colors.secondary,
+                  shadowOpacity: 0.3,
+                }
+              ]}
+              onPress={() => onFilterChange(filter.value)}
+              activeOpacity={0.8}
+            >
+              <Typography
+                variant="bold"
+                size={14}
+                style={{
+                  color: selectedFilter === filter.value ? colors.white : colors.secondary,
+                  // fontWeight: '700',
+                  letterSpacing: 0.2,
+                  lineHeight: 16, // Consistent line height for alignment
+                  textAlign: 'center',
+                }}
               >
-                <Typography
-                  variant="bold"
-                  size={13}
-                  className={`tracking-wide ${
-                    selectedFilter === filter.value ? 'text-white' : 'text-secondary'
-                  }`}
-                >
-                  {filter.label}
-                </Typography>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        )}
+                {filter.label}
+              </Typography>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 };
+
+// ===============================================
+// USAGE EXAMPLE:
+// ===============================================
+/*
+<MapHeader
+  searchQuery={searchQuery}
+  onSearchChange={setSearchQuery}
+  onSearchSubmit={handleSearch}
+  selectedFilter={selectedFilter}
+  onFilterChange={setSelectedFilter}
+  onProfilePress={() => navigation.navigate('Profile')}
+  searchPlaceholder="Search locations near you"
+  
+  // Profile props for Google Maps style
+  userAvatarUrl="https://example.com/user-avatar.jpg"
+  userName="John Doe"
+  showAvatar={true}
+/>
+*/

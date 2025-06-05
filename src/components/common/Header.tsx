@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Animated, Platform, StatusBar, Text, View } from 'react-native';
+import { Animated, Platform, Text, View } from 'react-native';
 import { colors } from '../../constants/theme/colors';
 import { IconButton } from './IconButton';
 
@@ -41,13 +41,13 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <>
     
-      <StatusBar 
+      {/* <StatusBar 
         barStyle={barStyle} 
         translucent={statusBarTranslucent} 
         backgroundColor="dark-content" 
-      />
+      /> */}
       
-      <Animated.View
+      <Animated.View 
         style={[
           { transform: [{ scale: animatedValue }] },
           withShadow && {

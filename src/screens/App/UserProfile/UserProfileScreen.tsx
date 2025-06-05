@@ -723,7 +723,7 @@ const renderFollowers = () => {
           <FollowerCard
             key={follower.id}
             follower={follower} 
-            fadeAnim={fadeAnim}
+            fadeAnim={fadeAnim} 
             slideAnim={slideAnim}
             index={index}
             onFollowPress={(follower) => console.log('Follow pressed:', follower.name)}

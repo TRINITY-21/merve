@@ -9,10 +9,9 @@ import {
     FlatList,
     Platform,
     Animated as RNAnimated,
-    StatusBar,
     StyleSheet,
     TouchableOpacity,
-    View,
+    View
 } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import { Typography } from '../../../components/common';
@@ -218,9 +217,8 @@ const MapScreen: React.FC = () => {
         }
     }
 
-    return (
+    return ( 
         <View className="flex-1">
-            <StatusBar barStyle="dark-content" />
             <MapView
                 ref={mapRef}
                 style={styles.map}
@@ -328,15 +326,21 @@ const MapScreen: React.FC = () => {
                 ))}
             </MapView>
 
+
             <MapHeader
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                selectedFilter={selectedFilter}
-                onFilterChange={handleFilterChange}
-                onNotificationPress={() => { navigation.navigate("Notifications") }}
-                onProfilePress={() => navigation.navigate('UserProfile')}
-                notificationCount={3}
-            />
+  searchQuery={searchQuery}
+  onSearchChange={setSearchQuery}
+  onSearchSubmit={searchQuery => console.log('Search submitted:', searchQuery)}
+  selectedFilter={selectedFilter}
+  onFilterChange={setSelectedFilter}
+  onProfilePress={() => navigation.navigate('UserProfile')}
+  searchPlaceholder="Search locations near you"
+  
+  // Profile props for Google Maps style
+  userAvatarUrl="https://picsum.photos/200/200"
+  userName="John Doe"
+  showAvatar={true}
+/>
 
             <ZoomControls
                 onZoomIn={handleZoomIn}
@@ -425,7 +429,7 @@ const MapScreen: React.FC = () => {
                 onMessageAgent={() => {
                     if (quickCash.acceptedAgent) {
                         // Add messaging logic
-                    }
+                    } 
                 }}
                 onGetDirections={() => {
                     if (quickCash.acceptedAgent && mapRef.current) {
