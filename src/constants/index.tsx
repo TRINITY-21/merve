@@ -1,3 +1,6 @@
+import { IAnalytics, IDuration, IPaymentMethod, IPromotionPlan } from "../types/promoteTypes";
+import { IAgent, IReview } from "../types/reviewsTypes";
+
 export const GHANA_LOCATIONS = {
   'Greater Accra': [
     'Accra', 'Tema', 'Kasoa', 'Madina', 'Adenta', 'Ashaiman', 'Teshie', 'Nungua',
@@ -377,3 +380,240 @@ export const FOLLOWER_ANIMATION_CONFIG = {
     useNativeDriver: true,
   },
 } as const;
+
+
+
+// constants/PromoteProduct.constants.ts
+
+export const PROMOTION_PLANS: IPromotionPlan[] = [
+  {
+    id: 'basic',
+    name: 'Basic Boost',
+    icon: 'trending-up',
+    color: '#00BFA5',
+    description: 'Get your product noticed with basic promotion',
+    features: [
+      'Featured in search results',
+      '2x more visibility',
+      'Priority in category listings',
+      'Basic analytics dashboard'
+    ],
+    pricing: {
+      7: 15,
+      14: 25,
+      30: 45
+    },
+    estimatedViews: {
+      7: '500-800',
+      14: '1,200-2,000',
+      30: '3,000-5,000'
+    },
+    badge: null
+  },
+  {
+    id: 'premium',
+    name: 'Premium Spotlight',
+    icon: 'star',
+    color: '#FF9800',
+    description: 'Maximum exposure with premium placement',
+    features: [
+      'Homepage featured section',
+      '5x more visibility',
+      'Push notifications to interested users',
+      'Advanced analytics & insights',
+      'Social media cross-promotion',
+      'Priority customer support'
+    ],
+    pricing: {
+      7: 35,
+      14: 60,
+      30: 100
+    },
+    estimatedViews: {
+      7: '1,500-2,500',
+      14: '3,500-6,000',
+      30: '8,000-15,000'
+    },
+    badge: 'Most Popular'
+  },
+  {
+    id: 'enterprise',
+    name: 'Enterprise Plus',
+    icon: 'business-center',
+    color: '#FFCC00',
+    description: 'Complete marketing solution for serious sellers',
+    features: [
+      'All Premium features',
+      '10x more visibility',
+      'Dedicated account manager',
+      'Custom promotion campaigns',
+      'Multi-platform advertising',
+      'Professional photography service',
+      'SEO optimization',
+      'Performance guarantee'
+    ],
+    pricing: {
+      7: 75,
+      14: 130,
+      30: 220
+    },
+    estimatedViews: {
+      7: '3,000-5,000',
+      14: '7,000-12,000',
+      30: '20,000-35,000'
+    },
+    badge: 'Best Value'
+  }
+];
+
+export const DURATIONS: IDuration[] = [
+  { days: 7, label: '1 Week', discount: 0 },
+  { days: 14, label: '2 Weeks', discount: 10 },
+  { days: 30, label: '1 Month', discount: 20 }
+];
+
+export const PAYMENT_METHODS: IPaymentMethod[] = [
+  {
+    id: 'mobile_money',
+    name: 'Mobile Money',
+    icon: 'phone-android',
+    description: 'MTN, Vodafone, AirtelTigo',
+    popular: true
+  },
+  {
+    id: 'bank_card',
+    name: 'Bank Card',
+    icon: 'credit-card',
+    description: 'Visa, Mastercard, Verve',
+    popular: false
+  },
+  {
+    id: 'bank_transfer',
+    name: 'Bank Transfer',
+    icon: 'account-balance',
+    description: 'Direct bank transfer',
+    popular: false
+  },
+  {
+    id: 'wallet',
+    name: 'Wallet Balance',
+    icon: 'account-balance-wallet',
+    description: 'Use your wallet balance',
+    popular: false
+  }
+];
+
+export const MOCK_ANALYTICS: IAnalytics = {
+  currentPeriod: {
+    views: 247,
+    saves: 18,
+    inquiries: 12,
+    shares: 5
+  },
+  projected: {
+    views: 1850,
+    saves: 128,
+    inquiries: 89,
+    shares: 35
+  }
+};
+
+// Step constants
+export const STEPS = {
+  PLAN_SELECTION: 1,
+  DURATION_SELECTION: 2,
+  REVIEW_CONFIRM: 3
+} as const;
+
+// Visibility multipliers
+export const VISIBILITY_MULTIPLIERS = {
+  basic: '2x',
+  premium: '5x',
+  enterprise: '10x'
+} as const;
+
+
+
+// constants/Reviews.constants.ts
+
+export const FIXED_AGENT_TO_REVIEW: IAgent= {
+  id: 'fixed_agent_001',
+  name: 'Main Branch Agent',
+  type: 'Agent',
+  avatar: 'https://i.pravatar.cc/150?img=30'
+};
+
+export const INITIAL_RECEIVED_REVIEWS: IReview[] = [
+  {
+    id: 'rev1',
+    reviewerName: 'Kwame Mensah',
+    reviewerType: 'User',
+    avatar: 'https://i.pravatar.cc/150?img=11',
+    rating: 5,
+    comment: 'Excellent service! Very professional and helpful with my cash-out. The agent was quick, courteous, and made the entire process seamless. Highly recommend!',
+    date: '2025-05-25',
+    verified: true,
+    entityType: 'Agent',
+    reply: null,
+    helpfulCount: 12,
+    notHelpfulCount: 1
+  },
+  {
+    id: 'rev2',
+    reviewerName: 'Ama Boateng',
+    reviewerType: 'User',
+    avatar: 'https://i.pravatar.cc/150?img=12',
+    rating: 4,
+    comment: 'Good overall, but transaction was a bit slow during peak hours. The service quality is decent though.',
+    date: '2025-05-23',
+    verified: true,
+    entityType: 'Agent',
+    reply: {
+      agentName: 'Your Business Name',
+      date: '2025-05-24',
+      comment: 'Apologies for the delay during peak hours. We are working to improve our service speed. Thank you for your feedback!'
+    },
+    helpfulCount: 8,
+    notHelpfulCount: 2
+  },
+  {
+    id: 'rev3',
+    reviewerName: 'John Doe',
+    reviewerType: 'User',
+    avatar: 'https://i.pravatar.cc/150?img=13',
+    rating: 3,
+    comment: 'Customer service was okay, but I had to wait a while for assistance. Could be better.',
+    date: '2025-05-20',
+    verified: false,
+    entityType: 'Agent',
+    reply: null,
+    helpfulCount: 5,
+    notHelpfulCount: 4
+  },
+];
+
+export const INITIAL_GIVEN_REVIEWS: IReview[] = [
+  {
+    id: 'giv1',
+    reviewedName: 'QuickPay Agent (Accra Mall)',
+    reviewedType: 'Agent',
+    avatar: 'https://i.pravatar.cc/150?img=20',
+    rating: 5,
+    comment: 'Super fast and friendly service! Always my go-to for transactions.',
+    date: '2025-05-18',
+    verified: true,
+    entityId: 'agent_quickpay',
+    reply: {
+      agentName: 'QuickPay Agent',
+      date: '2025-05-19',
+      comment: 'Thank you for your kind words! We appreciate your business.'
+    },
+    helpfulCount: 15,
+    notHelpfulCount: 0
+  },
+];
+
+export const REFRESH_TIMEOUT = 2000;
+
+
+

@@ -32,7 +32,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({
       <TouchableOpacity
         className="flex-row items-center gap-1 mt-2"
         activeOpacity={0.8}
-        onPress={() => navigation.navigate('ReviewsScreen')}
+        onPress={() => navigation.navigate('Reviews')}
       >
         <Text className="text-xs font-bold" style={{ color: colors.primary }}>
           View All

@@ -18,6 +18,10 @@ import ChatScreen from '../screens/App/Chat/ChatScreen';
 import FollowersScreen from '../screens/App/Followers/FollowersScreen';
 import MapScreen from '../screens/App/Map/MapScreen';
 import NotificationsScreen from '../screens/App/Notification/NotificationsScreen';
+import PromoteProductScreen from '../screens/App/Promote/PromoteProductScreen';
+import ReviewsScreen from '../screens/App/Reviews/ReviewsScreen';
+import SearchAgentsScreen from '../screens/App/SearchAgents/SearchAgentsScreen';
+import SearchUsersScreen from '../screens/App/SearchUsers/SearchUsersScreen';
 import AddProductScreen from '../screens/App/Shop/AgentShop/AddProductScreen';
 import AgentEditProductScreen from '../screens/App/Shop/AgentShop/AgentEditProductScreen';
 import AgentProductAnalyticsScreen from '../screens/App/Shop/AgentShop/AgentProductAnalyticsScreen';
@@ -40,6 +44,9 @@ export type RootTabParamList = {
   AllAgents: undefined;
   SearchUsers: undefined;
   Notiificatons: undefined;
+  PromoteProduct: undefined;
+  SearchAgents: undefined;
+
 };
 
 export type MapStackParamList = {
@@ -58,6 +65,26 @@ export type MapStackParamList = {
   UserBookings: undefined;
   Chat: undefined;
   Followers: undefined;
+  PromoteProduct: undefined;
+  Reviews: undefined;
+
+
+};
+
+
+export type SearchAgentsStackParamList = {
+  SearchAgentsHome: undefined;
+
+
+
+};
+
+
+
+export type SearchUserStackParamList = {
+  SearchUsersHome: undefined;
+
+
 
 };
 
@@ -65,13 +92,17 @@ export type ShopStackParamList = {
   ShopHome: undefined;
   ProductDetails: undefined;
   FavoriteProducts: undefined;
-  
+  PromoteProduct: undefined;
+  Reviews: undefined;
+
 };
 
 export type ProfileStackParamList = {
   ProfileHome: undefined;
   Chat: undefined;
   Followers: undefined;
+  Reviews: undefined;
+
 };
 
 export type AgentProfileStackParamList = {
@@ -86,6 +117,9 @@ export type AgentProfileStackParamList = {
   EditAgentProfile: undefined;
   Chat: undefined;
   Followers: undefined;
+  PromoteProduct: undefined;
+  Reviews: undefined;
+
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
@@ -109,11 +143,27 @@ export type AgentStackScreenProps<Screen extends keyof AgentProfileStackParamLis
     RootTabScreenProps<keyof RootTabParamList>
   >;
 
+    export type SearchUserStackScreenProps<Screen extends keyof SearchUserStackParamList> =
+  CompositeScreenProps<
+    StackScreenProps<SearchUserStackParamList, Screen>,
+    RootTabScreenProps<keyof RootTabParamList>
+  >;
+
+
+
+    export type SearchAgentsStackScreenProps<Screen extends keyof SearchAgentsStackParamList> =
+  CompositeScreenProps<
+    StackScreenProps<SearchAgentsStackParamList, Screen>,
+    RootTabScreenProps<keyof RootTabParamList>
+  >;
+
 // --------- Navigators ---------
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const MapStack = createStackNavigator<MapStackParamList>();
 const AgentProfileStack = createStackNavigator<AgentProfileStackParamList>();
+const SearchUserStack = createStackNavigator<SearchUserStackParamList>();
 const ShopStack = createStackNavigator<ShopStackParamList>();
+const SearchAgentsStack = createStackNavigator<SearchAgentsStackParamList>();
 
 // --------- Custom Tab Icon with Badge Support ---------
 interface TabIconProps {
@@ -191,6 +241,8 @@ const MapStackNavigator: React.FC = () => (
     <MapStack.Screen name="UserBookings" component={UserBookingScreen} />
     <MapStack.Screen name="Chat" component={ChatScreen} />
     <MapStack.Screen name="Followers" component={FollowersScreen} />
+    <MapStack.Screen name="PromoteProduct" component={PromoteProductScreen} />
+    <MapStack.Screen name="Reviews" component={ReviewsScreen} />
 
 
   </MapStack.Navigator>
@@ -209,6 +261,10 @@ const AgentProfileStackNavigator: React.FC = () => (
     <AgentProfileStack.Screen name="EditAgentProfile" component={EditAgentProfileScreen} />
     <AgentProfileStack.Screen name="Chat" component={ChatScreen} />
     <AgentProfileStack.Screen name="Followers" component={FollowersScreen} />
+    <AgentProfileStack.Screen name="PromoteProduct" component={PromoteProductScreen} />
+    <MapStack.Screen name="Reviews" component={ReviewsScreen} />
+    <MapStack.Screen name="SearchUsers" component={SearchUsersScreen} />
+
   </AgentProfileStack.Navigator>
 );
 
@@ -218,7 +274,29 @@ const ShopStackNavigator: React.FC = () => (
     <ShopStack.Screen name="ShopHome" component={MarketplaceScreen} />
     <ShopStack.Screen name="ProductDetails" component={ProductDetailsScreen} />
     <ShopStack.Screen name="FavoriteProducts" component={FavoriteProductsScreen} />
+    <ShopStack.Screen name="PromoteProduct" component={PromoteProductScreen} />
+    <MapStack.Screen name="Reviews" component={ReviewsScreen} />
+
   </ShopStack.Navigator>
+);
+
+
+
+const SearchUsersStackNavigator: React.FC = () => (
+  <SearchUserStack.Navigator screenOptions={{ headerShown: false }}>
+    <SearchUserStack.Screen name="SearchUsersHome" component={SearchUsersScreen} />
+
+
+  </SearchUserStack.Navigator>
+);
+
+
+const SearchAgentsStackNavigator: React.FC = () => (
+  <SearchAgentsStack.Navigator screenOptions={{ headerShown: false }}>
+    <SearchAgentsStack.Screen name="SearchAgentsHome" component={SearchAgentsScreen} />
+
+
+  </SearchAgentsStack.Navigator>
 );
 
 
@@ -306,7 +384,7 @@ const AppNavigator: React.FC = () => {
 
       <Tab.Screen
         name="AllAgents"
-        component={MapScreen}
+        component={SearchAgentsStackNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => (
             <TabIcon name="find-in-page" color={color} focused={focused} label="Agents" />
@@ -316,7 +394,7 @@ const AppNavigator: React.FC = () => {
 
       <Tab.Screen
         name="SearchUsers"
-        component={MapScreen}
+        component={SearchUsersStackNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => (
             <TabIcon name="group" color={color} focused={focused} label="Search" />

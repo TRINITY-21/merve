@@ -122,7 +122,7 @@ const ProductsTab: React.FC<IProductsTabProps> = ({ dashboardData, navigation })
           <TouchableOpacity 
             className="bg-white rounded-xl p-5 items-center shadow-sm shadow-black/10 elevation-4"
             style={{ width: (screenWidth - 52) / 2 }}
-            onPress={() => navigation.navigate('PromoteProductScreen')}
+            onPress={() => navigation.navigate('PromoteProduct')}
             activeOpacity={0.8}
           >
             <MaterialIcons name="star" size={24} color={colors.warning} />
