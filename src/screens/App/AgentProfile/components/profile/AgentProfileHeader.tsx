@@ -114,7 +114,7 @@ export const AgentProfileHeader: React.FC<AgentProfileHeaderProps> = ({
             <TouchableOpacity
               className="p-2.5 rounded-full items-center justify-center"
               style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)' }}
-              onPress={() => navigation.navigate('ChatScreen')}
+              onPress={() => navigation.navigate('Chat')} 
               activeOpacity={0.7}
             >
               <MaterialIcons name="phone" size={20} color={colors.secondary} />
@@ -122,7 +122,7 @@ export const AgentProfileHeader: React.FC<AgentProfileHeaderProps> = ({
             <TouchableOpacity
               className="p-2.5 rounded-full items-center justify-center"
               style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)' }}
-              onPress={() => navigation.navigate('ChatScreen')}
+              onPress={() => navigation.navigate('Chat')}
               activeOpacity={0.7}
             >
               <MaterialIcons name="chat-bubble-outline" size={20} color={colors.secondary} />

@@ -9,7 +9,7 @@ import {
     View,
 } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
-import { IMediaPreviewProps } from '../types/chatInterfaces';
+import { IMediaPreviewProps } from '../../../../types/chatTypes';
 
 export const MediaPreview: React.FC<IMediaPreviewProps> = ({
   media,
