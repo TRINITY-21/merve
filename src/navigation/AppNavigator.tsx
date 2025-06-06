@@ -16,6 +16,7 @@ import AgentBookingManagementScreen from '../screens/App/Booking/AgentBooking/Ag
 import UserBookingScreen from '../screens/App/Booking/UserBooking/UserBookingScreen';
 import ChatScreen from '../screens/App/Chat/ChatScreen';
 import FollowersScreen from '../screens/App/Followers/FollowersScreen';
+import InvitationScreen from '../screens/App/Invitation/InvitationScreen';
 import MapScreen from '../screens/App/Map/MapScreen';
 import NotificationsScreen from '../screens/App/Notification/NotificationsScreen';
 import PromoteProductScreen from '../screens/App/Promote/PromoteProductScreen';
@@ -33,6 +34,8 @@ import FavoriteProductsScreen from '../screens/App/Shop/UserShop/FavoriteProduct
 import UserAccountInfoScreen from '../screens/App/UserProfile/UserAccountInfoScreen';
 import UserProfileScreen from '../screens/App/UserProfile/UserProfileScreen';
 import UserSettingsScreen from '../screens/App/UserProfile/UserSettingsScreen';
+import AgentRegistrationScreen from '../screens/App/Vendor/components/agentRegistration/AgentRegistrationScreen';
+import VendorScreen from '../screens/App/Vendor/VendorScreen';
 
 // --------- Type Definitions ---------
 export type RootTabParamList = {
@@ -46,7 +49,9 @@ export type RootTabParamList = {
   Notiificatons: undefined;
   PromoteProduct: undefined;
   SearchAgents: undefined;
-
+  Vendor: undefined;
+  Invitations: undefined;
+  AgentRegistration: undefined;
 };
 
 export type MapStackParamList = {
@@ -67,6 +72,10 @@ export type MapStackParamList = {
   Followers: undefined;
   PromoteProduct: undefined;
   Reviews: undefined;
+    Vendor: undefined;
+  Invitations: undefined;
+AgentRegistration: undefined;
+
 
 
 };
@@ -74,7 +83,8 @@ export type MapStackParamList = {
 
 export type SearchAgentsStackParamList = {
   SearchAgentsHome: undefined;
-
+  Vendor: undefined;
+AgentRegistration: undefined;
 
 
 };
@@ -83,7 +93,9 @@ export type SearchAgentsStackParamList = {
 
 export type SearchUserStackParamList = {
   SearchUsersHome: undefined;
-
+  Vendor: undefined;
+  Invitations: undefined;
+AgentRegistration: undefined;
 
 
 };
@@ -94,7 +106,9 @@ export type ShopStackParamList = {
   FavoriteProducts: undefined;
   PromoteProduct: undefined;
   Reviews: undefined;
-
+  Vendor: undefined;
+  Invitations: undefined;
+  AgentRegistration: undefined;
 };
 
 export type ProfileStackParamList = {
@@ -102,7 +116,9 @@ export type ProfileStackParamList = {
   Chat: undefined;
   Followers: undefined;
   Reviews: undefined;
-
+  Vendor: undefined;
+  Invitations: undefined;
+  AgentRegistration: undefined;
 };
 
 export type AgentProfileStackParamList = {
@@ -119,7 +135,9 @@ export type AgentProfileStackParamList = {
   Followers: undefined;
   PromoteProduct: undefined;
   Reviews: undefined;
-
+  Vendor: undefined;
+  Invitations: undefined;
+  AgentRegistration: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
@@ -243,7 +261,8 @@ const MapStackNavigator: React.FC = () => (
     <MapStack.Screen name="Followers" component={FollowersScreen} />
     <MapStack.Screen name="PromoteProduct" component={PromoteProductScreen} />
     <MapStack.Screen name="Reviews" component={ReviewsScreen} />
-
+    <MapStack.Screen name="Vendor" component={VendorScreen} />
+    <MapStack.Screen name="AgentRegistration" component={AgentRegistrationScreen} />
 
   </MapStack.Navigator>
 );
@@ -262,8 +281,11 @@ const AgentProfileStackNavigator: React.FC = () => (
     <AgentProfileStack.Screen name="Chat" component={ChatScreen} />
     <AgentProfileStack.Screen name="Followers" component={FollowersScreen} />
     <AgentProfileStack.Screen name="PromoteProduct" component={PromoteProductScreen} />
-    <MapStack.Screen name="Reviews" component={ReviewsScreen} />
-    <MapStack.Screen name="SearchUsers" component={SearchUsersScreen} />
+    <AgentProfileStack.Screen name="Reviews" component={ReviewsScreen} />
+    <AgentProfileStack.Screen name="Vendor" component={VendorScreen} />
+    <AgentProfileStack.Screen name="Invitations" component={InvitationScreen} />
+    <AgentProfileStack.Screen name="AgentRegistration" component={AgentRegistrationScreen} />
+
 
   </AgentProfileStack.Navigator>
 );
@@ -275,7 +297,11 @@ const ShopStackNavigator: React.FC = () => (
     <ShopStack.Screen name="ProductDetails" component={ProductDetailsScreen} />
     <ShopStack.Screen name="FavoriteProducts" component={FavoriteProductsScreen} />
     <ShopStack.Screen name="PromoteProduct" component={PromoteProductScreen} />
-    <MapStack.Screen name="Reviews" component={ReviewsScreen} />
+    <ShopStack.Screen name="Reviews" component={ReviewsScreen} />
+    <ShopStack.Screen name="Invitations" component={InvitationScreen} />
+    <ShopStack.Screen name="AgentRegistration" component={AgentRegistrationScreen} />
+
+
 
   </ShopStack.Navigator>
 );
@@ -285,6 +311,8 @@ const ShopStackNavigator: React.FC = () => (
 const SearchUsersStackNavigator: React.FC = () => (
   <SearchUserStack.Navigator screenOptions={{ headerShown: false }}>
     <SearchUserStack.Screen name="SearchUsersHome" component={SearchUsersScreen} />
+    <AgentProfileStack.Screen name="Invitations" component={InvitationScreen} />
+    <AgentProfileStack.Screen name="AgentRegistration" component={AgentRegistrationScreen} />
 
 
   </SearchUserStack.Navigator>
@@ -294,6 +322,7 @@ const SearchUsersStackNavigator: React.FC = () => (
 const SearchAgentsStackNavigator: React.FC = () => (
   <SearchAgentsStack.Navigator screenOptions={{ headerShown: false }}>
     <SearchAgentsStack.Screen name="SearchAgentsHome" component={SearchAgentsScreen} />
+    <AgentProfileStack.Screen name="Invitations" component={InvitationScreen} />
 
 
   </SearchAgentsStack.Navigator>

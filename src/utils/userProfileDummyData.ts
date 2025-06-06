@@ -344,7 +344,7 @@ export const accountSections: IAccountSection[] = [
       color: colors.accent,
       expandable: true,
       items: [
-        { id: 'become-agent', title: 'Become an Agent', icon: 'business', action: 'navigate', screen: 'BecomeAgent', highlight: true },
+        { id: 'become-agent', title: 'Become an Agent', icon: 'business', action: 'navigate', screen: 'Vendor', highlight: true },
         { id: 'agent-dashboard', title: 'Agent Dashboard', icon: 'dashboard', action: 'navigate', screen: 'AgentDashboard' },
         { id: 'agent-earnings', title: 'Earnings & Reports', icon: 'assessment', action: 'navigate', screen: 'AgentEarnings' },
         { id: 'agent-support', title: 'Agent Support', icon: 'support-agent', action: 'navigate', screen: 'AgentSupport' },

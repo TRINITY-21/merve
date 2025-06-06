@@ -76,7 +76,7 @@ export const InvitesSection: React.FC<InvitesSectionProps> = ({
     <TouchableOpacity
       className="flex-row items-center gap-1 mt-2"
       activeOpacity={0.8}
-      onPress={() => navigation.navigate('InvitationsScreen')}
+      onPress={() => navigation.navigate('Invitations')}
     >
       <Text className="text-xs font-bold" style={{ color: colors.primary }}>
         View Invites

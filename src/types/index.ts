@@ -269,6 +269,7 @@ export interface IReplyResult {
 
 // Input types for forms/registration
 export interface IAgentRegistrationData {
+  id?: string;
   name: string;
   address?: string;
   networks?: string[];
