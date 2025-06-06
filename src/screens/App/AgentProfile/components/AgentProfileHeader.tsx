@@ -43,9 +43,9 @@ export const AgentProfileHeader: React.FC<AgentProfileHeaderProps> = ({
           onPress: () => navigation.goBack(),
         }}
         rightIcons={[
-          { name: 'shop-2', onPress: () => navigation.navigate('AgentShopDashboardScreen') },
-          { name: 'event', onPress: () => navigation.navigate('AgentBookingManagementScreen') },
-          { name: 'settings', onPress: () => navigation.navigate('AgentSettingsScreen') },
+          { name: 'shop-2', onPress: () => navigation.navigate('AgentShopDashboard') },
+          { name: 'event', onPress: () => navigation.navigate('AgentBookingManagement') },
+          { name: 'settings', onPress: () => navigation.navigate('AgentSettings') },
         ]}
       />
 

@@ -9,17 +9,24 @@ import React, { useEffect, useState } from 'react';
 import { Platform, View } from 'react-native';
 import { Typography } from '../components/common/Typography';
 import ActivityScreen from '../screens/App/Activity/ActivityScreen';
-import AgentsProfileScreen from '../screens/App/Agent/AgentsProfileScreen';
+import AgentsProfileScreen from '../screens/App/AgentProfile/AgentsProfileScreen';
+import AgentBookingManagementScreen from '../screens/App/Booking/AgentBooking/AgentBookingManagementScreen';
+import UserBookingScreen from '../screens/App/Booking/UserBooking/UserBookingScreen';
 import MapScreen from '../screens/App/Map/MapScreen';
 import NotificationsScreen from '../screens/App/Notification/NotificationsScreen';
 import UserAccountInfoScreen from '../screens/App/UserProfile/UserAccountInfoScreen';
 import UserProfileScreen from '../screens/App/UserProfile/UserProfileScreen';
 import UserSettingsScreen from '../screens/App/UserProfile/UserSettingsScreen';
+import AddProductScreen from '../screens/Shop/AgentShop/AddProductScreen';
+import AgentEditProductScreen from '../screens/Shop/AgentShop/AgentEditProductScreen';
+import AgentProductAnalyticsScreen from '../screens/Shop/AgentShop/AgentProductAnalyticsScreen';
+import AgentProductsScreen from '../screens/Shop/AgentShop/AgentProductsScreen';
+import AgentShopDashboardScreen from '../screens/Shop/AgentShop/AgentShopDashboardScreen';
 
 // --------- Type Definitions ---------
 export type RootTabParamList = {
   Map: undefined;
-  AgentsProfile: undefined;
+  AgentsProfile: undefined;  
   UserProfile: undefined;
   Agent: undefined;
   Shop: undefined;
@@ -41,6 +48,7 @@ export type MapStackParamList = {
   UserSettings: undefined;
   UserAccountInfo: undefined;
   Activity: undefined;
+  UserBookings: undefined;
 };
 
 export type FeedStackParamList = {
@@ -53,6 +61,12 @@ export type ProfileStackParamList = {
 
 export type AgentProfileStackParamList = {
   AgentProfile: undefined;
+  AgentBookingManagement: undefined;  
+  AgentShopDashboard: undefined;     
+  AddProduct: undefined;
+  AgentProducts: undefined;
+  AgentEditProduct: undefined;
+  AgentProductAnalytics: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
@@ -149,6 +163,7 @@ const MapStackNavigator: React.FC = () => (
     <MapStack.Screen name="UserSettings" component={UserSettingsScreen} />
     <MapStack.Screen name="UserAccountInfo" component={UserAccountInfoScreen} />
     <MapStack.Screen name="Activity" component={ActivityScreen} />
+    <MapStack.Screen name="UserBookings" component={UserBookingScreen} />
 
   </MapStack.Navigator>
 );
@@ -156,7 +171,12 @@ const MapStackNavigator: React.FC = () => (
 const AgentProfileStackNavigator: React.FC = () => (
   <AgentProfileStack.Navigator screenOptions={{ headerShown: false }}>
     <AgentProfileStack.Screen name="AgentProfile" component={AgentsProfileScreen} />
-
+    <AgentProfileStack.Screen name="AgentBookingManagement" component={AgentBookingManagementScreen} />
+    <AgentProfileStack.Screen name="AgentShopDashboard" component={AgentShopDashboardScreen} />
+    <AgentProfileStack.Screen name="AddProduct" component={AddProductScreen} />
+    <AgentProfileStack.Screen name="AgentProducts" component={AgentProductsScreen} />
+    <AgentProfileStack.Screen name="AgentEditProduct" component={AgentEditProductScreen} />
+    <AgentProfileStack.Screen name="AgentProductAnalytics" component={AgentProductAnalyticsScreen} />
   </AgentProfileStack.Navigator>
 );
 

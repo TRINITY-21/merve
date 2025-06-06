@@ -1057,7 +1057,7 @@ const UserProfileScreen: React.FC = () => {
                     }}
                     onBack={() => navigation.goBack()}
                     onSettings={() => navigation.navigate('UserSettings' as never)}
-                    onBookings={() => navigation.navigate('BookAppointmentsScreen' as never)}
+                    onBookings={() => navigation.navigate('UserBookings' as never)}
                     bookingsCount={dummyRecentBookings.length}
                 />
 

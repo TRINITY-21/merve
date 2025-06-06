@@ -1,0 +1,68 @@
+import { IAgent, IBooking } from "../types/BookingTypes";
+
+// Dummy data
+export const userDummyBookings: IBooking[] = [
+  {
+    id: '1',
+    agentName: 'Kwame\'s Mobile Money',
+    agentPhone: '+233-26-987-6543',
+    serviceType: 'cash_out',
+    amount: 500,
+    date: '2025-05-30',
+    time: '14:30',
+    location: 'Nkrumah Circle',
+    status: 'pending',
+    createdAt: '2025-05-28T10:00:00Z',
+    notes: 'Need to withdraw for school fees',
+    reminderSet: true,
+  },
+  {
+    id: '2', 
+    agentName: 'Quick Cash Services',
+    agentPhone: '+233-24-111-2222',
+    serviceType: 'cash_in',
+    amount: 1000,
+    date: '2025-05-29',
+    time: '16:00',
+    location: 'Accra Mall',
+    status: 'accepted',
+    createdAt: '2025-05-27T15:30:00Z',
+    notes: 'Deposit salary',
+    reminderSet: true,
+  },
+  {
+    id: '3',
+    agentName: 'Omar Cash Services', 
+    agentPhone: '+233-24-777-8888',
+    serviceType: 'bill_payment',
+    amount: 150,
+    date: '2025-05-25',
+    time: '11:00',
+    location: 'Kaneshie Market',
+    status: 'completed',
+    createdAt: '2025-05-23T09:15:00Z',
+    notes: 'Pay electricity bill',
+    reminderSet: false,
+  },
+  {
+    id: '4',
+    agentName: 'Akosua MoMo Point',
+    agentPhone: '+233-27-456-7890', 
+    serviceType: 'cash_out',
+    amount: 200,
+    date: '2025-05-20',
+    time: '13:15',
+    location: 'Madina Market',
+    status: 'cancelled',
+    createdAt: '2025-05-18T12:00:00Z',
+    notes: 'Emergency withdrawal',
+    reminderSet: false,
+  }
+];
+
+export const userDummyAgents: IAgent[] = [
+  { id: '1', name: 'Kwame\'s Mobile Money', location: 'Nkrumah Circle', rating: 4.8 },
+  { id: '2', name: 'Quick Cash Services', location: 'Accra Mall', rating: 4.9 },
+  { id: '3', name: 'Omar Cash Services', location: 'Kaneshie Market', rating: 4.7 },
+  { id: '4', name: 'Akosua MoMo Point', location: 'Madina Market', rating: 4.2 },
+];
