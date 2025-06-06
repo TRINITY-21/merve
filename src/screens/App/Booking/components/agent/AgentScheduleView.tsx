@@ -100,7 +100,7 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
                 <TouchableOpacity 
                   className="w-10 h-10 rounded-full items-center justify-center"
                   style={{ backgroundColor: colors.accent + '20' }}
-                  onPress={() => navigation.navigate('ChatScreen', { customer: booking.customerName })}
+                  onPress={() => navigation.navigate('Chat', { customer: booking.customerName })}
                 >
                   <MaterialIcons name="message" size={20} color={colors.accent} />
                 </TouchableOpacity>

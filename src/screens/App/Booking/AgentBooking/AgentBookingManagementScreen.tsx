@@ -274,7 +274,7 @@ const AgentBookingManagementScreen: React.FC = () => {
             request={item}
             fadeAnim={fadeAnim}
             onAction={handleBookingAction}
-            onMessage={(customerName) => navigation.navigate('ChatScreen', { customer: customerName })}
+            onMessage={(customerName) => navigation.navigate('Chat', { customer: customerName })}
             getServiceIcon={getServiceIcon}
             getServiceColor={getServiceColor}
             getUrgencyColor={getUrgencyColor}

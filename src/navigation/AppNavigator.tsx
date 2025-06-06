@@ -9,9 +9,12 @@ import React, { useEffect, useState } from 'react';
 import { Platform, View } from 'react-native';
 import { Typography } from '../components/common/Typography';
 import ActivityScreen from '../screens/App/Activity/ActivityScreen';
+import AgentSettingsScreen from '../screens/App/AgentProfile/AgentSettingsScreen';
 import AgentsProfileScreen from '../screens/App/AgentProfile/AgentsProfileScreen';
+import EditAgentProfileScreen from '../screens/App/AgentProfile/EditAgentProfileScreen';
 import AgentBookingManagementScreen from '../screens/App/Booking/AgentBooking/AgentBookingManagementScreen';
 import UserBookingScreen from '../screens/App/Booking/UserBooking/UserBookingScreen';
+import ChatScreen from '../screens/App/Chat/ChatScreen';
 import MapScreen from '../screens/App/Map/MapScreen';
 import NotificationsScreen from '../screens/App/Notification/NotificationsScreen';
 import AddProductScreen from '../screens/App/Shop/AgentShop/AddProductScreen';
@@ -51,15 +54,18 @@ export type MapStackParamList = {
   UserAccountInfo: undefined;
   Activity: undefined;
   UserBookings: undefined;
+  Chat: undefined;
 };
 
 export type ShopStackParamList = {
   ShopHome: undefined;
   ProductDetails: undefined;
+  
 };
 
 export type ProfileStackParamList = {
   ProfileHome: undefined;
+  Chat: undefined;
 };
 
 export type AgentProfileStackParamList = {
@@ -70,6 +76,9 @@ export type AgentProfileStackParamList = {
   AgentProducts: undefined;
   AgentEditProduct: undefined;
   AgentProductAnalytics: undefined;
+  AgentSettings: undefined;
+  EditAgentProfile: undefined;
+  Chat: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
@@ -173,6 +182,8 @@ const MapStackNavigator: React.FC = () => (
     <MapStack.Screen name="UserAccountInfo" component={UserAccountInfoScreen} />
     <MapStack.Screen name="Activity" component={ActivityScreen} />
     <MapStack.Screen name="UserBookings" component={UserBookingScreen} />
+    <MapStack.Screen name="Chat" component={ChatScreen} />
+
 
   </MapStack.Navigator>
 );
@@ -186,6 +197,9 @@ const AgentProfileStackNavigator: React.FC = () => (
     <AgentProfileStack.Screen name="AgentProducts" component={AgentProductsScreen} />
     <AgentProfileStack.Screen name="AgentEditProduct" component={AgentEditProductScreen} />
     <AgentProfileStack.Screen name="AgentProductAnalytics" component={AgentProductAnalyticsScreen} />
+    <AgentProfileStack.Screen name="AgentSettings" component={AgentSettingsScreen} />
+    <AgentProfileStack.Screen name="EditAgentProfile" component={EditAgentProfileScreen} />
+    <AgentProfileStack.Screen name="Chat" component={ChatScreen} />
   </AgentProfileStack.Navigator>
 );
 

@@ -68,3 +68,87 @@ export const GHANA_LOCATIONS = {
     'Akontombra', 'Enchi', 'Dadieso'
   ]
 };
+
+
+
+// constants/chatConstants.ts
+
+export const CHAT_CONFIG = {
+  MAX_MESSAGE_LENGTH: 500,
+  TYPING_DELAY: 1000,
+  AGENT_RESPONSE_DELAY: 2000,
+  VIBRATION_DURATION: 50,
+  SWIPE_THRESHOLD: 50,
+  SCROLL_THRESHOLD: 100,
+} as const;
+
+export const QUICK_REPLIES = [
+  'Thanks! 👍',
+  'Sure, I\'ll check',
+  'Give me a moment',
+  'Perfect!',
+  'On my way',
+] as const;
+
+export const EMOJI_REACTIONS = [
+  '❤️', 
+  '👍', 
+  '😂', 
+  '😮', 
+  '😢', 
+  '🙏'
+] as const;
+
+export const MEDIA_TYPES = {
+  IMAGE: 'image',
+  VIDEO: 'video',
+  VOICE: 'voice',
+  FILE: 'file',
+} as const;
+
+export const MESSAGE_STATUS = {
+  SENDING: 'sending',
+  SENT: 'sent',
+  DELIVERED: 'delivered',
+  READ: 'read',
+  FAILED: 'failed',
+} as const;
+
+export const CHAT_COLORS = {
+  USER_MESSAGE: '#FFCC00',
+  AGENT_MESSAGE: 'rgba(255, 255, 255, 0.95)',
+  BACKGROUND: ['#f5f7fa', '#c3cfe2'],
+  HEADER: ['#FFCC00', '#FFB300'],
+  PRIMARY: '#FFCC00',
+  SECONDARY: '#1E3A5F',
+  ACCENT: '#00BFA5',
+  WHITE: '#FFFFFF',
+  BLACK: '#000000',
+  GRAY: {
+    LIGHT: '#E0E0E0',
+    MEDIUM: '#9E9E9E',
+    DARK: '#616161',
+  },
+  SUCCESS: '#4CAF50',
+  ERROR: '#F44336',
+  WARNING: '#FF9800',
+} as const;
+
+export const ANIMATION_CONFIG = {
+  SPRING: {
+    damping: 15,
+    stiffness: 150,
+    mass: 1,
+  },
+  TIMING: {
+    duration: 300,
+  },
+  FADE: {
+    duration: 200,
+  },
+} as const;
+
+export const KEYBOARD_CONFIG = {
+  IOS_OFFSET: 90,
+  ANDROID_OFFSET: 0,
+} as const;

@@ -225,7 +225,7 @@ const UserBookingScreen: React.FC = () => {
             booking={item}
             fadeAnim={fadeAnim}
             onAction={handleBookingAction}
-            onMessage={(agentName) => navigation.navigate('ChatScreen', { agent: { name: agentName } })}
+            onMessage={(agentName) => navigation.navigate('Chat', { agent: { name: agentName } })}
             getServiceIcon={getServiceIcon}
             getServiceColor={getServiceColor}
             getStatusColor={getStatusColor}
