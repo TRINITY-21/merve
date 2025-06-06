@@ -243,3 +243,137 @@ export const FAVORITES_COLORS = {
     DARK: 'rgba(0, 0, 0, 0.3)',
   },
 } as const;
+
+
+
+
+
+
+
+
+// constants/followersConstants.ts
+
+export const FOLLOWERS_CONFIG = {
+  REFRESH_DELAY: 2000,
+  ANIMATION_DURATION: 1000,
+  TAB_ANIMATION_TENSION: 20,
+  TAB_ANIMATION_FRICTION: 7,
+  HEADER_ANIMATION_TENSION: 25,
+  HEADER_ANIMATION_FRICTION: 8,
+} as const;
+
+export const ENGAGEMENT_LEVELS = {
+  HIGH: 'high',
+  MEDIUM: 'medium',
+  LOW: 'low',
+} as const;
+
+export const USER_TYPES = {
+  USER: 'user',
+  AGENT: 'agent',
+} as const;
+
+export const TAB_TYPES = {
+  FOLLOWERS: 'followers',
+  FOLLOWING: 'following',
+} as const;
+
+export const FILTER_KEYS = {
+  ALL: 'all',
+  FOLLOWING_BACK: 'following_back',
+  NOT_FOLLOWING_BACK: 'not_following_back',
+  VERIFIED: 'verified',
+  CUSTOMERS: 'customers',
+  VIP: 'vip',
+  NEW: 'new',
+  INACTIVE: 'inactive',
+  AGENTS: 'agents',
+  TOP_RATED: 'top_rated',
+  NEARBY: 'nearby',
+  AVAILABLE: 'available',
+  FAVORITE: 'favorite',
+} as const;
+
+export const ACTION_TYPES = {
+  FOLLOW_BACK: 'follow_back',
+  UNFOLLOW: 'unfollow',
+  REMOVE: 'remove',
+  BLOCK: 'block',
+  VIEW_PROFILE: 'view_profile',
+  MESSAGE: 'message',
+  CALL: 'call',
+  DIRECTIONS: 'directions',
+  FAVORITE: 'favorite',
+  NOTIFY: 'notify',
+} as const;
+
+export const BULK_ACTIONS = {
+  FOLLOWERS: [
+    { action: 'Follow Back', icon: 'person-add' },
+    { action: 'Remove', icon: 'person-remove' },
+    { action: 'Block', icon: 'block' },
+  ],
+  FOLLOWING: [
+    { action: 'Unfollow', icon: 'person-remove' },
+    { action: 'Add to Favorites', icon: 'favorite' },
+    { action: 'Notify', icon: 'notifications' },
+  ],
+} as const;
+
+export const RATING_COLORS = {
+  EXCELLENT: '#4CAF50', // 4.5+
+  GOOD: '#FFCC00',      // 4.0+
+  FAIR: '#FF9800',      // 3.5+
+  POOR: '#F44336',      // Below 3.5
+} as const;
+
+export const ENGAGEMENT_COLORS = {
+  HIGH: '#4CAF50',
+  MEDIUM: '#FF9800',
+  LOW: '#F44336',
+} as const;
+
+export const FOLLOWERS_COLORS = {
+  PRIMARY: '#FFCC00',
+  SECONDARY: '#1E3A5F',
+  ACCENT: '#00BFA5',
+  SUCCESS: '#4CAF50',
+  ERROR: '#F44336',
+  WARNING: '#FF9800',
+  WHITE: '#FFFFFF',
+  BLACK: '#000000',
+  GRAY: {
+    LIGHT: '#E0E0E0',
+    MEDIUM: '#9E9E9E',
+    DARK: '#616161',
+  },
+  BACKGROUND: '#F5F5F5',
+  CARD: '#FFFFFF',
+  SHADOW: {
+    LIGHT: 'rgba(0, 0, 0, 0.1)',
+    MEDIUM: 'rgba(0, 0, 0, 0.2)',
+    DARK: 'rgba(0, 0, 0, 0.3)',
+  },
+} as const;
+
+export const FOLLOWER_ANIMATION_CONFIG = {
+  FADE: {
+    duration: 1000,
+    useNativeDriver: true,
+  },
+  SLIDE: {
+    tension: 20,
+    friction: 7,
+    useNativeDriver: true,
+  },
+  SCALE: {
+    tension: 25,
+    friction: 8,
+    useNativeDriver: true,
+  },
+  TAB_SLIDE: {
+    tension: 20,
+    friction: 7,
+    useNativeDriver: true,
+  },
+} as const;
