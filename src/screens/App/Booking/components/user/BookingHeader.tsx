@@ -3,7 +3,8 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { Animated, Dimensions, Platform, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, Dimensions, Text, TouchableOpacity, View } from 'react-native';
+import { Header } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { ITab } from '../../../../../types/BookingTypes';
 
@@ -29,39 +30,30 @@ export const BookingHeader: React.FC<BookingHeaderProps> = ({
 
 
   <View className="shadow-lg shadow-black/30 elevation-8">
-    <LinearGradient colors={colors.gradient.primary} className="rounded-b-0">
-      <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
-
-      <View
-        className="px-5"
-        style={{ paddingTop: Platform.OS === 'ios' ? 60 : 10, paddingBottom: 20 }}
-      >
-        <View className="flex-row items-center justify-between mb-5">
-          <TouchableOpacity
-            className="w-10 h-10 rounded-full items-center justify-center"
-            style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)' }}
-            onPress={() => navigation.goBack()}
-            activeOpacity={0.7}
-          >
-            <MaterialIcons name="chevron-left" size={24} color={colors.secondary} />
-          </TouchableOpacity>
-
-          <Text className="text-2xl font-extrabold text-center flex-1" style={{ color: colors.secondary }}>
-            Book Appointments
-          </Text>
-
-          <TouchableOpacity
-            className="w-10 h-10 rounded-full items-center justify-center"
-            style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)' }}
-            onPress={onNewBookingPress}
-            activeOpacity={0.7}
-          >
-            <MaterialIcons name="add" size={24} color={colors.secondary} />
-          </TouchableOpacity>
-        </View>
+    <LinearGradient colors={colors.gradient.primary} className="rounded-b-0" 
+      style={{ paddingBottom: 20 }}>
+  
+        <Header title="Book Appointments" withShadow={false} 
+          barStyle="light-content"
+          backgroundColor="transparent"
+          titleColor={colors.secondary}
+          iconBackgroundColor="rgba(255, 255, 255, 0.1)"
+          leftIcon={{
+            name: 'chevron-left',
+            onPress: () => navigation.goBack(),
+            color: colors.secondary
+          }}
+          rightIcons={[
+            {
+              name: 'add',
+              onPress: onNewBookingPress,
+              color: colors.secondary
+            }
+          ]}
+        />
 
         {/* Tab Navigation */}
-        <View className="flex-row rounded-3xl p-1 relative" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
+        <View className="flex-row rounded-3xl p- relative" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
           <View className="absolute top-1 bottom-1 left-5 right-5">
             <Animated.View
               className="absolute top-0 bottom-0 rounded-2xl"
@@ -101,7 +93,6 @@ export const BookingHeader: React.FC<BookingHeaderProps> = ({
             </TouchableOpacity>
           ))}
         </View>
-      </View>
     </LinearGradient>
   </View>
 

@@ -14,14 +14,16 @@ import AgentBookingManagementScreen from '../screens/App/Booking/AgentBooking/Ag
 import UserBookingScreen from '../screens/App/Booking/UserBooking/UserBookingScreen';
 import MapScreen from '../screens/App/Map/MapScreen';
 import NotificationsScreen from '../screens/App/Notification/NotificationsScreen';
+import AddProductScreen from '../screens/App/Shop/AgentShop/AddProductScreen';
+import AgentEditProductScreen from '../screens/App/Shop/AgentShop/AgentEditProductScreen';
+import AgentProductAnalyticsScreen from '../screens/App/Shop/AgentShop/AgentProductAnalyticsScreen';
+import AgentProductsScreen from '../screens/App/Shop/AgentShop/AgentProductsScreen';
+import AgentShopDashboardScreen from '../screens/App/Shop/AgentShop/AgentShopDashboardScreen';
+import MarketplaceScreen from '../screens/App/Shop/Home/MarketplaceScreen';
+import ProductDetailsScreen from '../screens/App/Shop/Home/ProductDetailsScreen';
 import UserAccountInfoScreen from '../screens/App/UserProfile/UserAccountInfoScreen';
 import UserProfileScreen from '../screens/App/UserProfile/UserProfileScreen';
 import UserSettingsScreen from '../screens/App/UserProfile/UserSettingsScreen';
-import AddProductScreen from '../screens/Shop/AgentShop/AddProductScreen';
-import AgentEditProductScreen from '../screens/Shop/AgentShop/AgentEditProductScreen';
-import AgentProductAnalyticsScreen from '../screens/Shop/AgentShop/AgentProductAnalyticsScreen';
-import AgentProductsScreen from '../screens/Shop/AgentShop/AgentProductsScreen';
-import AgentShopDashboardScreen from '../screens/Shop/AgentShop/AgentShopDashboardScreen';
 
 // --------- Type Definitions ---------
 export type RootTabParamList = {
@@ -51,8 +53,9 @@ export type MapStackParamList = {
   UserBookings: undefined;
 };
 
-export type FeedStackParamList = {
-  FeedHome: undefined;
+export type ShopStackParamList = {
+  ShopHome: undefined;
+  ProductDetails: undefined;
 };
 
 export type ProfileStackParamList = {
@@ -84,11 +87,17 @@ export type AgentStackScreenProps<Screen extends keyof AgentProfileStackParamLis
     RootTabScreenProps<keyof RootTabParamList>
   >;
 
+  export type ShopStackScreenProps<Screen extends keyof ShopStackParamList> =
+  CompositeScreenProps<
+    StackScreenProps<ShopStackParamList, Screen>,
+    RootTabScreenProps<keyof RootTabParamList>
+  >;
+
 // --------- Navigators ---------
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const MapStack = createStackNavigator<MapStackParamList>();
 const AgentProfileStack = createStackNavigator<AgentProfileStackParamList>();
-const FeedStack = createStackNavigator<FeedStackParamList>();
+const ShopStack = createStackNavigator<ShopStackParamList>();
 
 // --------- Custom Tab Icon with Badge Support ---------
 interface TabIconProps {
@@ -180,6 +189,16 @@ const AgentProfileStackNavigator: React.FC = () => (
   </AgentProfileStack.Navigator>
 );
 
+
+const ShopStackNavigator: React.FC = () => (
+  <ShopStack.Navigator screenOptions={{ headerShown: false }}>
+    <ShopStack.Screen name="ShopHome" component={MarketplaceScreen} />
+    <ShopStack.Screen name="ProductDetails" component={ProductDetailsScreen} />
+  </ShopStack.Navigator>
+);
+
+
+
 // --------- Main App Navigator ---------
 const AppNavigator: React.FC = () => {
   // Notification state management
@@ -253,7 +272,7 @@ const AppNavigator: React.FC = () => {
 
       <Tab.Screen
         name="Shop"
-        component={MapScreen}
+        component={ShopStackNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => (
             <TabIcon name="shop" color={color} focused={focused} label="Shop" />

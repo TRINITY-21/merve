@@ -14,18 +14,18 @@ import {
 } from 'react-native';
 import { colors } from '../../../constants/theme/colors';
 import { agentData, agentMarketplaceData, agentRecentBookings } from '../../../utils/agentProfileDummyData';
-import { BookingsSection } from './components/AgentBookingSection';
-import { FollowersSection } from './components/AgentFollowerSection';
-import { InviteModal } from './components/AgentInviteModal';
-import { InvitesSection } from './components/AgentInvitesSection';
-import { AgentMapView } from './components/AgentMapLocation';
-import { MarketplaceSection } from './components/AgentMarketPlace';
-import { OperationalHours } from './components/AgentOperationalHours';
-import { AgentProfileHeader } from './components/AgentProfileHeader';
-import { ProvidersSection } from './components/AgentProviderSection';
-import { RecentActivities } from './components/AgentRecentActivities';
-import { ReviewsSection } from './components/AgentReviewSection';
-import { ServicesSection } from './components/AgentServiceSection';
+import { BookingsSection } from './components/profile/AgentBookingSection';
+import { FollowersSection } from './components/profile/AgentFollowerSection';
+import { InviteModal } from './components/profile/AgentInviteModal';
+import { InvitesSection } from './components/profile/AgentInvitesSection';
+import { AgentMapView } from './components/profile/AgentMapLocation';
+import { MarketplaceSection } from './components/profile/AgentMarketPlace';
+import { OperationalHours } from './components/profile/AgentOperationalHours';
+import { AgentProfileHeader } from './components/profile/AgentProfileHeader';
+import { ProvidersSection } from './components/profile/AgentProviderSection';
+import { RecentActivities } from './components/profile/AgentRecentActivities';
+import { ReviewsSection } from './components/profile/AgentReviewSection';
+import { ServicesSection } from './components/profile/AgentServiceSection';
 
 interface NavigationProps {
   navigate: (screen: string, params?: any) => void;

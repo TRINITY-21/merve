@@ -220,6 +220,7 @@ const UserBookingScreen: React.FC = () => {
     };
 
     const renderBookingCard = ({ item }: { item: IBooking }) => (
+        
         <BookingCard
             booking={item}
             fadeAnim={fadeAnim}
@@ -244,7 +245,7 @@ const UserBookingScreen: React.FC = () => {
                 tabSlideAnim={tabSlideAnim}
             />
 
-            <View className="flex-1 pt-2.5">
+            <View className="pt-5">
                 {activeTab !== 'new' && (
                     <StatusFilters
                         filters={statusFilters}

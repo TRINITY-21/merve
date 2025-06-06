@@ -34,7 +34,7 @@ export const AgentBookingManagementHeader: React.FC<AgentBookingManagementHeader
         className="px-5"
         style={{ paddingTop: Platform.OS === 'ios' ? 60 : 10, paddingBottom: 20 }}
       >
-        <View className="flex-row items-center justify-between mb-5">
+       <View className="flex-row items-center justify-between mb-5">
           <TouchableOpacity 
             className="w-10 h-10 rounded-full items-center justify-center"
             style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)' }}
@@ -60,7 +60,8 @@ export const AgentBookingManagementHeader: React.FC<AgentBookingManagementHeader
               {isAvailable ? 'Available' : 'Offline'}
             </Text>
           </View>
-        </View>
+        </View> 
+
 
         {/* Tab Navigation */}
         <View className="flex-row rounded-3xl p-1 relative" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>

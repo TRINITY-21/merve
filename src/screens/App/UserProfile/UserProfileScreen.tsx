@@ -90,7 +90,7 @@ const UserProfileScreen: React.FC = () => {
                     useNativeDriver: true,
                 }),
                 Animated.spring(slideAnim, {
-                    toValue: 0,
+                    toValue: 0, 
                     tension: 30,
                     friction: 8,
                     useNativeDriver: true,
