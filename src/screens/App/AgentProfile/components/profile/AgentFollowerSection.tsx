@@ -29,7 +29,7 @@ export const FollowersSection: React.FC<FollowersSectionProps> = ({
       <TouchableOpacity
         className="flex-row items-center gap-1 mt-2"
         activeOpacity={0.8}
-        onPress={() => navigation.navigate('FollowersManagementScreen')}
+        onPress={() => navigation.navigate('Followers')}
       >
         <Text className="text-xs font-bold" style={{ color: colors.primary }}>
           View All

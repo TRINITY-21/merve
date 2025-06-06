@@ -15,6 +15,7 @@ import EditAgentProfileScreen from '../screens/App/AgentProfile/EditAgentProfile
 import AgentBookingManagementScreen from '../screens/App/Booking/AgentBooking/AgentBookingManagementScreen';
 import UserBookingScreen from '../screens/App/Booking/UserBooking/UserBookingScreen';
 import ChatScreen from '../screens/App/Chat/ChatScreen';
+import FollowersScreen from '../screens/App/Followers/FollowersScreen';
 import MapScreen from '../screens/App/Map/MapScreen';
 import NotificationsScreen from '../screens/App/Notification/NotificationsScreen';
 import AddProductScreen from '../screens/App/Shop/AgentShop/AddProductScreen';
@@ -24,6 +25,7 @@ import AgentProductsScreen from '../screens/App/Shop/AgentShop/AgentProductsScre
 import AgentShopDashboardScreen from '../screens/App/Shop/AgentShop/AgentShopDashboardScreen';
 import MarketplaceScreen from '../screens/App/Shop/Home/MarketplaceScreen';
 import ProductDetailsScreen from '../screens/App/Shop/Home/ProductDetailsScreen';
+import FavoriteProductsScreen from '../screens/App/Shop/UserShop/FavoriteProductsScreen';
 import UserAccountInfoScreen from '../screens/App/UserProfile/UserAccountInfoScreen';
 import UserProfileScreen from '../screens/App/UserProfile/UserProfileScreen';
 import UserSettingsScreen from '../screens/App/UserProfile/UserSettingsScreen';
@@ -55,17 +57,21 @@ export type MapStackParamList = {
   Activity: undefined;
   UserBookings: undefined;
   Chat: undefined;
+  Followers: undefined;
+
 };
 
 export type ShopStackParamList = {
   ShopHome: undefined;
   ProductDetails: undefined;
+  FavoriteProducts: undefined;
   
 };
 
 export type ProfileStackParamList = {
   ProfileHome: undefined;
   Chat: undefined;
+  Followers: undefined;
 };
 
 export type AgentProfileStackParamList = {
@@ -79,6 +85,7 @@ export type AgentProfileStackParamList = {
   AgentSettings: undefined;
   EditAgentProfile: undefined;
   Chat: undefined;
+  Followers: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
@@ -183,6 +190,7 @@ const MapStackNavigator: React.FC = () => (
     <MapStack.Screen name="Activity" component={ActivityScreen} />
     <MapStack.Screen name="UserBookings" component={UserBookingScreen} />
     <MapStack.Screen name="Chat" component={ChatScreen} />
+    <MapStack.Screen name="Followers" component={FollowersScreen} />
 
 
   </MapStack.Navigator>
@@ -200,6 +208,7 @@ const AgentProfileStackNavigator: React.FC = () => (
     <AgentProfileStack.Screen name="AgentSettings" component={AgentSettingsScreen} />
     <AgentProfileStack.Screen name="EditAgentProfile" component={EditAgentProfileScreen} />
     <AgentProfileStack.Screen name="Chat" component={ChatScreen} />
+    <AgentProfileStack.Screen name="Followers" component={FollowersScreen} />
   </AgentProfileStack.Navigator>
 );
 
@@ -208,6 +217,7 @@ const ShopStackNavigator: React.FC = () => (
   <ShopStack.Navigator screenOptions={{ headerShown: false }}>
     <ShopStack.Screen name="ShopHome" component={MarketplaceScreen} />
     <ShopStack.Screen name="ProductDetails" component={ProductDetailsScreen} />
+    <ShopStack.Screen name="FavoriteProducts" component={FavoriteProductsScreen} />
   </ShopStack.Navigator>
 );
 

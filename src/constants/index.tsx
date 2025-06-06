@@ -152,3 +152,94 @@ export const KEYBOARD_CONFIG = {
   IOS_OFFSET: 90,
   ANDROID_OFFSET: 0,
 } as const;
+
+
+
+// constants/favoritesConstants.ts
+
+export const FAVORITES_CONFIG = {
+  GRID_COLUMNS: 2,
+  CARD_MARGIN: 16,
+  REFRESH_DELAY: 2000,
+  ANIMATION_DURATION: 300,
+  FILTER_SLIDE_DURATION: 300,
+} as const;
+
+export const SORT_OPTIONS = [
+  { key: 'date_added', label: 'Recently Added', icon: 'schedule' },
+  { key: 'price_low', label: 'Price: Low to High', icon: 'trending-up' },
+  { key: 'price_high', label: 'Price: High to Low', icon: 'trending-down' },
+  { key: 'rating', label: 'Highest Rated', icon: 'grade' },
+  { key: 'distance', label: 'Nearest First', icon: 'location-on' },
+  { key: 'name', label: 'Name A-Z', icon: 'sort-by-alpha' },
+] as const;
+
+export const CATEGORY_ICONS = {
+  all: 'apps',
+  phones: 'smartphone',
+  accessories: 'headphones',
+  laptops: 'laptop',
+  furniture: 'chair',
+  electronics: 'devices',
+  clothing: 'checkroom',
+  books: 'menu-book',
+  sports: 'sports-soccer',
+  beauty: 'spa',
+} as const;
+
+export const VIEW_MODES = {
+  GRID: 'grid',
+  LIST: 'list',
+} as const;
+
+export const FILTER_RATINGS = [4, 3, 2, 1] as const;
+
+export const DEFAULT_FILTERS = {
+  inStock: false,
+  verified: false,
+  ratings: 0,
+} as const;
+
+export const FAV_ANIMATION_CONFIG = {
+  FADE: {
+    duration: 800,
+    useNativeDriver: true,
+  },
+  SLIDE: {
+    tension: 20,
+    friction: 7,
+    useNativeDriver: true,
+  },
+  SCALE: {
+    tension: 25,
+    friction: 8,
+    useNativeDriver: true,
+  },
+  FILTER_SLIDE: {
+    duration: 300,
+    useNativeDriver: true,
+  },
+} as const;
+
+export const FAVORITES_COLORS = {
+  PRIMARY: '#FFCC00',
+  SECONDARY: '#1E3A5F',
+  ACCENT: '#00BFA5',
+  SUCCESS: '#4CAF50',
+  ERROR: '#F44336',
+  WARNING: '#FF9800',
+  WHITE: '#FFFFFF',
+  BLACK: '#000000',
+  GRAY: {
+    LIGHT: '#E0E0E0',
+    MEDIUM: '#9E9E9E',
+    DARK: '#616161',
+  },
+  BACKGROUND: '#F5F5F5',
+  CARD: '#FFFFFF',
+  SHADOW: {
+    LIGHT: 'rgba(0, 0, 0, 0.1)',
+    MEDIUM: 'rgba(0, 0, 0, 0.2)',
+    DARK: 'rgba(0, 0, 0, 0.3)',
+  },
+} as const;

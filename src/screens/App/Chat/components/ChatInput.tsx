@@ -5,7 +5,6 @@ import React, { useEffect } from 'react';
 import {
     ActivityIndicator,
     Platform,
-    StyleSheet,
     TextInput,
     TouchableOpacity,
     View,
@@ -16,7 +15,7 @@ import Animated, {
     useSharedValue,
     withSpring,
 } from 'react-native-reanimated';
-import { IChatInputProps } from '../types/chatInterfaces';
+import { IChatInputProps } from '../../../../types/chatTypes';
 import { MediaOptions } from './MediaOptions';
 import { MediaPreview } from './MediaPreview';
 
@@ -50,11 +49,16 @@ export const ChatInput: React.FC<IChatInputProps> = ({
     opacity: mediaOptionsScale.value,
   }));
 
+  const handleMediaSelect = (mediaItem: any): void => {
+    // Media selection is handled through pickMedia function
+    onToggleMediaOptions();
+  };
+
   return (
-    <View style={styles.container}>
+    <View className="bg-transparent">
       <LinearGradient 
         colors={['rgb(255, 255, 255)', 'rgba(255, 255, 255, 0.99)']}
-        style={styles.gradient}
+        className={`px-5 py-3 ${Platform.OS === 'ios' ? 'pb-5' : 'pb-3'}`}
       >
         {/* Media Preview */}
         {media.length > 0 && (
@@ -62,9 +66,9 @@ export const ChatInput: React.FC<IChatInputProps> = ({
         )}
         
         {/* Input Row */}
-        <View style={styles.inputRow}>
+        <View className="flex-row items-end gap-2.5">
           <TouchableOpacity
-            style={styles.attachButton}
+            className="w-11 h-11 rounded-full bg-indigo-100 justify-center items-center"
             onPress={onToggleMediaOptions}
           >
             <Ionicons
@@ -75,7 +79,9 @@ export const ChatInput: React.FC<IChatInputProps> = ({
           </TouchableOpacity>
           
           <TextInput
-            style={[styles.textInput, isFocused && styles.textInputFocused]}
+            className={`flex-1 text-base min-h-11 max-h-30 px-5 py-3 rounded-2xl bg-black/5 text-gray-800 ${
+              isFocused ? 'bg-indigo-50 border border-[#FFCC00]' : ''
+            }`}
             placeholder="Type a message..."
             placeholderTextColor="#9E9E9E"
             multiline
@@ -89,12 +95,12 @@ export const ChatInput: React.FC<IChatInputProps> = ({
           {messageText.trim() || media.length > 0 ? (
             <TouchableOpacity
               disabled={isLoading}
-              style={styles.sendButton}
+              className="w-11 h-11 rounded-full overflow-hidden"
               onPress={onSendMessage}
             >
               <LinearGradient
                 colors={['#FFCC00', '#FFB300']}
-                style={styles.sendButtonGradient}
+                className="flex-1 items-center justify-center"
               >
                 {isLoading ? (
                   <ActivityIndicator size="small" color="white" />
@@ -104,82 +110,25 @@ export const ChatInput: React.FC<IChatInputProps> = ({
               </LinearGradient>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity style={styles.voiceButton}>
+            <TouchableOpacity className="w-11 h-11 rounded-full bg-indigo-100 justify-center items-center">
               <Ionicons name="mic" size={26} color="#FFCC00" />
             </TouchableOpacity>
           )}
         </View>
         
         {/* Media Options */}
-        <Animated.View style={[mediaOptionsStyle]}>
-          <MediaOptions
-            isVisible={showMediaOptions}
-            onImagePick={() => pickMedia('image')}
-            onVideoPick={() => pickMedia('video')}
-            onCameraPick={() => console.log('Camera pick')}
-            onFilePick={() => console.log('File pick')}
-          />
-        </Animated.View>
+        {showMediaOptions && (
+          <Animated.View style={mediaOptionsStyle}>
+            <MediaOptions
+              isVisible={showMediaOptions}
+              onImagePick={() => pickMedia('image')}
+              onVideoPick={() => pickMedia('video')}
+              onCameraPick={() => console.log('Camera pick')}
+              onFilePick={() => console.log('File pick')}
+            />
+          </Animated.View>
+        )}
       </LinearGradient>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-  },
-  gradient: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    paddingBottom: Platform.OS === 'ios' ? 20 : 12,
-  },
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: 10,
-  },
-  attachButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(255, 204, 0, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textInput: {
-    flex: 1,
-    fontSize: 16,
-    minHeight: 44,
-    maxHeight: 120,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 25,
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    color: '#212121',
-  },
-  textInputFocused: {
-    backgroundColor: 'rgba(255, 204, 0, 0.05)',
-    borderWidth: 1,
-    borderColor: '#FFCC00',
-  },
-  sendButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    overflow: 'hidden',
-  },
-  sendButtonGradient: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  voiceButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(255, 204, 0, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

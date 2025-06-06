@@ -370,6 +370,8 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
   const handleFavoritePress = (productId: string) => {
     // Handle favorite functionality
     console.log('Favorite pressed for product:', productId);
+    navigation.navigate('FavoriteProducts' as never, { productId } as never);
+
   };
 
   const handleSharePress = (productId: string) => {
