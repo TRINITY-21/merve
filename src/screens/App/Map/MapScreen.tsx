@@ -222,9 +222,9 @@ const MapScreen: React.FC = () => {
 
     const handleUrgetSheetClose = (): void => {
         setShowUrgentSheet(false);
+        quickCash.resetState();
     };
 
-    console.log(showUrgentSheet, "show ur")
 
     return ( 
         <View className="flex-1">
@@ -337,19 +337,19 @@ const MapScreen: React.FC = () => {
 
  
             <MapHeader
-  searchQuery={searchQuery}
-  onSearchChange={setSearchQuery}
-  onSearchSubmit={searchQuery => console.log('Search submitted:', searchQuery)}
-  selectedFilter={selectedFilter}
-  onFilterChange={setSelectedFilter}
-  onProfilePress={() => navigation.navigate('UserProfile')}
-  searchPlaceholder="Search locations near you"
-  
-  // Profile props for Google Maps style
-  userAvatarUrl="https://picsum.photos/200/200"
-  userName="John Doe"
-  showAvatar={true}
-/>
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onSearchSubmit={searchQuery => console.log('Search submitted:', searchQuery)}
+            selectedFilter={selectedFilter}
+            onFilterChange={setSelectedFilter}
+            onProfilePress={() => navigation.navigate('UserProfile')}
+            searchPlaceholder="Search locations near you"
+            
+            // Profile props for Google Maps style
+            userAvatarUrl="https://picsum.photos/200/200"
+            userName="John Doe"
+            showAvatar={true}
+            />
 
 
 
@@ -427,24 +427,32 @@ const MapScreen: React.FC = () => {
             />
 
     <BottomSheet
-      isVisible={showUrgentSheet}
-      onClose={handleUrgetSheetClose}
-        title = 'Quick Cash Help'
-        subtitle = 'Get instant assistance from verified agents nearby'
+      isVisible={showUrgentSheet} 
+      onClose={handleUrgetSheetClose} 
+      title = 'Quick Cash Help'
+      subtitle = 'Get instant assistance from verified agents nearby'
       animationDuration={300}
       keyboardAware={true}
-      height={Platform.OS === 'ios' ? '60%' : '60%'}
-      maxHeight={Platform.OS === 'ios' ? '80%' : '90%'}
+//         height={BottomSheetSnapPoints.FULL}
+//   maxHeight={BottomSheetSnapP oints.FULL}
+      height={Platform.OS === 'ios' ? '10%' : '60%'}
+      maxHeight={Platform.OS === 'ios' ? '70%' : '90%'}
+      minHeight={Platform.OS === 'ios' ? '300%' : '20%'}
       showCloseButton={true}
       closeIcon="close" 
       statusBarStyle="dark-content"  
-      statusBarTranslucent={false} 
+    //   statusBarTranslucent={false}
+    swipeToClose={true}
+      onBackdropPress={() => setShowUrgentSheet(false)} 
     >
-            <QuickCashBottomSheet
-                visible={quickCash.isVisible}
+         
+       <QuickCashBottomSheet
+                visible={true} 
                 onClose={() => {
                     quickCash.hide();
-                    quickCash.resetState();
+                    setShowUrgentSheet(false);
+                   handleUrgetSheetClose();
+                     console.log(' agent');
                 }}
                 onRequestAgent={handleQuickCashRequest}
                 onCallAgent={() => {
@@ -481,7 +489,7 @@ const MapScreen: React.FC = () => {
                     { id: '6', name: 'Daniel Amo.', avatar: 'person', color: '#FF4800' },
 
                 ]}
-            />
+            /> 
             </BottomSheet>
         </View>
     );

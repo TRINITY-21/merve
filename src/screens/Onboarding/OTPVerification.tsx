@@ -220,10 +220,10 @@ const OTPVerification = forwardRef<OTPVerificationRef, OTPVerificationProps>(({
       keyboardAware={true}
       height={Platform.OS === 'ios' ? '55%' : '60%'}
       maxHeight={Platform.OS === 'ios' ? '90%' : '90%'}
+      minHeight={Platform.OS === 'ios'? '90%' : '55%'}
       showCloseButton={true}
       closeIcon="close"
       statusBarStyle="dark-content"
-      statusBarTranslucent={false}
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: Platform.OS === 'ios' ? 0 : 0 }}

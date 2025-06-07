@@ -295,6 +295,9 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
         const renderStep1 = (): React.ReactElement => (
             <View>
                 <View style={{ marginBottom: 20, marginTop: 20 }}>
+                     <Typography variant="bold" size={24} style={{ color: colors.text.primary, marginBottom: 8 }}>
+                        Reset PIN
+                    </Typography>
                     <Typography variant="regular" size={16} style={{ color: colors.text.secondary, lineHeight: 22 }}>
                         Enter your email or phone number to receive a verification code
                     </Typography>
@@ -637,14 +640,16 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                 isVisible={isVisible}
                 onClose={onClose}
                 title="Forgot PIN"
+                // subtitle="Enter your email address to reset your PIN"
                 animationDuration={300}
-                keyboardAware={false} // Keep this true
-                height={Platform.OS === 'ios' ? '48%' : '52%'}
+                keyboardAware={true} // Keep this true
+                height={Platform.OS === 'ios' ? '70%' : '52%'}
                 maxHeight={Platform.OS === 'ios' ? '90%' : '90%'}
+                minHeight={Platform.OS === 'ios' ? '90%' : '52%'}
                 showCloseButton={true}
                 closeIcon="close"
                 statusBarStyle="dark-content"
-                statusBarTranslucent={false}
+                // statusBarTranslucent={false}
             >
 
                 {getCurrentStepContent()}

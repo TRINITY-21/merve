@@ -90,7 +90,7 @@ export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
 
   return (
     <View 
-      className="absolute top-0 left-0 right-0 bottom-0 z-50 items-center justify-center rounded-t-3xl"
+      className=" mt-10 absolute top-0 left-0 right-0 bottom-0 z-50 items-center justify-center rounded-t-3xl"
       style={{ backgroundColor }}
     >
       <View className="items-center justify-center relative w-72 h-72">

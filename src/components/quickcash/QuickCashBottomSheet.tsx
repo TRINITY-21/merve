@@ -85,8 +85,6 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
   acceptedAgent,
   services = defaultServices,
   nearbyAgents = [],
-  title = 'Quick Cash Help',
-  subtitle = 'Get instant assistance from verified agents nearby',
   currency = 'GHS',
   quickAmounts = ['10', '25', '50', '100'],
   gradientColors = colors.gradient.primary

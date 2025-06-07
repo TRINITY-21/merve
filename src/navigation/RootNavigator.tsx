@@ -69,7 +69,7 @@ const RootNavigator: React.FC = () => {
               options={{ gestureEnabled: false, headerShown: false }}
             >
               {() => <ErrorBoundary>
-                <AuthNavigator  showIntro={showIntro} />
+                <AppNavigator  />
                 </ErrorBoundary>}
             </Stack.Screen>
           </Stack.Navigator>
@@ -85,7 +85,7 @@ const RootNavigator: React.FC = () => {
         name="Auth"
         options={{ headerShown: false }}
       >
-        {() => <AppNavigator />}
+        {() => <AuthNavigator showIntro={showIntro} />}
       </Stack.Screen>
     </Stack.Navigator>
   );
