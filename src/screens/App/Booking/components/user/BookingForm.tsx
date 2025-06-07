@@ -53,7 +53,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     onReminderToggle,
     onCreateBooking
 }) => (
-    <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
+    <ScrollView className="" showsVerticalScrollIndicator={false}>
         <ServiceTypeSelector
             serviceTypes={serviceTypes}
             selectedService={selectedService}
@@ -128,6 +128,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                 multiline
                 numberOfLines={3}
             />
+
         </View>
 
         {/* Reminder Toggle */}

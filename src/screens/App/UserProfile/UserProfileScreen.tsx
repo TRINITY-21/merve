@@ -457,8 +457,8 @@ const UserProfileScreen: React.FC = () => {
                                     Your booking history will appear here once you start making appointments
                                 </Text>
                                 <GradientButton
-                                    title="Book Appointment"
-                                    onPress={() => navigation.navigate('BookAppointmentsScreen' as never)}
+                                    title="Booking Appointment"
+                                    onPress={() => navigation.navigate('BookAppointments' as never)}
                                     icon="add"
                                 />
                             </View>
@@ -1042,8 +1042,8 @@ const UserProfileScreen: React.FC = () => {
             />
         </View>
     );
-
-    return (
+ 
+    return ( 
         <View className="flex-1">
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

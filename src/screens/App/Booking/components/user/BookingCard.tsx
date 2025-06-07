@@ -36,10 +36,10 @@ export const BookingCard: React.FC<BookingCardProps> = ({
         {/* Modern card with elevated shadow and sophisticated border */}
         <View className="bg-white rounded-3xl shadow-lg shadow-black/8 elevation-8 border border-gray-100/50">
             {/* Status indicator strip */}
-            <View 
+            {/* <View 
                 className="h-1 rounded-t-3xl"
                 style={{ backgroundColor: getStatusColor(booking.status) }}
-            />
+            /> */}
             
             <View className="p-6">
                 {/* Header Section */}

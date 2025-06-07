@@ -33,7 +33,8 @@ export const BookingHeader: React.FC<BookingHeaderProps> = ({
     <LinearGradient colors={colors.gradient.primary} className="rounded-b-0" 
       style={{ paddingBottom: 20 }}>
   
-        <Header title="Book Appointments" withShadow={false} 
+        <Header title="Booking Appointments" withShadow={false} 
+        
           barStyle="light-content"
           backgroundColor="transparent"
           titleColor={colors.secondary}

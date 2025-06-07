@@ -218,9 +218,9 @@ const OTPVerification = forwardRef<OTPVerificationRef, OTPVerificationProps>(({
       title="Verify Phone Number"
       animationDuration={300}
       keyboardAware={true}
-      height={Platform.OS === 'ios' ? '55%' : '60%'}
+      height={Platform.OS === 'ios' ? '55%' : '70%'}
       maxHeight={Platform.OS === 'ios' ? '90%' : '90%'}
-      minHeight={Platform.OS === 'ios'? '90%' : '55%'}
+      minHeight={Platform.OS === 'ios'? '90%' : '80%'}
       showCloseButton={true}
       closeIcon="close"
       statusBarStyle="dark-content"

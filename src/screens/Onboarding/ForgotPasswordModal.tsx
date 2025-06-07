@@ -643,9 +643,9 @@ const ForgotPasswordModal = forwardRef<ForgotPasswordModalRef, ForgotPasswordMod
                 // subtitle="Enter your email address to reset your PIN"
                 animationDuration={300}
                 keyboardAware={true} // Keep this true
-                height={Platform.OS === 'ios' ? '70%' : '52%'}
+                height={Platform.OS === 'ios' ? '70%' : '80%'}
                 maxHeight={Platform.OS === 'ios' ? '90%' : '90%'}
-                minHeight={Platform.OS === 'ios' ? '90%' : '52%'}
+                minHeight={Platform.OS === 'ios' ? '90%' : '78%'}
                 showCloseButton={true}
                 closeIcon="close"
                 statusBarStyle="dark-content"

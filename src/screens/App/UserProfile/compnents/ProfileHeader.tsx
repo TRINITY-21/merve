@@ -41,8 +41,8 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
                 ]} />
 
-            <View className="pt-0 px-0 pb-5 mb-2">
-                <View className="flex-row items-center px-1">
+            <View className="pt-0 pl-5 pb-5 mb-2">
+                <View className="flex-row items-center">
                     <TouchableOpacity className="relative mr-4 shadow-2xl" activeOpacity={0.8}>
                         <Image
                             source={{ uri: user.avatar || 'https://i.pravatar.cc/150?img=9' }}
@@ -64,7 +64,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                         <Text className="text-sm text-secondary/90 mb-1 font-medium">Mobile Money User</Text>
                         <Text className="text-xs text-secondary/85 mb-4 font-medium">📍 Accra, Ghana</Text>
 
-                        <View className="flex-row justify-between bg-white/15 rounded-2xl p-3 mb-2">
+                        <View className="flex-row justify-between bg-white/15 rounded-2xl px-3 py-2 mb-2">
                             <TouchableOpacity className="items-center flex-1 border-r border-white/30 pr-2 mr-2">
                                 <Text className="text-base font-extrabold text-secondary mb-1">{bookingsCount}</Text>
                                 <Text className="text-[11px] text-secondary/80 font-semibold tracking-wide">Bookings</Text>
@@ -78,8 +78,8 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                                 <Text className="text-[11px] text-secondary/80 font-semibold tracking-wide">Following</Text>
                             </TouchableOpacity>
                             <TouchableOpacity className="items-center">
-                                <MaterialIcons name="person-add" size={20} color={colors.secondary} />
-                                <Text className="text-[11px] text-secondary/80 font-semibold tracking-wide">Invite</Text>
+                                <MaterialIcons name="person-add" size={22} color={colors.secondary} />
+                                <Text className="text-sm text-secondary/80 font-semibold tracking-wide">Invite</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

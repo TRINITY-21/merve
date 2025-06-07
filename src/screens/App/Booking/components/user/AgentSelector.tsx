@@ -22,7 +22,7 @@ export const AgentSelector: React.FC<AgentSelectorProps> = ({
             Select Agent
         </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View className="flex-row gap-3">
+            <View className="flex-row gap-3 p-1">
                 {agents.map((agent) => (
                     <TouchableOpacity
                         key={agent.id}

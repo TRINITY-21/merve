@@ -9,15 +9,17 @@ import {
     Animated,
     Dimensions,
     FlatList,
-    Modal,
+    KeyboardAvoidingView,
+    Platform,
     RefreshControl,
+    ScrollView,
     Text,
-    TouchableOpacity,
     View
 } from 'react-native';
 import { colors } from '../../../../constants/theme/colors';
 
 // Import components
+import { BottomSheet } from '../../../../components/common';
 import { IAgent, IBooking, IServiceType, IStatusFilter, ITab } from '../../../../types/BookingTypes';
 import { userDummyAgents, userDummyBookings } from '../../../../utils/UserBookingDummyData';
 import { BookingCard } from '../components/user/BookingCard';
@@ -341,48 +343,53 @@ const UserBookingScreen: React.FC = () => {
             )}
 
             {/* New Booking Modal */}
-            <Modal
-                visible={showNewBookingModal}
-                animationType="slide"
-                presentationStyle="pageSheet"
-            >
-                <View className="flex-1" style={{ backgroundColor: colors.background }}>
-                    <View className="flex-row items-center justify-between px-5 py-5 border-b border-gray-200">
-                        <TouchableOpacity
-                            onPress={() => setShowNewBookingModal(false)}
-                            className="w-8 h-8 rounded-2xl items-center justify-center"
-                            style={{ backgroundColor: colors.gray.light }}
-                        >
-                            <MaterialIcons name="close" size={24} color={colors.text.primary} />
-                        </TouchableOpacity>
-                        <Text className="text-lg font-bold" style={{ color: colors.text.primary }}>
-                            New Booking
-                        </Text>
-                        <View className="w-6" />
-                    </View>
-                    <BookingForm
-                        serviceTypes={serviceTypes}
-                        agents={userDummyAgents}
-                        selectedService={selectedService}
-                        selectedAgent={selectedAgent}
-                        amount={amount}
-                        selectedDate={selectedDate}
-                        selectedTime={selectedTime}
-                        customLocation={customLocation}
-                        bookingNotes={bookingNotes}
-                        reminderEnabled={reminderEnabled}
-                        onServiceSelect={setSelectedService}
-                        onAgentSelect={setSelectedAgent}
-                        onAmountChange={setAmount}
-                        onDatePress={() => setShowDatePicker(true)}
-                        onTimePress={() => setShowTimePicker(true)}
-                        onLocationChange={setCustomLocation}
-                        onNotesChange={setBookingNotes}
-                        onReminderToggle={() => setReminderEnabled(!reminderEnabled)}
-                        onCreateBooking={handleCreateBooking}
-                    />
-                </View>
-            </Modal>
+          <BottomSheet
+  isVisible={showNewBookingModal}
+  onClose={() => setShowNewBookingModal(false)}
+  title="New Booking"
+  animationDuration={800}
+  height={Platform.OS === 'ios' ? '55%' : '70%'}
+  maxHeight={Platform.OS === 'ios' ? '90%' : '90%'}
+  minHeight={Platform.OS === 'ios' ? '90%' : '80%'}
+  showCloseButton={true}
+  closeIcon="close"
+  statusBarStyle="dark-content"
+>
+  <KeyboardAvoidingView
+    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+    style={{ flex: 1 }}
+  >
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32, flexGrow: 1 }}
+    >
+      <BookingForm
+        serviceTypes={serviceTypes}
+        agents={userDummyAgents}
+        selectedService={selectedService}
+        selectedAgent={selectedAgent}
+        amount={amount}
+        selectedDate={selectedDate}
+        selectedTime={selectedTime}
+        customLocation={customLocation}
+        bookingNotes={bookingNotes}
+        reminderEnabled={reminderEnabled}
+        onServiceSelect={setSelectedService}
+        onAgentSelect={setSelectedAgent}
+        onAmountChange={setAmount}
+        onDatePress={() => setShowDatePicker(true)}
+        onTimePress={() => setShowTimePicker(true)}
+        onLocationChange={setCustomLocation}
+        onNotesChange={setBookingNotes}
+        onReminderToggle={() => setReminderEnabled(!reminderEnabled)}
+        onCreateBooking={handleCreateBooking}
+      />
+    </ScrollView>
+  </KeyboardAvoidingView>
+</BottomSheet>
+
         </View>
     );
 };

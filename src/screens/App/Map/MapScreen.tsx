@@ -433,9 +433,9 @@ const MapScreen: React.FC = () => {
       subtitle = 'Get instant assistance from verified agents nearby'
       animationDuration={300}
       keyboardAware={true}
-      height={Platform.OS === 'ios' ? '10%' : '60%'}
+      height={Platform.OS === 'ios' ? '10%' : '90%'}
       maxHeight={Platform.OS === 'ios' ? '70%' : '90%'}
-      minHeight={Platform.OS === 'ios' ? '300%' : '20%'}
+      minHeight={Platform.OS === 'ios' ? '90%' : '80%'}
       showCloseButton={true}
       closeIcon="close" 
       statusBarStyle="dark-content"  

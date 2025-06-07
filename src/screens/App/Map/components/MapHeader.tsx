@@ -13,7 +13,7 @@ interface FilterOption {
 interface MapHeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
-  onSearchSubmit?: (query: string) => void; 
+  onSearchSubmit?: (query: string) => void;
   selectedFilter: string;
   onFilterChange: (filter: string) => void;
   onProfilePress: () => void;
@@ -64,8 +64,8 @@ export const MapHeader: React.FC<MapHeaderProps> = ({
   };
 
   return (
-    <View 
-      className={`absolute top-0 left-0 right-0 z-500 ${Platform.OS === 'ios' ? 'pt-10' : 'pt-0'} pb-4 px-4`}
+    <View
+      className={`absolute top-0 left-0 right-0 z-500 ${Platform.OS === 'ios' ? 'pt-10' : 'pt-1'} pb-4 px-4`}
       style={style}
     >
       {/* Search Bar with Profile Icon Inside (Google Maps Style) */}
@@ -78,17 +78,17 @@ export const MapHeader: React.FC<MapHeaderProps> = ({
             onSearch={handleSearchSubmitted}
             onClear={handleSearchClear}
             placeholder={searchPlaceholder}
-            visible={true} 
+            visible={true}
             icon="location-pin"
             debounceDelay={400}
-            
+
             // Google Maps style profile integration
             showProfileIcon={showAvatar}
             profileIconPress={onProfilePress}
             profileAvatarUrl={userAvatarUrl}
             userName={userName}
             profileIconSize={36}
-            
+
             // Enhanced card-like styling with full opacity
             containerStyle={{
               height: 56, // Fixed height to match profile icon + padding
@@ -101,12 +101,12 @@ export const MapHeader: React.FC<MapHeaderProps> = ({
               borderColor: 'rgba(0, 0, 0, 0.08)',
               // Strong card-like elevation
               shadowColor: '#000',
-              shadowOffset: { 
-                width: 0, 
-                height: 8 
+              shadowOffset: {
+                width: 0,
+                height: 8
               },
               shadowOpacity: 0.25,
-              shadowRadius: 20, 
+              shadowRadius: 20,
               elevation: 15,
               // Additional visual enhancement
               marginHorizontal: 0,
@@ -157,11 +157,11 @@ export const MapHeader: React.FC<MapHeaderProps> = ({
                   // Ensure consistent alignment across platforms
                   flexDirection: 'row',
                   // Google Maps style elevation and colors - SOLID BACKGROUNDS
-                  backgroundColor: selectedFilter === filter.value 
-                    ? colors.secondary 
+                  backgroundColor: selectedFilter === filter.value
+                    ? colors.secondary
                     : '#FFFFFF', // Solid white - no transparency
-                  borderColor: selectedFilter === filter.value 
-                    ? colors.secondary 
+                  borderColor: selectedFilter === filter.value
+                    ? colors.secondary
                     : 'rgba(255, 255, 255, 0.8)',
                   // Enhanced shadow for map overlay
                   // shadowColor: '#000',
