@@ -2,7 +2,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Platform, TouchableOpacity, View } from 'react-native';
-import { colors } from '../../constants/theme/colors';
+import { colors } from '../../../../constants/theme/colors';
 
 
 interface ZoomControlsProps {

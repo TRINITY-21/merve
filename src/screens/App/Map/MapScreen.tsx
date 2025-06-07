@@ -17,9 +17,6 @@ import MapView, { Marker, Polyline } from 'react-native-maps';
 import { BottomSheet, Typography } from '../../../components/common';
 import EmergencyButton from '../../../components/common/EmergencyButton';
 import ListToggleButton from '../../../components/common/ListToggleButton';
-import { AgentListItem, MapHeader, NavigationOverlay, SelectedAgentCard, ZoomControls } from '../../../components/map';
-import { AgentNotificationCard } from '../../../components/notifications';
-import { QuickCashBottomSheet } from '../../../components/quickcash';
 import { defaultServiceTypes, defaultTransportModes } from '../../../config/defaults';
 import { colors } from '../../../constants/theme/colors';
 import { useLocation } from '../../../hooks/useLocation';
@@ -28,6 +25,9 @@ import { useQuickCash } from '../../../hooks/useQuickCash';
 import { MapStackParamList } from '../../../navigation/AppNavigator';
 import useStore from '../../../store/useStore';
 import { IAgent } from '../../../types';
+import { AgentNotificationCard } from '../Notification/components';
+import { AgentListItem, MapHeader, NavigationOverlay, SelectedAgentCard, ZoomControls } from './components';
+import { QuickCashBottomSheet } from './components/quickcash';
 
 type NavigationProp = NativeStackNavigationProp<MapStackParamList>;
 
@@ -426,23 +426,20 @@ const MapScreen: React.FC = () => {
                 onDecline={handleAgentDecline}
             />
 
-    <BottomSheet
+    <BottomSheet  
       isVisible={showUrgentSheet} 
       onClose={handleUrgetSheetClose} 
       title = 'Quick Cash Help'
       subtitle = 'Get instant assistance from verified agents nearby'
       animationDuration={300}
       keyboardAware={true}
-//         height={BottomSheetSnapPoints.FULL}
-//   maxHeight={BottomSheetSnapP oints.FULL}
       height={Platform.OS === 'ios' ? '10%' : '60%'}
       maxHeight={Platform.OS === 'ios' ? '70%' : '90%'}
       minHeight={Platform.OS === 'ios' ? '300%' : '20%'}
       showCloseButton={true}
       closeIcon="close" 
       statusBarStyle="dark-content"  
-    //   statusBarTranslucent={false}
-    swipeToClose={true}
+      swipeToClose={true}
       onBackdropPress={() => setShowUrgentSheet(false)} 
     >
          

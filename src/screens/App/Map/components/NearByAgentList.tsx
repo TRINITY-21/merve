@@ -1,12 +1,12 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
-import { colors } from '../../constants/theme/colors';
-import { IAgent } from '../../types';
-import { Typography } from '../common/Typography';
+import { Typography } from '../../../../components/common';
+import { colors } from '../../../../constants/theme/colors';
+import { AcceptedAgent } from './quickcash/QuickCashBottomSheet';
 
 // Define how a single NearbyAgent card looks
-const renderNearbyAgentItem = ({ item }: { item: IAgent }) => (
+const renderNearbyAgentItem = ({ item }: { item: AcceptedAgent }) => (
   <TouchableOpacity className="flex-row items-center bg-white p-4 rounded-xl shadow-sm mb-3 border border-gray-100 mx-5">
     {/* Agent Profile Picture/Icon */}
     <View className="w-14 h-14 rounded-full bg-blue-50 items-center justify-center mr-4 relative overflow-hidden">

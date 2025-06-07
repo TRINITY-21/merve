@@ -2,10 +2,9 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Platform, TouchableOpacity, View } from 'react-native';
-import { colors } from '../../constants/theme/colors';
-import type { IAgent } from '../../types';
-import { Button, Card } from '../common';
-import { Typography } from '../common/Typography';
+import { Button, Card, Typography } from '../../../../components/common';
+import { colors } from '../../../../constants/theme/colors';
+import { IAgent } from '../../../../types';
 
 export interface TransportMode {
   label: string;

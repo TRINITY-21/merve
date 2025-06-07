@@ -1,10 +1,9 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { View } from 'react-native';
-import { colors } from '../../constants/theme/colors';
-import { IAgent } from '../../types';
-import { Card } from '../common';
-import { Typography } from '../common/Typography';
+import { Card, Typography } from '../../../../components/common';
+import { colors } from '../../../../constants/theme/colors';
+import { IAgent } from '../../../../types';
 
 
 interface AgentListItemProps {

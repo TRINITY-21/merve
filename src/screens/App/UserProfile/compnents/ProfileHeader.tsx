@@ -4,8 +4,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { colors } from '../../constants/theme/colors';
-import { Header } from '../common';
+import { Header } from '../../../../components/common';
+import { colors } from '../../../../constants/theme/colors';
 
 interface ProfileHeaderProps {
     user: {

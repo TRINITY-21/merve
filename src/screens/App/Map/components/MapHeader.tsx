@@ -1,10 +1,9 @@
 // components/map/MapHeader.tsx
 import React, { useRef } from 'react';
 import { Platform, ScrollView, TouchableOpacity, View } from 'react-native';
-
-import { colors } from '../../constants/theme/colors';
-import { SearchInput, SearchInputRef } from '../common/SearchInput';
-import { Typography } from '../common/Typography';
+import { Typography } from '../../../../components/common';
+import { SearchInput, SearchInputRef } from '../../../../components/common/SearchInput';
+import { colors } from '../../../../constants/theme/colors';
 
 interface FilterOption {
   value: string;

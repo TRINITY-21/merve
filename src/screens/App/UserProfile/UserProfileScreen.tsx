@@ -19,20 +19,20 @@ import {
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import Toast from 'react-native-toast-message';
 import { Typography } from '../../../components/common';
-import { ActivityCard } from '../../../components/userProfile/ActivityCard';
-import { BookingCard } from '../../../components/userProfile/BookingCard';
-import { FilterButtons } from '../../../components/userProfile/FilterButtons';
-import { FollowerCard } from '../../../components/userProfile/FollowerCard';
-import { GradientButton } from '../../../components/userProfile/GradientButton';
-import { ProfessionalCard } from '../../../components/userProfile/ModernInput';
-import { PremiumUpgradeCard } from '../../../components/userProfile/PremiumCard';
-import { ProductCard } from '../../../components/userProfile/ProductCard';
-import { ProfileHeader } from '../../../components/userProfile/ProfileHeader';
-import { ProfessionalStatsCard } from '../../../components/userProfile/StatsCard';
 import { colors } from '../../../constants/theme/colors';
 import useStore from '../../../store/useStore';
 import { IRoute, IUser } from '../../../types/userProfileTypes';
 import { dummyActivities, dummyFollowers, dummyFollowing, dummyInvites, dummyMarketplaceData, dummyRecentBookings } from '../../../utils/userProfileDummyData';
+import { ActivityCard } from './compnents/ActivityCard';
+import { BookingCard } from './compnents/BookingCard';
+import { FilterButtons } from './compnents/FilterButtons';
+import { FollowerCard } from './compnents/FollowerCard';
+import { GradientButton } from './compnents/GradientButton';
+import { ProfessionalCard } from './compnents/ModernInput';
+import { PremiumUpgradeCard } from './compnents/PremiumCard';
+import { ProductCard } from './compnents/ProductCard';
+import { ProfileHeader } from './compnents/ProfileHeader';
+import { ProfessionalStatsCard } from './compnents/StatsCard';
 
 // Get screen dimensions
 const { width: screenWidth } = Dimensions.get('window');

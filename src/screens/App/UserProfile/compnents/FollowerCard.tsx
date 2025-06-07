@@ -2,8 +2,8 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Animated, Image, Text, TouchableOpacity, View } from 'react-native';
-import { colors } from '../../constants/theme/colors';
-import { IFollower } from '../../types/userProfileTypes';
+import { colors } from '../../../../constants/theme/colors';
+import { IFollower } from '../../../../types/userProfileTypes';
 
 interface Follower {
   id: string;

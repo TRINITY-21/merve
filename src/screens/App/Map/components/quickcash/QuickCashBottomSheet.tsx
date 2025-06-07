@@ -2,13 +2,11 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef } from 'react';
 import { Dimensions, Animated as RNAnimated, TouchableOpacity, View } from 'react-native';
-import { LoadingOverlay, NearbyAgent } from '../common/LoadingOverlay';
+import { Button, LoadingOverlay, NearbyAgent, Typography } from '../../../../../components/common';
+import { colors } from '../../../../../constants/theme/colors';
 import { AmountInputSection } from './AmountInputSection';
 import { ServiceSelectionGrid, ServiceType } from './ServiceSelectionGrid';
 
-import { colors } from '../../constants/theme/colors';
-import { Button } from '../common';
-import { Typography } from '../common/Typography';
 const { height } = Dimensions.get('window');
 
 export interface AcceptedAgent {

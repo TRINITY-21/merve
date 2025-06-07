@@ -300,7 +300,7 @@ export const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
       
       if (isVisible && statusBarStyle) {
         // Store original status bar style
-        setOriginalStatusBarStyle(StatusBar._defaultProps?.barStyle);
+        // setOriginalStatusBarStyle(StatusBar._defaultProps?.barStyle as any);
         StatusBar.setBarStyle(statusBarStyle, true);
         
         if (statusBarBackgroundColor && Platform.OS === 'android') {

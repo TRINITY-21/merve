@@ -3,8 +3,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Animated, Text, View } from 'react-native';
-import { colors } from '../../constants/theme/colors';
-import { Button } from '../common';
+import { Button } from '../../../../components/common';
+import { colors } from '../../../../constants/theme/colors';
 
 interface PremiumUpgradeCardProps {
     onUpgradePress: () => void;

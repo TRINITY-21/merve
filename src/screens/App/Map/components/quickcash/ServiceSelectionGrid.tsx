@@ -2,8 +2,9 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { colors } from '../../constants/theme/colors';
-import { Typography } from '../common/Typography';
+import { Typography } from '../../../../../components/common';
+import { colors } from '../../../../../constants/theme/colors';
+
 
 
 export interface ServiceType {

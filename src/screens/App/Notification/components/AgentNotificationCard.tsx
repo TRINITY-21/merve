@@ -3,8 +3,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useRef, useState } from 'react';
 import { Platform, Animated as RNAnimated, TouchableOpacity, View } from 'react-native';
-import { colors } from '../../constants/theme/colors';
-import { Typography } from '../common/Typography';
+import { Typography } from '../../../../components/common';
+import { colors } from '../../../../constants/theme/colors';
+
 
 export interface RequestData {
   service: string;

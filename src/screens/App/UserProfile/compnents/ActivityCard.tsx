@@ -3,7 +3,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Animated, Text, TouchableOpacity, View } from 'react-native';
-import { colors } from '../../constants/theme/colors';
+import { colors } from '../../../../constants/theme/colors';
 
 interface Activity {
   id: string;
