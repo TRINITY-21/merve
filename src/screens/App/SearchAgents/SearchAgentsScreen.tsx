@@ -2,13 +2,14 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, FlatList, RefreshControl, View } from 'react-native';
+import { Header } from '../../../components/common/Header';
 import { REFRESH_TIMEOUT } from '../../../constants';
 import { DUMMY_AGENTS, PROVIDER_OPTIONS, SERVICE_OPTIONS, SORT_OPTIONS, STATUS_OPTIONS } from '../../../constants/seachAgentConstants';
+import { colors } from '../../../constants/theme/colors';
 import { FilterType, IAgent, IAgentsScreenProps, SortKey, SortOrder, ViewMode } from '../../../types/searchAgentTypes';
 import { calculateAgentStats, getDefaultFilters, hasActiveFilters, processAgents } from '../../../utils/searchAgentUtils';
 import AgentCard from './AgentCard';
 import AgentFilters from './AgentFilters';
-import AgentsHeader from './AgentsHeader';
 import EmptyAgentsState from './EmptyAgentState';
 
 const SearchAgentsScreen: React.FC<IAgentsScreenProps> = ({
@@ -131,15 +132,29 @@ const SearchAgentsScreen: React.FC<IAgentsScreenProps> = ({
 
   return (
     <View className="flex-1 bg-[#F5F5F5]">
-      <AgentsHeader
-        searchQuery={searchQuery}
-        viewMode={viewMode}
-        showFilters={showFilters}
-        stats={stats}
-        onSearchChange={setSearchQuery}
-        onViewModeToggle={handleViewModeToggle}
-        onToggleFilters={() => setShowFilters(!showFilters)}
-        onBack={() => navigation.goBack()}
+      <Header
+        title="Search Agents"
+        leftIcon={{
+          name: 'arrow-back',
+          onPress: () => navigation.goBack(),
+          color: colors.secondary
+        }}
+        rightIcons={[
+          {
+            name: showFilters ? 'filter-list' : 'filter-list-off',
+            onPress: () => setShowFilters(!showFilters),
+            color: colors.secondary
+          },
+          {
+            name: viewMode === 'list' ? 'grid-view' : 'view-list',
+            onPress: handleViewModeToggle,
+            color: colors.secondary
+          }
+        ]}
+        animatedValue={scaleAnim}
+        backgroundColor={colors.background}
+        titleColor={colors.secondary}
+        iconBackgroundColor={colors.accent + '20'}
       />
       
       <View className="flex-1">

@@ -4,8 +4,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Animated,
+    Dimensions,
     Platform,
     StatusBar,
+    StyleSheet,
     TextInput,
     TouchableOpacity,
     View
@@ -72,6 +74,107 @@ const RegisterScreen: React.FC = () => {
     const pinRef = useRef<TextInput>(null);
     const confirmPinRef = useRef<TextInput>(null);
     const otpRef = useRef<OTPVerificationRef>(null);
+
+    const windowWidth = Dimensions.get('window').width;
+    const cardWidth = Math.min(windowWidth - 32, 500); // Max width of 500
+
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+        },
+        header: {
+            paddingHorizontal: 16,
+            paddingBottom: 10,
+            borderBottomWidth: 1,
+            borderBottomColor: colors.white + '30',
+        },
+        headerContent: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingVertical: 10,
+        },
+        backButton: {
+            marginRight: 10,
+            marginBottom: Platform.OS === 'ios' ? 4 : -3,
+        },
+        progressBar: {
+            height: 4,
+            backgroundColor: 'rgba(255,255,255,0.3)',
+            borderRadius: 2,
+            overflow: 'hidden',
+            marginBottom: 8,
+        },
+        progressFill: {
+            height: '100%',
+            backgroundColor: colors.white,
+            borderRadius: 2,
+        },
+        scrollContent: {
+            flexGrow: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 16,
+        },
+        card: {
+            width: cardWidth,
+            backgroundColor: colors.white,
+            borderRadius: 24,
+            padding: 24,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.15,
+            shadowRadius: 16,
+            elevation: 8,
+        },
+        cardHeader: {
+            marginBottom: 30,
+        },
+        cardTitle: {
+            color: colors.text.primary,
+            marginBottom: 4,
+        },
+        cardSubtitle: {
+            color: colors.text.secondary,
+        },
+        footer: {
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: 20,
+            marginTop: 30,
+            borderTopWidth: 1,
+            borderTopColor: colors.white + '30',
+            marginBottom: 2,
+        },
+        footerText: {
+            color: colors.text.light,
+        },
+        footerLink: {
+            color: colors.white,
+            textDecorationLine: 'underline',
+        },
+        infoBox: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: colors.primary + '30',
+            padding: 12,
+            borderRadius: 8,
+            marginBottom: 24,
+        },
+        infoText: {
+            flex: 1,
+            marginLeft: 8,
+            color: colors.text.secondary,
+        },
+        buttonContainer: {
+            flexDirection: 'row',
+            gap: 16,
+            marginTop: 24,
+        },
+        button: {
+            flex: 1,
+        },
+    });
 
     useEffect(() => {
         fadeAnim.setValue(0);
@@ -400,27 +503,24 @@ const RegisterScreen: React.FC = () => {
     const renderStep1 = (): React.ReactElement => (
         <Animated.View
             key="step1-content"
-            style={[{
-                backgroundColor: colors.white,
-                borderRadius: 20,
-                padding: 20,
-                shadowOffset: { width: 0, height: 8 },
-                shadowOpacity: 0.15,
-                shadowRadius: 16,
-                opacity: fadeAnim,
-                transform: [{
-                    translateX: slideAnim.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [300, 0],
-                    }),
-                }],
-            }]}
+            style={[
+                styles.card,
+                {
+                    opacity: fadeAnim,
+                    transform: [{
+                        translateX: slideAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [300, 0],
+                        }),
+                    }],
+                }
+            ]}
         >
-            <View style={{ marginBottom: 30 }}>
-                <Typography variant="bold" size={22} style={{ color: colors.text.primary, marginBottom: 4 }}>
+            <View style={styles.cardHeader}>
+                <Typography variant="bold" size={22} style={styles.cardTitle}>
                     Personal Information
                 </Typography>
-                <Typography variant="regular" size={14} style={{ color: colors.text.secondary }}>
+                <Typography variant="regular" size={14} style={styles.cardSubtitle}>
                     Let's get to know you
                 </Typography>
             </View>
@@ -521,7 +621,7 @@ const RegisterScreen: React.FC = () => {
                     disabled={loading}
                     containerStyle={{ marginBottom: 20, marginTop: 5 }}
                 />
-                <View style={{ marginTop: 24 }}>
+                <View style={styles.buttonContainer}>
                     <Button
                         title="Next"
                         onPress={handleNext}
@@ -529,6 +629,7 @@ const RegisterScreen: React.FC = () => {
                         size="large"
                         endIcon="chevron-right"
                         disabled={loading || !isPhoneVerified}
+                        style={styles.button}
                     />
                 </View>
             </View>
@@ -538,32 +639,27 @@ const RegisterScreen: React.FC = () => {
     const renderStep2 = (): React.ReactElement => (
         <Animated.View
             key="step2-content"
-            style={[{
-                backgroundColor: colors.white,
-                borderRadius: 24,
-                padding: 20,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 8 },
-                shadowOpacity: 0.15,
-                shadowRadius: 16,
-                opacity: fadeAnim,
-                transform: [{
-                    translateX: slideAnim.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [300, 0],
-                    }),
-                }],
-            }]}
+            style={[
+                styles.card,
+                {
+                    opacity: fadeAnim,
+                    transform: [{
+                        translateX: slideAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [300, 0],
+                        }),
+                    }],
+                }
+            ]}
         >
-            <View style={{ marginBottom: 30 }}>
-                <Typography variant="bold" size={22} style={{ color: colors.text.primary, marginBottom: 5 }}>
+            <View style={styles.cardHeader}>
+                <Typography variant="bold" size={22} style={styles.cardTitle}>
                     Security Setup
                 </Typography>
-                <Typography variant="regular" size={14} style={{ color: colors.text.secondary }}>
+                <Typography variant="regular" size={14} style={styles.cardSubtitle}>
                     Create your secure PIN
                 </Typography>
             </View>
-            {/* Form inputs section */}
             <View>
                 <Input
                     ref={pinRef}
@@ -604,32 +700,18 @@ const RegisterScreen: React.FC = () => {
                     disabled={loading}
                     containerStyle={{ marginBottom: 20 }}
                 />
-                <View style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    backgroundColor: colors.primary + '30',
-                    padding: 12,
-                    borderRadius: 8,
-                    marginBottom: 24,
-                }}>
+                <View style={styles.infoBox}>
                     <MaterialIcons name="info" size={18} color={colors.primary} />
-                    <Typography variant="regular" size={12} style={{
-                        flex: 1,
-                        marginLeft: 8,
-                        color: colors.text.secondary
-                    }}>
+                    <Typography variant="regular" size={12} style={styles.infoText}>
                         Your PIN will be used to login to your account.
                     </Typography>
                 </View>
-            </View>
-            {/* Buttons section */}
-            <View>
-                <View style={{ flexDirection: 'row', gap: 50 }}>
+                <View style={styles.buttonContainer}>
                     <Button
                         title="Back"
                         onPress={goBackToStep1}
                         size="medium"
-                        style={{ flex: 1 }}
+                        style={styles.button}
                         disabled={loading}
                         startIcon="chevron-left"
                         variant='outline'
@@ -638,7 +720,7 @@ const RegisterScreen: React.FC = () => {
                         title="Register"
                         onPress={handleRegister}
                         size="medium"
-                        style={{ flex: 1 }}
+                        style={styles.button}
                         disabled={loading}
                         loading={loading}
                     />
@@ -650,24 +732,15 @@ const RegisterScreen: React.FC = () => {
     return (
         <LinearGradient
             colors={[colors.gradient.primary[1], colors.gradient.primary[0]]}
-            style={{ flex: 1 }}
+            style={styles.container}
         >
             <StatusBar barStyle="light-content" backgroundColor={colors.gradient.primary[1]} />
-            <SafeAreaView style={{ flex: 1 }}>
-                <View style={{
-                    paddingHorizontal: 16,
-                    paddingBottom: 10,
-                    borderBottomWidth: 1,
-                    borderBottomColor: colors.white + '30',
-                }}>
-                    <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        paddingVertical: 10,
-                    }}>
+            <SafeAreaView style={styles.container}>
+                <View style={styles.header}>
+                    <View style={styles.headerContent}>
                         <TouchableOpacity
                             onPress={() => navigation.goBack()}
-                            style={{ marginRight: 10, marginBottom: Platform.OS === 'ios' ? 4 : -3 }}
+                            style={styles.backButton}
                         >
                             <MaterialIcons name="chevron-left" size={28} color={colors.white} />
                         </TouchableOpacity>
@@ -675,21 +748,15 @@ const RegisterScreen: React.FC = () => {
                             Create Account
                         </Typography>
                     </View>
-                    <View style={{ paddingHorizontal: 0 }}>
-                        <View style={{
-                            height: 4,
-                            backgroundColor: 'rgba(255,255,255,0.3)',
-                            borderRadius: 2,
-                            overflow: 'hidden',
-                            marginBottom: 8
-                        }}>
+                    <View>
+                        <View style={styles.progressBar}>
                             <Animated.View
-                                style={[{
-                                    height: '100%',
-                                    backgroundColor: colors.white,
-                                    borderRadius: 2,
-                                    width: `${currentStep * 50}%`,
-                                }]}
+                                style={[
+                                    styles.progressFill,
+                                    {
+                                        width: `${currentStep * 50}%`,
+                                    }
+                                ]}
                             />
                         </View>
                         <Typography
@@ -706,11 +773,10 @@ const RegisterScreen: React.FC = () => {
                 </View>
                 <KeyboardAwareScrollView
                     style={{
-                        flex: 1, backgroundColor: 'transparent',
-                        paddingHorizontal: 16,
-                        paddingVertical: 10
+                        flex: 1,
+                        backgroundColor: 'transparent',
                     }}
-                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 0 }}
+                    contentContainerStyle={styles.scrollContent}
                     resetScrollToCoords={{ x: 0, y: 0 }}
                     enableAutomaticScroll={true}
                     extraHeight={Platform.OS === 'ios' ? 50 : 20}
@@ -719,35 +785,13 @@ const RegisterScreen: React.FC = () => {
                     keyboardShouldPersistTaps="handled"
                     showsVerticalScrollIndicator={false}
                 >
-                    <View>
-                        {currentStep === 1 ? renderStep1() : renderStep2()}
-                    </View>
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        paddingVertical: 20,
-                        marginTop: 30,
-                        borderTopWidth: 1,
-                        borderTopColor: colors.white + '30',
-                        marginBottom:2
-                    }}>
-                        <Typography
-                            variant="regular"
-                            size={14}
-                            style={{ color: colors.text.light }}
-                        >
+                    {currentStep === 1 ? renderStep1() : renderStep2()}
+                    <View style={styles.footer}>
+                        <Typography variant="regular" size={14} style={styles.footerText}>
                             Already have an account?{' '}
                         </Typography>
                         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                            <Typography
-                                variant="bold"
-                                size={14}
-                                style={{
-                                    color: colors.white,
-                                    textDecorationLine: 'underline',
-                                }}
-                            >
+                            <Typography variant="bold" size={14} style={styles.footerLink}>
                                 Login
                             </Typography>
                         </TouchableOpacity>

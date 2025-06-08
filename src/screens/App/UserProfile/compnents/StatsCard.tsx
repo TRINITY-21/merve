@@ -1,7 +1,8 @@
 // components/ProfessionalStatsCard.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../components/common';
 import { colors } from '../../../../constants/theme/colors';
 
 interface StatItem {
@@ -43,17 +44,17 @@ export const ProfessionalStatsCard: React.FC<ProfessionalStatsCardProps> = ({
   };
 
   const CardContent = () => (
-    <View className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 mb-8">
+    <View className="bg-white rounded-2xl p-6 mb-8">
       {/* Header */}
       <View className="flex-row items-center justify-between mb-6">
         <View className="flex-1">
-          <Text className="text-lg font-bold text-slate-800 mb-1">
+          <Typography className="text-lg text-slate-800 mb-1" variant="bold" size={18}>
             {title}
-          </Text>
+          </Typography>
           {subtitle && (
-            <Text className="text-sm text-slate-500 font-medium">
+            <Typography className="text-sm text-slate-500" variant="medium" size={14}>
               {subtitle}
-            </Text>
+            </Typography>
           )}
         </View>
         {onPress && (
@@ -62,7 +63,7 @@ export const ProfessionalStatsCard: React.FC<ProfessionalStatsCardProps> = ({
       </View>
 
       {/* Stats Row */}
-      <View className="flex-row justify-between">
+      <View className="flex-row">
         {stats.map((stat, index) => (
           <View key={index} className="flex-1 items-center">
             {/* Icon */}
@@ -77,17 +78,19 @@ export const ProfessionalStatsCard: React.FC<ProfessionalStatsCardProps> = ({
             )}
 
             {/* Value */}
-            <Text 
-              className="text-xl font-bold mb-1" 
+            <Typography 
+              className="text-xl mb-1" 
+              variant="bold"
+              size={20}
               style={{ color: stat.color || '#0f172a' }}
             >
               {stat.value}
-            </Text>
+            </Typography>
 
             {/* Label */}
-            <Text className="text-xs text-slate-600 font-medium text-center leading-4">
+            <Typography className="text-xs text-slate-600 text-center leading-4" variant="medium" size={12}>
               {stat.label}
-            </Text>
+            </Typography>
 
             {/* Trend */}
             {stat.trend && stat.trendValue && (
@@ -97,12 +100,14 @@ export const ProfessionalStatsCard: React.FC<ProfessionalStatsCardProps> = ({
                   size={12} 
                   color={getTrendColor(stat.trend)} 
                 />
-                <Text 
-                  className="text-xs font-semibold ml-1"
+                <Typography 
+                  className="text-xs ml-1"
+                  variant="semibold"
+                  size={12}
                   style={{ color: getTrendColor(stat.trend) }}
                 >
                   {stat.trendValue}
-                </Text>
+                </Typography>
               </View>
             )}
           </View>

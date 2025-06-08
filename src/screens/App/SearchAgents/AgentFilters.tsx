@@ -85,8 +85,12 @@ const AgentFilters: React.FC<IAgentFiltersProps> = ({
         <Text className="text-base font-bold text-[#212121] mb-3">
           Network Provider
         </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View className="flex-row gap-2.5">
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingRight: 20 }}
+        >
+          <View className="flex-row flex-wrap gap-2.5">
             {providerOptions.map((provider) => (
               <TouchableOpacity
                 key={provider.key}
@@ -117,8 +121,12 @@ const AgentFilters: React.FC<IAgentFiltersProps> = ({
         <Text className="text-base font-bold text-[#212121] mb-3">
           Status
         </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View className="flex-row gap-2.5">
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingRight: 20 }}
+        >
+          <View className="flex-row flex-wrap gap-2.5">
             {statusOptions.map((status) => (
               <TouchableOpacity
                 key={status.key}
@@ -149,8 +157,12 @@ const AgentFilters: React.FC<IAgentFiltersProps> = ({
         <Text className="text-base font-bold text-[#212121] mb-3">
           Services
         </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View className="flex-row gap-2.5">
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingRight: 20 }}
+        >
+          <View className="flex-row flex-wrap gap-2.5">
             {serviceOptions.map((service) => (
               <TouchableOpacity
                 key={service.key}

@@ -135,10 +135,9 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
 
       {!agentAccepted ? (
         <>
-
             {/* Service Selection */}
-            <View className="px-0 pt-1 pb-4">
-              <Typography variant="semibold" size={16} className="text-gray-900 mb-4 tracking-tight">
+            <View className="px-4 pt-2 pb-3">
+              <Typography variant="semibold" size={16} className="text-gray-900 mb-3 tracking-tight">
                 Select Service
               </Typography>
               <ServiceSelectionGrid
@@ -150,7 +149,7 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
             </View>
 
             {/* Amount Input */}
-            <View className="px-0 py-2">
+            <View className="px-4 py-2">
               <AmountInputSection
                 amount={cashAmount}
                 onAmountChange={setCashAmount}
@@ -162,7 +161,7 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
             </View>
 
             {/* Request Button */}
-            <View className="px-0 py-3 mt-auto">
+            <View className="px-4 py-3 mt-2">
              <Button title="Request Agent Now" onPress={handleRequestAgent}
              startIcon='flash-on'  
              />
@@ -170,9 +169,9 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
         </>
       ) : (
         // Agent Accepted View
-        <View className="flex-1 p-0">
-          <View className="items-center py-2 mb-6">
-            <View className="mb-4">
+        <View className="flex-1 px-4">
+          <View className="items-center py-2 mb-4">
+            <View className="mb-3">
               <MaterialIcons name="check-circle" size={48} color="#4CAF50" />
             </View>
             <Typography variant="bold" size={24} className="text-gray-900 mb-2 tracking-tight">
@@ -185,12 +184,12 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
 
           {acceptedAgent && (
             <>
-              <View className="bg-gray-50 rounded-3xl p-5 mb-6 border border-gray-200">
+              <View className="bg-gray-50 rounded-3xl p-4 mb-4 border border-gray-200">
                 <View className="flex-row items-center">
-                  <View className="w-16 h-16 rounded-full bg-white items-center justify-center mr-4 relative border-2 border-gray-200">
-                    <MaterialIcons name="person" size={32} color="#FF6B35" />
-                    <View className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-white items-center justify-center">
-                      <MaterialIcons name="verified" size={16} color="#4CAF50" />
+                  <View className="w-14 h-14 rounded-full bg-white items-center justify-center mr-3 relative border-2 border-gray-200">
+                    <MaterialIcons name="person" size={28} color="#FF6B35" />
+                    <View className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-white items-center justify-center">
+                      <MaterialIcons name="verified" size={14} color="#4CAF50" />
                     </View>
                   </View>
                   <View className="flex-1">
@@ -219,16 +218,16 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
                 </View>
               </View>
 
-              <Typography variant="semibold" size={16} className="text-gray-900 mb-4 tracking-tight">
+              <Typography variant="semibold" size={16} className="text-gray-900 mb-3 tracking-tight">
                 Contact Agent
               </Typography>
               <View className="flex-row justify-between mb-4 gap-3">
                 <TouchableOpacity 
-                  className="flex-1 items-center py-4 rounded-2xl bg-green-50 border-2 border-green-200"
+                  className="flex-1 items-center py-3 rounded-2xl bg-green-50 border-2 border-green-200"
                   onPress={onCallAgent}
                 >
-                  <View className="w-10 h-10 rounded-full bg-white items-center justify-center mb-2 shadow-sm">
-                    <MaterialIcons name="call" size={20} color="#4CAF50" />
+                  <View className="w-9 h-9 rounded-full bg-white items-center justify-center mb-2 shadow-sm">
+                    <MaterialIcons name="call" size={18} color="#4CAF50" />
                   </View>
                   <Typography variant="semibold" size={12} className="text-gray-900 tracking-wide">
                     Call
@@ -236,11 +235,11 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="flex-1 items-center py-4 rounded-2xl bg-blue-50 border-2 border-blue-200"
+                  className="flex-1 items-center py-3 rounded-2xl bg-blue-50 border-2 border-blue-200"
                   onPress={onGetDirections}
                 >
-                  <View className="w-10 h-10 rounded-full bg-white items-center justify-center mb-2 shadow-sm">
-                    <MaterialIcons name="directions" size={20} color="#2196F3" />
+                  <View className="w-9 h-9 rounded-full bg-white items-center justify-center mb-2 shadow-sm">
+                    <MaterialIcons name="directions" size={18} color="#2196F3" />
                   </View>
                   <Typography variant="semibold" size={12} className="text-gray-900 tracking-wide">
                     Directions
@@ -248,11 +247,11 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="flex-1 items-center py-4 rounded-2xl bg-orange-50 border-2 border-orange-200"
+                  className="flex-1 items-center py-3 rounded-2xl bg-orange-50 border-2 border-orange-200"
                   onPress={onMessageAgent}
                 >
-                  <View className="w-10 h-10 rounded-full bg-white items-center justify-center mb-2 shadow-sm">
-                    <MaterialIcons name="message" size={20} color="#FF6B35" />
+                  <View className="w-9 h-9 rounded-full bg-white items-center justify-center mb-2 shadow-sm">
+                    <MaterialIcons name="message" size={18} color="#FF6B35" />
                   </View>
                   <Typography variant="semibold" size={12} className="text-gray-900 tracking-wide">
                     Message
@@ -263,7 +262,7 @@ export const QuickCashBottomSheet: React.FC<QuickCashBottomSheetProps> = ({
           )}
 
           <TouchableOpacity
-            className="bg-gray-100 py-4 mt-3 mb-24 rounded-2xl items-center"
+            className="bg-gray-100 py-3 mt-2 mb-6 rounded-2xl items-center"
             onPress={handleDone}
           >
             <Typography variant="semibold" size={16} className="text-gray-600 tracking-wide">

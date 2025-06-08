@@ -947,42 +947,43 @@ const UserProfileScreen: React.FC = () => {
                     <MaterialIcons name="tune" size={20} color={colors.primary} />
                 </TouchableOpacity>
             </View>
-            <ProfessionalStatsCard
-                title="Monthly Overview"
-                subtitle="December 2024"
-                stats={[
-                    {
-                        label: "Activities",
-                        value: "198",
-                        icon: "book",
-                        color: "#10b981",
-                        trend: "up",
-                    },
-                    {
-                        label: "Followers",
-                        value: "89",
-                        icon: "done-all",
-                        color: colors.success,
-                        trend: "up",
-                    },
-                    {
-                        label: "Bookings",
-                        value: "8",
-                        icon: "pending-actions",
-                        color: "#3b82f6",
-                        trend: "up",
-                    },
-                    {
-                        label: "Invites",
-                        value: "34",
-                        icon: "cancel",
-                        color: colors.error,
-                        trend: "up",
-                    }
-
-                ]}
-                onPress={() => console.log('View details')}
-            />
+            <View style={{ alignItems: 'center', marginHorizontal: -16 }}>
+                <ProfessionalStatsCard
+                    title="Monthly Overview"
+                    subtitle="December 2024"
+                    stats={[
+                        {
+                            label: "Activities",
+                            value: "198",
+                            icon: "book",
+                            color: "#10b981",
+                            trend: "up",
+                        },
+                        {
+                            label: "Followers",
+                            value: "89",
+                            icon: "done-all",
+                            color: colors.success,
+                            trend: "up",
+                        },
+                        {
+                            label: "Bookings",
+                            value: "8",
+                            icon: "pending-actions",
+                            color: "#3b82f6",
+                            trend: "up",
+                        },
+                        {
+                            label: "Invites",
+                            value: "34",
+                            icon: "cancel",
+                            color: colors.error,
+                            trend: "up",
+                        }
+                    ]}
+                    onPress={() => console.log('View details')}
+                />
+            </View>
 
             {/* Activity List */}
             <View style={{ position: 'relative' }}>
@@ -1062,14 +1063,14 @@ const UserProfileScreen: React.FC = () => {
                 />
 
                 {/* Tab View */}
-                <View className="flex-1 -mt-6 bg-slate-50 rounded-t-3xl">
+                <View className="flex-1 mt-0 bg-slate-50 rounded-t-lg">
                     <TabView
                         navigationState={{ index, routes }}
                         renderScene={renderScene}
                         onIndexChange={setIndex}
                         initialLayout={initialLayout}
                         renderTabBar={renderTabBar}
-                    />
+                    /> 
                 </View>
             </KeyboardAvoidingView>
         </View>

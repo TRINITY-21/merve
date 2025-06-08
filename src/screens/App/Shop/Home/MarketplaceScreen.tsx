@@ -3,16 +3,18 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-    Animated,
-    Dimensions,
-    FlatList,
-    RefreshControl,
-    Text,
-    View
+  Animated,
+  Dimensions,
+  FlatList,
+  RefreshControl,
+  Text,
+  View
 } from 'react-native';
+import { Header } from '../../../../components/common/Header';
+import { colors } from '../../../../constants/theme/colors';
 import { ISortOption } from '../../../../types/agentProductTypes';
 import { ICategory, IGhanaLocation, IMarketplaceScreenProps, IProduct, ISelectedFilters, SortBy, ViewMode } from '../../../../types/marketplaceTypes';
-import { CategoriesSection, FiltersPanel, LocationModal, MarketplaceHeader, MarketplaceToolbar, ProductCard, SortModal } from './components/home';
+import { CategoriesSection, FiltersPanel, LocationModal, MarketplaceToolbar, ProductCard, SortModal } from './components/home';
 
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -425,17 +427,29 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
   return (
     <View className="flex-1 bg-background">
       <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-        <MarketplaceHeader
-          selectedLocation={selectedLocation}
-          showMap={showMap}
-          searchQuery={searchQuery}
-          radius={radius}
-          onLocationPress={toggleLocationModal}
-          onMapToggle={() => setShowMap(!showMap)}
-          onSearchChange={setSearchQuery}
-          onRadiusChange={setRadius}
-          onBack={() => navigation.goBack()}
-          onFavoritesPress={() => navigation.navigate('FavoritesScreen' as never)}
+        <Header
+          title="Marketplace"
+          leftIcon={{
+            name: 'arrow-back',
+            onPress: () => navigation.goBack(),
+            color: colors.secondary
+          }}
+          rightIcons={[
+            {
+              name: 'favorite-border',
+              onPress: () => navigation.navigate('FavoritesScreen' as never),
+              color: colors.secondary
+            },
+            {
+              name: showMap ? 'grid-view' : 'map',
+              onPress: () => setShowMap(!showMap),
+              color: colors.secondary
+            }
+          ]}
+          animatedValue={scaleAnim}
+          backgroundColor={colors.background}
+          titleColor={colors.secondary}
+          iconBackgroundColor={colors.accent + '20'} // Adding 20% opacity
         />
       </Animated.View>
       
@@ -469,8 +483,8 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={handleRefresh}
-              colors={['#FFCC00']}
-              tintColor="#FFCC00"
+              colors={[colors.accent]}
+              tintColor={colors.accent}
             />
           }
           ListEmptyComponent={EmptyState}

@@ -10,7 +10,6 @@ import {
     Platform,
     Animated as RNAnimated,
     StyleSheet,
-    TouchableOpacity,
     View
 } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
@@ -169,16 +168,7 @@ const MapScreen: React.FC = () => {
     };
 
     const toggleList = () => {
-        setShowList((prevShowList) => {
-            const newShowList = !prevShowList;
-            RNAnimated.spring(slideAnim, {
-                toValue: newShowList ? 0 : height * 0.6,
-                useNativeDriver: false,
-                tension: 50,
-                friction: 10,
-            }).start();
-            return newShowList;
-        });
+        setShowList(prevShowList => !prevShowList);
     };
 
     const filteredAgents = useMemo(() => {
@@ -393,31 +383,62 @@ const MapScreen: React.FC = () => {
                 />
             )}
 
-            <RNAnimated.View
-                className="absolute bottom-14 left-0 right-0 bg-gray-50 rounded-t-3xl shadow-2xl"
-                style={{
-                    height: height * 0.5,
-                    transform: [{ translateY: slideAnim }],
+            <BottomSheet
+                isVisible={showList}
+                onClose={() => setShowList(false)}
+                title="Nearby Agents"
+                subtitle={`${filteredAgents.length} agents available`}
+                height={Platform.OS === 'ios' ? '85%' : '90%'}
+                maxHeight={Platform.OS === 'ios' ? '90%' : '95%'}
+                minHeight={Platform.OS === 'ios' ? '75%' : '90%'}
+                showCloseButton={true}
+                closeIcon="close"
+                statusBarStyle="dark-content"
+                swipeToClose={true}
+                onBackdropPress={() => setShowList(false)}
+                contentStyle={{
+                    padding: 0,
+                    margin: 0,
+                    paddingTop: 0
+                }}
+                scrollEnabled={false}
+                keyboardAware={false}
+                animationDuration={200}
+                animationType="spring"
+                springConfig={{
+                    tension: 300,
+                    friction: 20
                 }}
             >
-                <View className="flex-row justify-between items-center p-4 border-b border-gray-200 bg-white rounded-t-3xl">
-                    <Typography variant="bold" size={16} className="text-gray-900 tracking-wide">
-                        Nearby Agents
-                    </Typography>
-                    <TouchableOpacity onPress={toggleList}>
-                        <MaterialIcons name="close" size={24} color={colors.gray.dark} />
-                    </TouchableOpacity>
-                </View>
                 <FlatList
                     data={filteredAgents}
                     renderItem={renderAgentItem}
                     keyExtractor={(item) => item.id}
-                    className="flex-1"
-                    contentContainerClassName={`${Platform.OS === 'ios' ? 'pb-10' : 'pb-8'} pt-2`}
-                    showsVerticalScrollIndicator={true}
-                    nestedScrollEnabled={true}
+                    contentContainerStyle={{
+                        paddingHorizontal: 0,
+                        paddingBottom: Platform.OS === 'ios' ? 120 : 100,
+                        paddingTop: 8,
+                        paddingLeft: 0,
+                        paddingRight: 0
+                    }}
+                    showsVerticalScrollIndicator={false}
+                    bounces={true}
+                    overScrollMode="always"
+                    scrollEnabled={true}
+                    removeClippedSubviews={Platform.OS === 'android'}
+                    ListEmptyComponent={
+                        <View className="flex-1 items-center justify-center py-8 px-4">
+                            <MaterialIcons name="search-off" size={48} color={colors.gray.light} />
+                            <Typography variant="medium" size={16} className="text-gray-600 mt-4 text-center">
+                                No agents found nearby
+                            </Typography>
+                            <Typography variant="regular" size={14} className="text-gray-500 mt-2 text-center">
+                                Try adjusting your filters or search
+                            </Typography>
+                        </View>
+                    }
                 />
-            </RNAnimated.View>
+            </BottomSheet>
 
             <AgentNotificationCard
                 visible={showAgentNotification}
@@ -433,14 +454,18 @@ const MapScreen: React.FC = () => {
       subtitle = 'Get instant assistance from verified agents nearby'
       animationDuration={300}
       keyboardAware={true}
-      height={Platform.OS === 'ios' ? '10%' : '90%'}
-      maxHeight={Platform.OS === 'ios' ? '70%' : '90%'}
-      minHeight={Platform.OS === 'ios' ? '90%' : '80%'}
+      height={Platform.OS === 'ios' ? '85%' : '90%'}
+      maxHeight={Platform.OS === 'ios' ? '90%' : '95%'}
+      minHeight={Platform.OS === 'ios' ? '70%' : '75%'}
       showCloseButton={true}
       closeIcon="close" 
       statusBarStyle="dark-content"  
       swipeToClose={true}
-      onBackdropPress={() => setShowUrgentSheet(false)} 
+      onBackdropPress={() => setShowUrgentSheet(false)}
+      contentStyle={{
+        paddingTop: 8,
+        paddingBottom: Platform.OS === 'ios' ? 24 : 32
+      }}
     >
          
        <QuickCashBottomSheet

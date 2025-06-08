@@ -31,7 +31,7 @@ export const AgentListItem: React.FC<AgentListItemProps> = ({
 
   return (
     <Card
-      className={`mx-4 my-1.5 bg-white rounded-2xl shadow-md border border-gray-50 ${compact ? 'p-3' : 'p-4'}`}
+      className={`mx-0 my-1 bg-white rounded-2xl shadow-md border border-gray-50 ${compact ? 'p-3' : 'p-4'}`}
       onPress={() => onPress(agent)}
       elevated={true}
     >

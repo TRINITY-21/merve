@@ -476,16 +476,16 @@ useEffect(() => {
                     {
                         marginBottom: 12,
                         shadowColor: selectedNotifications.includes(item.id) ? colors.accent : '#000',
-                        shadowOffset: { width: 0, height: 1 },
-                        shadowOpacity: selectedNotifications.includes(item.id) ? 0.1 : 0.05,
-                        shadowRadius: selectedNotifications.includes(item.id) ? 4 : 2,
-                        elevation: selectedNotifications.includes(item.id) ? 3 : 1,
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: selectedNotifications.includes(item.id) ? 0.15 : 0.08,
+                        shadowRadius: selectedNotifications.includes(item.id) ? 8 : 4,
+                        elevation: selectedNotifications.includes(item.id) ? 4 : 2,
                     }
                 ]}
                 className={`
-                bg-white border border-gray-200 rounded-xl overflow-hidden
+                bg-white rounded-2xl overflow-hidden
                 ${!item.isRead ? 'border-l-4 border-l-primary' : ''}
-                ${selectedNotifications.includes(item.id) ? 'border-accent shadow-accent/10' : 'shadow-sm'}
+                ${selectedNotifications.includes(item.id) ? 'border-accent' : ''}
             `}
             >
                 <TouchableOpacity
@@ -511,21 +511,10 @@ useEffect(() => {
                             className="absolute z-10"
                             style={{ top: 12, right: 12 }}
                         >
-                            <TouchableOpacity
-                                className={`
-                                w-6 h-6 rounded-full border-2 items-center justify-center
-                                ${selectedNotifications.includes(item.id)
-                                        ? 'bg-accent border-accent'
-                                        : 'bg-white border-gray-300'
-                                    }
-                            `}
-                                onPress={() => toggleNotificationSelection(item.id)}
-                                activeOpacity={0.8}
-                            >
-                                {selectedNotifications.includes(item.id) && (
-                                    <MaterialIcons name="check" size={14} color={colors.white} />
-                                )}
-                            </TouchableOpacity>
+                            {renderSelectionCheckbox(
+                                selectedNotifications.includes(item.id),
+                                () => toggleNotificationSelection(item.id)
+                            )}
                         </View>
                     )}
 
@@ -537,17 +526,22 @@ useEffect(() => {
                                 <View className="relative">
                                     <Image
                                         source={{ uri: item.avatar }}
-                                        className="w-12 h-12 rounded-full border border-gray-200"
-                                        style={{ backgroundColor: '#f3f4f6' }}
+                                        className="w-12 h-12 rounded-full border border-gray-100"
+                                        style={{ backgroundColor: '#f8fafc' }}
                                     />
                                     {'userVerified' in item && item.userVerified && (
                                         <View
-                                            className="absolute bg-white border border-gray-200 rounded-full items-center justify-center"
+                                            className="absolute bg-white rounded-full items-center justify-center"
                                             style={{
                                                 top: -2,
                                                 right: -2,
                                                 width: 16,
-                                                height: 16
+                                                height: 16,
+                                                shadowColor: '#000',
+                                                shadowOffset: { width: 0, height: 1 },
+                                                shadowOpacity: 0.1,
+                                                shadowRadius: 2,
+                                                elevation: 2
                                             }}
                                         >
                                             <MaterialIcons name="verified" size={10} color={colors.accent} />
@@ -556,8 +550,15 @@ useEffect(() => {
                                 </View>
                             ) : (
                                 <View
-                                    className="w-12 h-12 rounded-full items-center justify-center border border-gray-100"
-                                    style={{ backgroundColor: getNotificationColor(item.type) }}
+                                    className="w-12 h-12 rounded-full items-center justify-center"
+                                    style={{ 
+                                        backgroundColor: getNotificationColor(item.type),
+                                        shadowColor: getNotificationColor(item.type),
+                                        shadowOffset: { width: 0, height: 2 },
+                                        shadowOpacity: 0.2,
+                                        shadowRadius: 4,
+                                        elevation: 3
+                                    }}
                                 >
                                     <MaterialIcons
                                         name={getNotificationIcon(item.type, 'icon' in item ? item.icon : undefined) as any}
@@ -575,7 +576,12 @@ useEffect(() => {
                                         top: -1,
                                         right: -1,
                                         width: 12,
-                                        height: 12
+                                        height: 12,
+                                        shadowColor: colors.primary,
+                                        shadowOffset: { width: 0, height: 1 },
+                                        shadowOpacity: 0.3,
+                                        shadowRadius: 2,
+                                        elevation: 2
                                     }}
                                 />
                             )}
@@ -625,10 +631,15 @@ useEffect(() => {
                             {/* Transaction Info */}
                             {isTransaction && (
                                 <View
-                                    className="bg-gray-50 border border-gray-100 rounded-lg flex-row justify-between items-center"
+                                    className="bg-gray-50 rounded-xl flex-row justify-between items-center"
                                     style={{
                                         padding: 12,
-                                        marginBottom: 12
+                                        marginBottom: 12,
+                                        shadowColor: '#000',
+                                        shadowOffset: { width: 0, height: 1 },
+                                        shadowOpacity: 0.05,
+                                        shadowRadius: 2,
+                                        elevation: 1
                                     }}
                                 >
                                     <Text
@@ -659,10 +670,15 @@ useEffect(() => {
                                     }}
                                 >
                                     <View
-                                        className="bg-orange-500 rounded-lg items-center justify-center"
+                                        className="bg-primary rounded-lg items-center justify-center"
                                         style={{
                                             paddingHorizontal: 8,
-                                            paddingVertical: 4
+                                            paddingVertical: 4,
+                                            shadowColor: colors.primary,
+                                            shadowOffset: { width: 0, height: 2 },
+                                            shadowOpacity: 0.2,
+                                            shadowRadius: 4,
+                                            elevation: 2
                                         }}
                                     >
                                         <Text
@@ -684,10 +700,15 @@ useEffect(() => {
                             {/* Achievement Info */}
                             {isAchievement && 'achievementName' in item && (
                                 <View
-                                    className="bg-primary/5 border border-primary/10 rounded-lg"
+                                    className="bg-primary/5 rounded-xl"
                                     style={{
                                         padding: 12,
-                                        marginBottom: 12
+                                        marginBottom: 12,
+                                        shadowColor: colors.primary,
+                                        shadowOffset: { width: 0, height: 2 },
+                                        shadowOpacity: 0.1,
+                                        shadowRadius: 4,
+                                        elevation: 1
                                     }}
                                 >
                                     <Text
@@ -711,20 +732,25 @@ useEffect(() => {
                             {/* Social Content Preview */}
                             {hasSocialContent && (
                                 <View
-                                    className="bg-gray-50 border border-gray-100 rounded-lg flex-row items-center"
+                                    className="bg-gray-50 rounded-xl flex-row items-center"
                                     style={{
                                         padding: 8,
                                         marginBottom: 12,
-                                        gap: 8
+                                        gap: 8,
+                                        shadowColor: '#000',
+                                        shadowOffset: { width: 0, height: 1 },
+                                        shadowOpacity: 0.05,
+                                        shadowRadius: 2,
+                                        elevation: 1
                                     }}
                                 >
                                     <Image
                                         source={{ uri: item.postImage }}
-                                        className="rounded border border-gray-200"
+                                        className="rounded-lg"
                                         style={{
                                             width: 32,
                                             height: 32,
-                                            backgroundColor: '#f3f4f6'
+                                            backgroundColor: '#f8fafc'
                                         }}
                                     />
                                     {item.postTitle && (
@@ -754,7 +780,15 @@ useEffect(() => {
                         >
                             <View
                                 className="bg-red-500 rounded-full items-center justify-center"
-                                style={{ width: 20, height: 20 }}
+                                style={{ 
+                                    width: 20, 
+                                    height: 20,
+                                    shadowColor: colors.error,
+                                    shadowOffset: { width: 0, height: 2 },
+                                    shadowOpacity: 0.2,
+                                    shadowRadius: 4,
+                                    elevation: 2
+                                }}
                             >
                                 <MaterialIcons name="priority-high" size={12} color={colors.white} />
                             </View>

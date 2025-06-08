@@ -87,38 +87,39 @@ export const MapHeader: React.FC<MapHeaderProps> = ({
             profileIconPress={onProfilePress}
             profileAvatarUrl={userAvatarUrl}
             userName={userName}
-            profileIconSize={36}
+            profileIconSize={40} // Increased profile icon size
 
             // Enhanced card-like styling with full opacity
             containerStyle={{
-              height: 56, // Fixed height to match profile icon + padding
+              height: 60, // Increased height
               opacity: 1,
-              backgroundColor: '#FFFFFF', // Solid white - no transparency
-              borderRadius: 28, // Full border radius (height/2)
-              paddingHorizontal: 1,
-              paddingVertical: 0, // Remove vertical padding since we have fixed height
-              borderWidth: 0.5,
-              borderColor: 'rgba(0, 0, 0, 0.08)',
-              // Strong card-like elevation
+              backgroundColor: '#FFFFFF', // Solid white background
+              borderRadius: 30, // Full border radius (height/2)
+              paddingHorizontal: 4,
+              paddingVertical: 0,
+              borderWidth: 1.5, // Increased border width
+              borderColor: 'rgba(0, 0, 0, 0.1)', // Subtle border
+              // Enhanced shadow for better elevation
               shadowColor: '#000',
               shadowOffset: {
                 width: 0,
-                height: 8
+                height: 10
               },
               shadowOpacity: 0.25,
               shadowRadius: 20,
               elevation: 15,
               // Additional visual enhancement
               marginHorizontal: 0,
-              alignItems: 'center', // Ensure content is centered
+              alignItems: 'center',
               flexDirection: 'row',
             }}
             inputStyle={{
-              fontSize: 16,
-              // fontWeight: '500',
+              fontSize: 17, // Increased font size
+              fontWeight: '500',
               color: colors.secondary,
               paddingVertical: 0,
-              lineHeight: 20, // Consistent line height
+              lineHeight: 22, // Increased line height
+              letterSpacing: 0.3, // Added letter spacing
             }}
           />
         </View>
@@ -144,52 +145,51 @@ export const MapHeader: React.FC<MapHeaderProps> = ({
               key={filter.value}
               style={[
                 {
-                  paddingHorizontal: 14,
-                  paddingVertical: 8, // Slightly increased for better touch target
-                  borderRadius: 16,
-                  marginRight: 8,
+                  paddingHorizontal: 16, // Increased horizontal padding
+                  paddingVertical: 10, // Increased vertical padding
+                  borderRadius: 20, // Increased border radius
+                  marginRight: 10,
                   marginLeft: index === 0 ? 0 : 0,
-                  minHeight: 36,
-                  height: 32, // Fixed height for consistency
+                  minHeight: 40, // Increased height
+                  height: 40, // Increased height
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderWidth: 1,
-                  // Ensure consistent alignment across platforms
+                  borderWidth: 1.5, // Increased border width
                   flexDirection: 'row',
-                  // Google Maps style elevation and colors - SOLID BACKGROUNDS
+                  // White background for unselected state
                   backgroundColor: selectedFilter === filter.value
                     ? colors.secondary
-                    : '#FFFFFF', // Solid white - no transparency
+                    : '#FFFFFF',
                   borderColor: selectedFilter === filter.value
                     ? colors.secondary
-                    : 'rgba(255, 255, 255, 0.8)',
-                  // Enhanced shadow for map overlay
-                  // shadowColor: '#000',
-                  // shadowOffset: {
-                  //   width: 0,
-                  //   height: selectedFilter === filter.value ? 6 : 4,
-                  // },
-                  // shadowOpacity: selectedFilter === filter.value ? 0.25 : 0.15,
-                  // shadowRadius: selectedFilter === filter.value ? 12 : 8,
-                  // elevation: selectedFilter === filter.value ? 12 : 6,
+                    : 'rgba(0, 0, 0, 0.1)',
+                  // Strong elevation and shadow
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: selectedFilter === filter.value ? 8 : 4,
+                  },
+                  shadowOpacity: selectedFilter === filter.value ? 0.3 : 0.2,
+                  shadowRadius: selectedFilter === filter.value ? 12 : 8,
+                  elevation: selectedFilter === filter.value ? 12 : 6,
                 },
-                // Add a subtle glow effect for selected state
+                // Enhanced glow effect for selected state
                 selectedFilter === filter.value && {
                   shadowColor: colors.secondary,
-                  shadowOpacity: 0.3,
+                  shadowOpacity: 0.4,
                 }
               ]}
               onPress={() => onFilterChange(filter.value)}
-              activeOpacity={0.8}
+              activeOpacity={0.7}
             >
               <Typography
                 variant="bold"
-                size={14}
+                size={15} // Increased font size
                 style={{
                   color: selectedFilter === filter.value ? colors.white : colors.secondary,
-                  // fontWeight: '700',
-                  letterSpacing: 0.2,
-                  lineHeight: 16, // Consistent line height for alignment
+                  fontWeight: '700', // Bolder text
+                  letterSpacing: 0.3, // Increased letter spacing
+                  lineHeight: 18, // Increased line height
                   textAlign: 'center',
                 }}
               >

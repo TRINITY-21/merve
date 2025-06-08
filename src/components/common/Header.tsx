@@ -1,8 +1,9 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Animated, Platform, Text, View } from 'react-native';
+import { Animated, Platform, View } from 'react-native';
 import { colors } from '../../constants/theme/colors';
 import { IconButton } from './IconButton';
+import { Typography } from './Typography';
 
 export type HeaderProps = {
   title: string;
@@ -59,8 +60,8 @@ export const Header: React.FC<HeaderProps> = ({
           }
         ]}
       >
-          <View className={`px-5 ${Platform.OS === 'ios' ? 'pt-14' : 'pt-3'}`}>
-            <View className="flex-row items-center justify-between h-16">
+          <View className={`${Platform.OS === 'ios' ? 'pt-14' : 'pt-0'} pl-2 pr-5`}>
+            <View className="flex-row items-center justify-between h-14">
               {/* Left Icon (conditionally rendered) */}
               {leftIcon ? (
                 <IconButton
@@ -77,13 +78,15 @@ export const Header: React.FC<HeaderProps> = ({
               )}
 
               {/* Title */}
-              <Text 
-                className="text-xl font-bold flex-1 text-center mx-4"
+              <Typography 
+                className="text-xl flex-1 text-center mx-4"
                 style={{ color: titleColor }}
                 numberOfLines={1}
+                variant="bold"
+                size={20}
               >
                 {title}
-              </Text>
+              </Typography>
 
               {/* Right Icons */}
               <View className="flex-row" style={{ gap: 10 }}>

@@ -197,7 +197,7 @@ const LoginScreen: React.FC = () => {
 
     return (
         <LinearGradient
-            colors={[colors.gradient.primary[1], colors.gradient.primary[0]]}
+            colors={[colors.gradient.accent[1], colors.gradient.accent[0]]}
             style={{ flex: 1 }}
         >
             <KeyboardAwareScrollView
@@ -335,7 +335,7 @@ const LoginScreen: React.FC = () => {
                                 <Typography
                                     variant="semibold"
                                     size={14}
-                                    style={{ color: colors.primary }}
+                                    style={{ color: colors.secondary }}
                                 >
                                     Forgot PIN?
                                 </Typography>
@@ -347,10 +347,17 @@ const LoginScreen: React.FC = () => {
                                 onPress={handleLogin}
                                 gradient
                                 size="large"
-                                style={{ marginBottom: 10 }}
+                                style={{ 
+                                    marginBottom: 10,
+                                    backgroundColor: colors.accent,
+                                    borderColor: colors.accent
+                                }}
+                                textStyle={{ color: colors.white }}
+                                startIconColor={colors.white}
                                 disabled={loading}
                                 loading={loading}
                                 startIcon='login'
+                                variant="outline"
                             />
 
                             {/* OR Divider */}
