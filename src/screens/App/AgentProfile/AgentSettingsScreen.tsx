@@ -321,10 +321,10 @@ const AgentSettingsScreen: React.FC<IAgentSettingsScreenProps> = () => {
       />
       
       <ScrollView
-        className="flex-1"
+        className="flex-1 p-0 m-0"
         contentContainerStyle={{ paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
-        refreshControl={
+        refreshControl={ 
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}

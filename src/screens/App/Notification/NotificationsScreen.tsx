@@ -19,7 +19,7 @@ import { MapStackParamList } from '../../../navigation/AppNavigator';
 import { IFilterOption, INotification, INotificationGroup } from '../../../types';
 import { dummyNotifications } from '../../../utils/dummyData';
 
-type NotificationsScreenNavigationProp = StackNavigationProp<MapStackParamList, 'Notifications'>;
+type NotificationsScreenNavigationProp = StackNavigationProp<MapStackParamList, 'Notification'>;
 
 
 const NotificationsScreen: React.FC = () => {
@@ -70,30 +70,30 @@ const NotificationsScreen: React.FC = () => {
         ]).start();
     }, []);
 
-useEffect(() => {
-    // Filter notifications based on selected filter
-    let filtered = [...notifications];
+    useEffect(() => {
+        // Filter notifications based on selected filter
+        let filtered = [...notifications];
 
-    switch (selectedFilter) {
-        case 'unread':
-            filtered = filtered.filter(notif => !notif.isRead);
-            break;
-        case 'transaction':
-            filtered = filtered.filter(notif => notif.type === 'transaction');
-            break;
-        case 'social':
-            filtered = filtered.filter(notif => ['follow', 'like', 'comment'].includes(notif.type));
-            break;
-        case 'system':
-            filtered = filtered.filter(notif => ['system', 'security', 'update', 'promotion'].includes(notif.type));
-            break;
-        default:
-            // 'all' case - no filtering needed
-            break;
-    }
+        switch (selectedFilter) {
+            case 'unread':
+                filtered = filtered.filter(notif => !notif.isRead);
+                break;
+            case 'transaction':
+                filtered = filtered.filter(notif => notif.type === 'transaction');
+                break;
+            case 'social':
+                filtered = filtered.filter(notif => ['follow', 'like', 'comment'].includes(notif.type));
+                break;
+            case 'system':
+                filtered = filtered.filter(notif => ['system', 'security', 'update', 'promotion'].includes(notif.type));
+                break;
+            default:
+                // 'all' case - no filtering needed
+                break;
+        }
 
-    setFilteredNotifications(filtered);
-}, [selectedFilter, notifications]);
+        setFilteredNotifications(filtered);
+    }, [selectedFilter, notifications]);
 
     const handleRefresh = (): void => {
         setRefreshing(true);
@@ -551,7 +551,7 @@ useEffect(() => {
                             ) : (
                                 <View
                                     className="w-12 h-12 rounded-full items-center justify-center"
-                                    style={{ 
+                                    style={{
                                         backgroundColor: getNotificationColor(item.type),
                                         shadowColor: getNotificationColor(item.type),
                                         shadowOffset: { width: 0, height: 2 },
@@ -780,8 +780,8 @@ useEffect(() => {
                         >
                             <View
                                 className="bg-red-500 rounded-full items-center justify-center"
-                                style={{ 
-                                    width: 20, 
+                                style={{
+                                    width: 20,
                                     height: 20,
                                     shadowColor: colors.error,
                                     shadowOffset: { width: 0, height: 2 },
@@ -799,209 +799,209 @@ useEffect(() => {
         );
     };
 
-// Update your renderGroupedNotifications function
-const renderGroupedNotifications = () => {
-    // Check if filteredNotifications is empty
-    if (filteredNotifications.length === 0) {
+    // Update your renderGroupedNotifications function
+    const renderGroupedNotifications = () => {
+        // Check if filteredNotifications is empty
+        if (filteredNotifications.length === 0) {
+            return (
+                <View className="flex-1 items-center justify-center px-6 py-16">
+                    <LinearGradient
+                        colors={colors.gradient.light}
+                        className="rounded-3xl p-12 items-center w-full"
+                    >
+                        <MaterialIcons name="notifications-none" size={80} color={colors.gray.medium} />
+                        <Text className="text-2xl font-bold text-gray-900 mt-6 mb-2">No notifications</Text>
+                        <Text className="text-base text-gray-500 text-center leading-6">
+                            {selectedFilter === 'all'
+                                ? "You're all caught up! New notifications will appear here."
+                                : `No ${selectedFilter} notifications found.`}
+                        </Text>
+                    </LinearGradient>
+                </View>
+            );
+        }
+
+        // Group the filtered notifications
+        const groups = groupNotificationsByTime(filteredNotifications);
+
+        // Create sections only for groups that have data
+        const sections = [
+            { title: 'Today', data: groups.today },
+            { title: 'Yesterday', data: groups.yesterday },
+            { title: 'This Week', data: groups.thisWeek },
+            { title: 'Older', data: groups.older },
+        ].filter(section => section.data.length > 0);
+
+        // If all sections are empty (shouldn't happen but just in case)
+        if (sections.length === 0) {
+            return (
+                <View className="flex-1 items-center justify-center px-6 py-16">
+                    <LinearGradient
+                        colors={colors.gradient.light}
+                        className="rounded-3xl p-12 items-center w-full"
+                    >
+                        <MaterialIcons name="notifications-none" size={80} color={colors.gray.medium} />
+                        <Text className="text-2xl font-bold text-gray-900 mt-6 mb-2">No notifications</Text>
+                        <Text className="text-base text-gray-500 text-center leading-6">
+                            {selectedFilter === 'all'
+                                ? "You're all caught up! New notifications will appear here."
+                                : `No ${selectedFilter} notifications found.`}
+                        </Text>
+                    </LinearGradient>
+                </View>
+            );
+        }
+
         return (
-            <View className="flex-1 items-center justify-center px-6 py-16">
-                <LinearGradient
-                    colors={colors.gradient.light}
-                    className="rounded-3xl p-12 items-center w-full"
-                >
-                    <MaterialIcons name="notifications-none" size={80} color={colors.gray.medium} />
-                    <Text className="text-2xl font-bold text-gray-900 mt-6 mb-2">No notifications</Text>
-                    <Text className="text-base text-gray-500 text-center leading-6">
-                        {selectedFilter === 'all' 
-                            ? "You're all caught up! New notifications will appear here."
-                            : `No ${selectedFilter} notifications found.`}
-                    </Text>
-                </LinearGradient>
-            </View>
-        );
-    }
-
-    // Group the filtered notifications
-    const groups = groupNotificationsByTime(filteredNotifications);
-    
-    // Create sections only for groups that have data
-    const sections = [
-        { title: 'Today', data: groups.today },
-        { title: 'Yesterday', data: groups.yesterday },
-        { title: 'This Week', data: groups.thisWeek },
-        { title: 'Older', data: groups.older },
-    ].filter(section => section.data.length > 0);
-
-    // If all sections are empty (shouldn't happen but just in case)
-    if (sections.length === 0) {
-        return (
-            <View className="flex-1 items-center justify-center px-6 py-16">
-                <LinearGradient
-                    colors={colors.gradient.light}
-                    className="rounded-3xl p-12 items-center w-full"
-                >
-                    <MaterialIcons name="notifications-none" size={80} color={colors.gray.medium} />
-                    <Text className="text-2xl font-bold text-gray-900 mt-6 mb-2">No notifications</Text>
-                    <Text className="text-base text-gray-500 text-center leading-6">
-                        {selectedFilter === 'all' 
-                            ? "You're all caught up! New notifications will appear here."
-                            : `No ${selectedFilter} notifications found.`}
-                    </Text>
-                </LinearGradient>
-            </View>
-        );
-    }
-
-    return (
-        <FlatList
-            data={sections}
-            renderItem={({ item: section }) => (
-                <View className="mb-6">
-                    <View className="flex-row items-center justify-between mb-3 px-6">
-                        <Text className="text-lg font-bold text-gray-900">{section.title}</Text>
-                        <View className="bg-accent/10 rounded-full px-3 py-1.5">
-                            <Text className="text-xs text-accent font-bold">{section.data.length}</Text>
+            <FlatList
+                data={sections}
+                renderItem={({ item: section }) => (
+                    <View className="mb-6">
+                        <View className="flex-row items-center justify-between mb-3 px-6">
+                            <Text className="text-lg font-bold text-gray-900">{section.title}</Text>
+                            <View className="bg-accent/10 rounded-full px-3 py-1.5">
+                                <Text className="text-xs text-accent font-bold">{section.data.length}</Text>
+                            </View>
+                        </View>
+                        <View className="px-6">
+                            {section.data.map((item) => (
+                                <View key={item.id} style={{ marginBottom: 12 }}>
+                                    {renderNotificationCard({ item, index: 0 })}
+                                </View>
+                            ))}
                         </View>
                     </View>
-                    <View className="px-6">
-                        {section.data.map((item) => (
-                            <View key={item.id} style={{ marginBottom: 12 }}>
-                                {renderNotificationCard({ item, index: 0 })}
-                            </View>
-                        ))}
-                    </View>
-                </View>
-            )}
-            keyExtractor={(item) => item.title}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 20 }}
-            refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={handleRefresh}
-                    colors={[colors.primary]}
-                    tintColor={colors.primary}
-                />
-            }
-        />
-    );
-};
+                )}
+                keyExtractor={(item) => item.title}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 20 }}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={handleRefresh}
+                        colors={[colors.primary]}
+                        tintColor={colors.primary}
+                    />
+                }
+            />
+        );
+    };
 
-const renderFilters = () => (
-    <View className="bg-white mb-3 border-b border-gray-100">
-        <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            className="py-4"
-            contentContainerStyle={{
-                paddingHorizontal: 16,
-                alignItems: 'center',
-                paddingVertical: 0,
-            }}
-            style={{
-                flexGrow: 0,
-            }}
-        >
-            {filterOptions.map((filter, index) => (
-                <TouchableOpacity
-                    key={filter.key}
-                    style={[
-                        {
-                            paddingHorizontal: 14,
-                            paddingVertical: 8,
-                            borderRadius: 16,
-                            marginRight: 8,
-                            marginLeft: index === 0 ? 0 : 0,
-                            minHeight: 36,
-                            height: 32,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            borderWidth: 1,
-                            flexDirection: 'row',
-                            // Solid backgrounds like MapHeader
-                            backgroundColor: selectedFilter === filter.key 
-                                ? colors.primary 
-                                : '#FFFFFF',
-                            borderColor: selectedFilter === filter.key 
-                                ? colors.primary 
-                                : 'rgba(0, 0, 0, 0.08)',
-                            // Enhanced shadows
-                            shadowColor: '#000',
-                            shadowOffset: {
-                                width: 0,
-                                height: selectedFilter === filter.key ? 6 : 4,
+    const renderFilters = () => (
+        <View className="bg-white mb-3 border-b border-gray-100">
+            <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                className="py-4"
+                contentContainerStyle={{
+                    paddingHorizontal: 16,
+                    alignItems: 'center',
+                    paddingVertical: 0,
+                }}
+                style={{
+                    flexGrow: 0,
+                }}
+            >
+                {filterOptions.map((filter, index) => (
+                    <TouchableOpacity
+                        key={filter.key}
+                        style={[
+                            {
+                                paddingHorizontal: 14,
+                                paddingVertical: 8,
+                                borderRadius: 16,
+                                marginRight: 8,
+                                marginLeft: index === 0 ? 0 : 0,
+                                minHeight: 36,
+                                height: 32,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderWidth: 1,
+                                flexDirection: 'row',
+                                // Solid backgrounds like MapHeader
+                                backgroundColor: selectedFilter === filter.key
+                                    ? colors.primary
+                                    : '#FFFFFF',
+                                borderColor: selectedFilter === filter.key
+                                    ? colors.primary
+                                    : 'rgba(0, 0, 0, 0.08)',
+                                // Enhanced shadows
+                                shadowColor: '#000',
+                                shadowOffset: {
+                                    width: 0,
+                                    height: selectedFilter === filter.key ? 6 : 4,
+                                },
+                                shadowOpacity: selectedFilter === filter.key ? 0.25 : 0.15,
+                                shadowRadius: selectedFilter === filter.key ? 12 : 8,
+                                elevation: selectedFilter === filter.key ? 12 : 6,
                             },
-                            shadowOpacity: selectedFilter === filter.key ? 0.25 : 0.15,
-                            shadowRadius: selectedFilter === filter.key ? 12 : 8,
-                            elevation: selectedFilter === filter.key ? 12 : 6,
-                        },
-                        // Add glow effect for selected state
-                        selectedFilter === filter.key && {
-                            shadowColor: colors.primary,
-                            shadowOpacity: 0.3,
-                        }
-                    ]}
-                    onPress={() => setSelectedFilter(filter.key)}
-                    activeOpacity={0.8}
-                >
-                    <View className="flex-row items-center justify-center" style={{ gap: 6 }}>
-                        <MaterialIcons
-                            name={filter.icon as any}
-                            size={16}
-                            color={selectedFilter === filter.key ? colors.white : colors.text.secondary}
-                        />
-                        <Typography
-                            style={{
-                                color: selectedFilter === filter.key ? colors.white : colors.secondary,
-                                fontSize: 14,
-                                // fontWeight: '700',
-                                letterSpacing: 0.2,
-                                lineHeight: 16,
-                                textAlign: 'center',
-                            }}
-                            numberOfLines={1}
-                        >
-                            {filter.label}
-                        </Typography>
-                        {filter.key === 'unread' && (
-                            <View
-                                className={`
+                            // Add glow effect for selected state
+                            selectedFilter === filter.key && {
+                                shadowColor: colors.primary,
+                                shadowOpacity: 0.3,
+                            }
+                        ]}
+                        onPress={() => setSelectedFilter(filter.key)}
+                        activeOpacity={0.8}
+                    >
+                        <View className="flex-row items-center justify-center" style={{ gap: 6 }}>
+                            <MaterialIcons
+                                name={filter.icon as any}
+                                size={16}
+                                color={selectedFilter === filter.key ? colors.white : colors.text.secondary}
+                            />
+                            <Typography
+                                style={{
+                                    color: selectedFilter === filter.key ? colors.white : colors.secondary,
+                                    fontSize: 14,
+                                    // fontWeight: '700',
+                                    letterSpacing: 0.2,
+                                    lineHeight: 16,
+                                    textAlign: 'center',
+                                }}
+                                numberOfLines={1}
+                            >
+                                {filter.label}
+                            </Typography>
+                            {filter.key === 'unread' && (
+                                <View
+                                    className={`
                                     rounded-full min-w-[20px] h-5 px-1.5 
                                     items-center justify-center
                                     ${selectedFilter === filter.key
-                                        ? 'bg-white'
-                                        : 'bg-red-500'
-                                    }
+                                            ? 'bg-white'
+                                            : 'bg-red-500'
+                                        }
                                 `}
-                                style={{ marginLeft: 2 }} 
-                            > 
-                                <Typography
-                                size={10}
-                                    style={{
-                                        color: selectedFilter === filter.key ? colors.primary : colors.white,
-                                        fontSize: 11,
-                                        // fontWeight: 'bold',
-                                        lineHeight: 16,
-                                    }}
+                                    style={{ marginLeft: 2 }}
                                 >
-                                    {notifications.filter(n => !n.isRead).length}
-                                </Typography>
-                            </View>
-                        )}
-                    </View>
-                </TouchableOpacity>
-            ))}
-        </ScrollView>
-    </View>
-);
-    
+                                    <Typography
+                                        size={10}
+                                        style={{
+                                            color: selectedFilter === filter.key ? colors.primary : colors.white,
+                                            fontSize: 11,
+                                            // fontWeight: 'bold',
+                                            lineHeight: 16,
+                                        }}
+                                    >
+                                        {notifications.filter(n => !n.isRead).length}
+                                    </Typography>
+                                </View>
+                            )}
+                        </View>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
+        </View>
+    );
+
     const renderHeader = () => (
         <Animated.View
             style={{ transform: [{ scale: headerScaleAnim }] }}
             className="shadow-lg shadow-black/10"
         >
             <LinearGradient
-                colors={colors.gradient.primary}
+                colors={[colors.background, colors.background]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 className="pb-4"
@@ -1027,7 +1027,7 @@ const renderFilters = () => (
                                     color: colors.secondary
                                 }
                             ]
-                            : [ 
+                            : [
                                 {
                                     name: 'done-all',
                                     onPress: markAllAsRead,
@@ -1044,30 +1044,29 @@ const renderFilters = () => (
                     barStyle="dark-content"
                     withShadow={true}
                 />
-
-
-                {/* Stats row */}
-                <View className="flex-row justify-between p-4" style={{ gap: 10 }}>
-                    <View className="flex-1 bg-white/10 rounded-xl p-3 items-center">
-                        <Text className="text-lg font-bold text-secondary mb-0.5">
-                            {notifications.length}
-                        </Text>
-                        <Text className="text-xs text-secondary font-medium">Total</Text>
-                    </View>
-                    <View className="flex-1 bg-white/10 rounded-xl p-3 items-center">
-                        <Text className="text-lg font-bold text-secondary mb-0.5">
-                            {notifications.filter(n => !n.isRead).length}
-                        </Text>
-                        <Text className="text-xs text-secondary font-medium">Unread</Text>
-                    </View>
-                    <View className="flex-1 bg-white/10 rounded-xl p-3 items-center">
-                        <Text className="text-lg font-bold text-secondary mb-0.5">
-                            {notifications.filter(n => n.actionRequired).length}
-                        </Text>
-                        <Text className="text-xs text-secondary font-medium">Actions</Text>
-                    </View>
-                </View>
             </LinearGradient>
+
+            {/* Stats row */}
+            <View className="flex-row text-accent justify-between p-4" style={{ gap: 10 }}>
+                <View className="flex-1 bg-black/10 rounded-xl p-3 items-center">
+                    <Text className="text-lg font-bold text-secondary mb-0.5">
+                        {notifications.length}
+                    </Text>
+                    <Text className="text-xs text-secondary font-medium">Total</Text>
+                </View>
+                <View className="flex-1 bg-black/10 rounded-xl p-3 items-center">
+                    <Text className="text-lg font-bold text-secondary mb-0.5">
+                        {notifications.filter(n => !n.isRead).length}
+                    </Text>
+                    <Text className="text-xs text-secondary font-medium">Unread</Text>
+                </View>
+                <View className="flex-1 bg-black/10 rounded-xl p-3 items-center">
+                    <Text className="text-lg font-bold text-secondary mb-0.5">
+                        {notifications.filter(n => n.actionRequired).length}
+                    </Text>
+                    <Text className="text-xs text-secondary font-medium">Actions</Text>
+                </View>
+            </View>
         </Animated.View>
     );
 
