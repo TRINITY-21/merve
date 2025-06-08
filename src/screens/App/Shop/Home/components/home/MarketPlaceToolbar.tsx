@@ -11,6 +11,11 @@ const MarketplaceToolbar: React.FC<IToolbarProps> = ({
   onFilterPress,
   onViewModeChange,
 }) => {
+  const handleViewModeChange = (mode: 'grid' | 'list') => {
+    console.log('Toolbar: Changing view mode to:', mode); // Debug log
+    onViewModeChange(mode);
+  };
+
   return (
     <View className="flex-row justify-between items-center px-5 py-4 bg-white border-b border-gray-light">
       <View className="flex-1">
@@ -45,7 +50,7 @@ const MarketplaceToolbar: React.FC<IToolbarProps> = ({
                 ? 'bg-white shadow-sm' 
                 : ''
             }`}
-            onPress={() => onViewModeChange('grid')}
+            onPress={() => handleViewModeChange('grid')}
             activeOpacity={0.8}
           >
             <MaterialIcons 
@@ -60,7 +65,7 @@ const MarketplaceToolbar: React.FC<IToolbarProps> = ({
                 ? 'bg-white shadow-sm' 
                 : ''
             }`}
-            onPress={() => onViewModeChange('list')}
+            onPress={() => handleViewModeChange('list')}
             activeOpacity={0.8}
           >
             <MaterialIcons 

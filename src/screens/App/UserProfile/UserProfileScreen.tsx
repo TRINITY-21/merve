@@ -161,7 +161,7 @@ const UserProfileScreen: React.FC = () => {
     const [refreshing, setRefreshing] = useState<boolean>(false);
 
     // Tab routes
-    const [routes] = useState<IRoute[]>([ 
+    const [routes] = useState<IRoute[]>([
         { key: 'profileInfo', title: 'Profile' },
         { key: 'bookings', title: 'Bookings' },
         { key: 'followers', title: 'Followers' },
@@ -503,7 +503,7 @@ const UserProfileScreen: React.FC = () => {
                             slideAnim={slideAnim}
                             onPress={() => navigation.navigate('ProductDetails', { product: item })}
                         />
-                    )} 
+                    )}
                     keyExtractor={(item) => item.id}
                 />
             </Animated.View>
@@ -640,9 +640,9 @@ const UserProfileScreen: React.FC = () => {
                             </View>
 
                             {/* Quick Actions */}
-                            <View style={{ 
-                                flexDirection: 'row', 
-                                gap: 12, 
+                            <View style={{
+                                flexDirection: 'row',
+                                gap: 12,
                                 marginBottom: 24,
                                 paddingHorizontal: 4
                             }}>
@@ -710,34 +710,34 @@ const UserProfileScreen: React.FC = () => {
                                 title="Monthly Overview"
                                 subtitle="December 2024"
                                 stats={[
-                                    { 
-                                        label: "Total Bookings", 
-                                        value: "198", 
-                                        icon: "book", 
+                                    {
+                                        label: "Total Bookings",
+                                        value: "198",
+                                        icon: "book",
                                         color: colors.primary,
                                         trend: "up",
                                         trendValue: "+12%"
                                     },
-                                    { 
-                                        label: "Completed", 
-                                        value: "89", 
-                                        icon: "done-all", 
+                                    {
+                                        label: "Completed",
+                                        value: "89",
+                                        icon: "done-all",
                                         color: colors.success,
                                         trend: "up",
                                         trendValue: "+8%"
                                     },
-                                    { 
-                                        label: "Pending", 
-                                        value: "8", 
-                                        icon: "pending-actions", 
+                                    {
+                                        label: "Pending",
+                                        value: "8",
+                                        icon: "pending-actions",
                                         color: colors.warning,
                                         trend: "down",
                                         trendValue: "-3%"
                                     },
-                                    { 
-                                        label: "Cancelled", 
-                                        value: "34", 
-                                        icon: "cancel", 
+                                    {
+                                        label: "Cancelled",
+                                        value: "34",
+                                        icon: "cancel",
                                         color: colors.error,
                                         trend: "down",
                                         trendValue: "-5%"
@@ -777,9 +777,9 @@ const UserProfileScreen: React.FC = () => {
                                 <Typography variant="bold" size={20} style={{ color: colors.text.primary, marginBottom: 8 }}>
                                     No Recent Bookings
                                 </Typography>
-                                <Typography variant="regular" size={14} style={{ 
-                                    color: colors.text.secondary, 
-                                    textAlign: 'center', 
+                                <Typography variant="regular" size={14} style={{
+                                    color: colors.text.secondary,
+                                    textAlign: 'center',
                                     paddingHorizontal: 32,
                                     marginBottom: 24,
                                     lineHeight: 20
@@ -832,7 +832,7 @@ const UserProfileScreen: React.FC = () => {
     };
 
     const getFilteredFollowers = () => {
-        if (!searchQuery.trim()) { 
+        if (!searchQuery.trim()) {
             return dummyFollowers;
         }
 
@@ -1015,15 +1015,15 @@ const UserProfileScreen: React.FC = () => {
                             onFollowPress={(follower) => console.log('Follow pressed:', follower.name)}
                         />
                     ))
-                )} 
+                )}
             </ScrollView>
         );
     };
     // Following Tab
     const renderFollowing = () => (
         <ScrollView
-            contentContainerStyle={{ 
-                padding: 14, 
+            contentContainerStyle={{
+                padding: 14,
                 paddingBottom: 100,
                 paddingTop: Platform.OS === 'ios' ? 14 : 8
             }}
@@ -1052,9 +1052,9 @@ const UserProfileScreen: React.FC = () => {
                 </View>
 
                 {/* Quick Actions */}
-                <View style={{ 
-                    flexDirection: 'row', 
-                    gap: 12, 
+                <View style={{
+                    flexDirection: 'row',
+                    gap: 12,
                     marginBottom: 24,
                     paddingHorizontal: 4
                 }}>
@@ -1073,8 +1073,8 @@ const UserProfileScreen: React.FC = () => {
                     >
                         <View style={{
                             width: 40,
-                            height: 40, 
-                            borderRadius: 20, 
+                            height: 40,
+                            borderRadius: 20,
                             backgroundColor: colors.primary + '20',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -1084,10 +1084,10 @@ const UserProfileScreen: React.FC = () => {
                         </View>
                         <Typography variant="semibold" size={14} style={{ color: colors.primary }}>
                             Find Agents
-                        </Typography> 
+                        </Typography>
                     </TouchableOpacity>
- 
-                    <TouchableOpacity 
+
+                    <TouchableOpacity
                         style={{
                             flex: 1,
                             backgroundColor: colors.success + '15',
@@ -1177,26 +1177,26 @@ const UserProfileScreen: React.FC = () => {
                         title="This Week"
                         subtitle="December 2024"
                         stats={[
-                            { 
-                                label: 'Total Agents', 
-                                value: '24', 
-                                icon: 'people', 
+                            {
+                                label: 'Total Agents',
+                                value: '24',
+                                icon: 'people',
                                 color: colors.primary,
                                 trend: 'up',
                                 trendValue: '+12%'
                             },
-                            { 
-                                label: 'Active', 
-                                value: '18', 
-                                icon: 'check-circle', 
+                            {
+                                label: 'Active',
+                                value: '18',
+                                icon: 'check-circle',
                                 color: colors.success,
                                 trend: 'up',
                                 trendValue: '+8%'
                             },
-                            { 
-                                label: 'Inactive', 
-                                value: '6', 
-                                icon: 'cancel', 
+                            {
+                                label: 'Inactive',
+                                value: '6',
+                                icon: 'cancel',
                                 color: colors.error,
                                 trend: 'down',
                                 trendValue: '-3%'
@@ -1244,11 +1244,11 @@ const UserProfileScreen: React.FC = () => {
                                             {person.name}
                                         </Typography>
                                         {person.verified && (
-                                            <MaterialIcons 
-                                                name="verified" 
-                                                size={16} 
-                                                color={colors.accent} 
-                                                style={{ marginLeft: 4 }} 
+                                            <MaterialIcons
+                                                name="verified"
+                                                size={16}
+                                                color={colors.accent}
+                                                style={{ marginLeft: 4 }}
                                             />
                                         )}
                                     </View>
@@ -1512,7 +1512,7 @@ const UserProfileScreen: React.FC = () => {
             </View>
 
             {/* Monthly Overview Card */}
-            <View style={{ alignItems: 'center', marginHorizontal:3 , marginBottom: 4 }}>
+            <View style={{ alignItems: 'center', marginHorizontal: 3, marginBottom: 4 }}>
                 <ProfessionalStatsCard
                     title="Monthly Overview"
                     subtitle="December 2024"
@@ -1521,7 +1521,7 @@ const UserProfileScreen: React.FC = () => {
                             label: "Activities",
                             value: "198",
                             icon: "book",
-                            color: "#10b981", 
+                            color: "#10b981",
                             trend: "up",
                         },
                         {
@@ -1593,13 +1593,13 @@ const UserProfileScreen: React.FC = () => {
                         { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 },
                         focused && { transform: [{ scale: 1.05 }] }
                     ]}>
-                        <Typography 
-                            variant="bold" 
-                            size={13} 
-                            style={{ 
-                                textTransform: 'capitalize', 
-                                letterSpacing: 0.2, 
-                                color 
+                        <Typography
+                            variant="bold"
+                            size={13}
+                            style={{
+                                textTransform: 'capitalize',
+                                letterSpacing: 0.2,
+                                color
                             }}
                         >
                             {route.title}
@@ -1613,10 +1613,10 @@ const UserProfileScreen: React.FC = () => {
                     </Animated.View>
                 )}
             />
-        </View> 
+        </View>
     );
-  
-    return ( 
+
+    return (
         <View className="flex-1">
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -1633,7 +1633,7 @@ const UserProfileScreen: React.FC = () => {
                     onBookings={() => navigation.navigate('UserBookings' as never)}
                     bookingsCount={10}
                 />
- 
+
                 {/* Tab View */}
                 <View className="flex-1 mt-0 bg-slate-50 rounded-t-lg">
                     <TabView
@@ -1642,7 +1642,7 @@ const UserProfileScreen: React.FC = () => {
                         onIndexChange={setIndex}
                         initialLayout={initialLayout}
                         renderTabBar={renderTabBar}
-                    /> 
+                    />
                 </View>
             </KeyboardAvoidingView>
         </View>

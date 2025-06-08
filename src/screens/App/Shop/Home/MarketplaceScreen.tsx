@@ -1,13 +1,18 @@
 // screens/MarketplaceScreen.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useRef, useState } from 'react';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React, { Component, ErrorInfo, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
   FlatList,
+  Keyboard,
   RefreshControl,
+  StatusBar,
   Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
   View
 } from 'react-native';
 import { Header } from '../../../../components/common/Header';
@@ -16,13 +21,80 @@ import { ISortOption } from '../../../../types/agentProductTypes';
 import { ICategory, IGhanaLocation, IMarketplaceScreenProps, IProduct, ISelectedFilters, SortBy, ViewMode } from '../../../../types/marketplaceTypes';
 import { CategoriesSection, FiltersPanel, LocationModal, MarketplaceToolbar, ProductCard, SortModal } from './components/home';
 
-
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
+// Define navigation types
+type RootStackParamList = {
+  ProductDetails: { productId: string };
+  FavoriteProducts: { productId: string };
+  FavoritesScreen: undefined;
+};
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+// Custom Error Boundary Component
+class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; error: Error | null }> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Error caught by boundary:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <View className="flex-1 items-center justify-center p-5">
+          <MaterialIcons name="error-outline" size={64} color={colors.error} />
+          <Text className="text-xl font-bold text-text-primary mt-4 mb-2">
+            Oops! Something went wrong
+          </Text>
+          <Text className="text-sm text-text-secondary text-center mb-4">
+            {this.state.error?.message}
+          </Text>
+          <TouchableOpacity
+            className="bg-accent px-6 py-3 rounded-xl"
+            onPress={() => this.setState({ hasError: false, error: null })}
+          >
+            <Text className="text-white font-semibold">Try Again</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+// Temporary Skeleton component until the real one is implemented
+const Skeleton = ({ className }: { className: string }) => (
+  <View className={`bg-gray-200 animate-pulse ${className}`} />
+);
+
+// Loading skeleton component
+const ProductSkeleton = () => (
+  <View className="bg-white rounded-3xl mb-4 shadow-md overflow-hidden p-4">
+    <Skeleton className="w-full h-40 rounded-2xl mb-4" />
+    <Skeleton className="w-3/4 h-6 rounded-lg mb-2" />
+    <Skeleton className="w-1/2 h-4 rounded-lg mb-4" />
+    <View className="flex-row justify-between">
+      <Skeleton className="w-1/3 h-4 rounded-lg" />
+      <Skeleton className="w-1/4 h-4 rounded-lg" />
+    </View>
+  </View>
+);
+
 const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp>();
   
   // State management
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -41,6 +113,7 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
     openNow: false,
     ratings: 0,
   });
+  const [error, setError] = useState<string | null>(null);
 
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -48,6 +121,7 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
   const scaleAnim = useRef(new Animated.Value(0.95)).current;
   const filterSlideAnim = useRef(new Animated.Value(screenHeight)).current;
   const locationSlideAnim = useRef(new Animated.Value(screenHeight)).current;
+  const searchBarAnim = useRef(new Animated.Value(0)).current;
 
   // Mock data
   const categories: ICategory[] = [
@@ -267,14 +341,26 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
         useNativeDriver: true,
       }),
     ]).start();
+
+    // Simulate initial loading
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
   }, []);
 
-  const handleRefresh = () => {
+  const handleRefresh = useCallback(() => {
     setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 2000);
-  };
+    setError(null);
+    
+    // Simulate API call
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
-  const toggleLocationModal = () => {
+  const toggleLocationModal = useCallback(() => {
     if (showLocationModal) {
       Animated.timing(locationSlideAnim, {
         toValue: screenHeight,
@@ -289,9 +375,9 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
         useNativeDriver: true,
       }).start();
     }
-  };
+  }, [showLocationModal, locationSlideAnim]);
 
-  const toggleFilters = () => {
+  const toggleFilters = useCallback(() => {
     if (showFilters) {
       Animated.timing(filterSlideAnim, {
         toValue: screenHeight,
@@ -306,82 +392,88 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
         useNativeDriver: true,
       }).start();
     }
-  };
+  }, [showFilters, filterSlideAnim]);
 
-  const getFilteredProducts = (): IProduct[] => {
-    let filtered = products;
+  const getFilteredProducts = useCallback((): IProduct[] => {
+    try {
+      let filtered = products;
 
-    // Search filter
-    if (searchQuery) {
-      filtered = filtered.filter(product =>
-        product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      // Search filter
+      if (searchQuery) {
+        filtered = filtered.filter(product =>
+          product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        );
+      }
+
+      // Category filter
+      if (selectedCategory !== 'all') {
+        filtered = filtered.filter(product => product.category === selectedCategory);
+      }
+
+      // Additional filters
+      if (selectedFilters.inStock) {
+        filtered = filtered.filter(product => product.inStock);
+      }
+      if (selectedFilters.verified) {
+        filtered = filtered.filter(product => product.agent.verified);
+      }
+      if (selectedFilters.ratings > 0) {
+        filtered = filtered.filter(product => product.rating >= selectedFilters.ratings);
+      }
+
+      // Price range filter
+      filtered = filtered.filter(product => 
+        product.price >= priceRange[0] && product.price <= priceRange[1]
       );
+
+      // Sort
+      switch (sortBy) {
+        case 'distance':
+          filtered.sort((a, b) => a.agent.distance - b.agent.distance);
+          break;
+        case 'price_low':
+          filtered.sort((a, b) => a.price - b.price);
+          break;
+        case 'price_high':
+          filtered.sort((a, b) => b.price - a.price);
+          break;
+        case 'rating':
+          filtered.sort((a, b) => b.rating - a.rating);
+          break;
+        case 'newest':
+          filtered.sort((a, b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime());
+          break;
+        default: // relevance
+          filtered.sort((a, b) => (b.isPromoted ? 1 : 0) - (a.isPromoted ? 1 : 0));
+      }
+
+      return filtered;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred while filtering products');
+      return [];
     }
+  }, [searchQuery, selectedCategory, selectedFilters, priceRange, sortBy]);
 
-    // Category filter
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product => product.category === selectedCategory);
-    }
+  const handleProductPress = useCallback((productId: string) => {
+    navigation.navigate('ProductDetails', { productId });
+  }, [navigation]);
 
-    // Additional filters
-    if (selectedFilters.inStock) {
-      filtered = filtered.filter(product => product.inStock);
-    }
-    if (selectedFilters.verified) {
-      filtered = filtered.filter(product => product.agent.verified);
-    }
-    if (selectedFilters.ratings > 0) {
-      filtered = filtered.filter(product => product.rating >= selectedFilters.ratings);
-    }
+  const handleFavoritePress = useCallback((productId: string) => {
+    navigation.navigate('FavoriteProducts', { productId });
+  }, [navigation]);
 
-    // Price range filter
-    filtered = filtered.filter(product => 
-      product.price >= priceRange[0] && product.price <= priceRange[1]
-    );
-
-    // Sort
-    switch (sortBy) {
-      case 'distance':
-        filtered.sort((a, b) => a.agent.distance - b.agent.distance);
-        break;
-      case 'price_low':
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case 'price_high':
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case 'rating':
-        filtered.sort((a, b) => b.rating - a.rating);
-        break;
-      case 'newest':
-        filtered.sort((a, b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime());
-        break;
-      default: // relevance
-        filtered.sort((a, b) => (b.isPromoted ? 1 : 0) - (a.isPromoted ? 1 : 0));
-    }
-
-    return filtered;
-  };
-
-  const handleProductPress = (productId: string) => {
-    navigation.navigate('ProductDetails' as never, { productId } as never);
-  };
-
-  const handleFavoritePress = (productId: string) => {
-    // Handle favorite functionality
-    console.log('Favorite pressed for product:', productId);
-    navigation.navigate('FavoriteProducts' as never, { productId } as never);
-
-  };
-
-  const handleSharePress = (productId: string) => {
-    // Handle share functionality
+  const handleSharePress = useCallback((productId: string) => {
+    // Implement share functionality
     console.log('Share pressed for product:', productId);
-  };
+  }, []);
 
-  const renderProductItem = ({ item }: { item: IProduct }) => {
+  const handleViewModeChange = useCallback((mode: ViewMode) => {
+    setViewMode(mode);
+  }, []);
+
+  const renderProductItem = useCallback(({ item }: { item: IProduct }) => {
     const cardWidth = viewMode === 'grid' ? (screenWidth - 52) / 2 : undefined;
     return (
       <ProductCard
@@ -393,16 +485,16 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
         onSharePress={handleSharePress}
       />
     );
-  };
+  }, [viewMode, handleProductPress, handleFavoritePress, handleSharePress]);
 
-  const handleClearFilters = () => {
+  const handleClearFilters = useCallback(() => {
     setSelectedFilters({
       inStock: false,
       verified: false,
       openNow: false,
       ratings: 0,
     });
-  };
+  }, []);
 
   const filteredProducts = getFilteredProducts();
 
@@ -424,9 +516,9 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
     </View>
   );
 
-  return (
-    <View className="flex-1 bg-background">
-      <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+  if (isLoading) {
+    return (
+      <View className="flex-1 bg-background p-4">
         <Header
           title="Marketplace"
           leftIcon={{
@@ -437,88 +529,148 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
           rightIcons={[
             {
               name: 'favorite-border',
-              onPress: () => navigation.navigate('FavoritesScreen' as never),
+              onPress: () => navigation.navigate('FavoritesScreen'),
               color: colors.secondary
             },
             {
-              name: showMap ? 'grid-view' : 'map',
-              onPress: () => setShowMap(!showMap),
+              name: 'grid-view',
+              onPress: () => {},
               color: colors.secondary
-            }
+            } 
           ]}
           animatedValue={scaleAnim}
           backgroundColor={colors.background}
           titleColor={colors.secondary}
-          iconBackgroundColor={colors.accent + '20'} // Adding 20% opacity
+          iconBackgroundColor={colors.accent + '20'}
         />
-      </Animated.View>
-      
-      <CategoriesSection
-        categories={categories}
-        selectedCategory={selectedCategory}
-        onCategorySelect={setSelectedCategory}
-      />
-      
-      <MarketplaceToolbar
-        resultCount={filteredProducts.length}
-        viewMode={viewMode}
-        onSortPress={() => setShowSortModal(true)}
-        onFilterPress={toggleFilters}
-        onViewModeChange={setViewMode}
-      />
-      
-      {showMap ? (
-        <MapView />
-      ) : (
-        <FlatList
-          data={filteredProducts}
-          renderItem={renderProductItem}
-          keyExtractor={(item) => item.id}
-          numColumns={viewMode === 'grid' ? 2 : 1}
-          key={`${viewMode}-${filteredProducts.length}`}
-          columnWrapperStyle={viewMode === 'grid' ? { justifyContent: 'space-between' } : undefined}
-          contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={handleRefresh}
-              colors={[colors.accent]}
-              tintColor={colors.accent}
+        <View className="flex-row flex-wrap justify-between mt-4">
+          {[1, 2, 3, 4,5,6,7,8,9,10].map((i) => (
+            <ProductSkeleton key={i} />
+          ))}
+        </View>
+      </View>
+    );
+  }
+
+  return (
+    <ErrorBoundary>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View className="flex-1 bg-background">
+          <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+          
+          <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+            <Header
+              title="Marketplace"
+              leftIcon={{
+                name: 'arrow-back',
+                onPress: () => navigation.goBack(),
+                color: colors.secondary
+              }}
+              rightIcons={[
+                {
+                  name: 'favorite-border',
+                  onPress: () => navigation.navigate('FavoritesScreen'),
+                  color: colors.secondary
+                },
+                {
+                  name: showMap ? 'grid-view' : 'map',
+                  onPress: () => setShowMap(!showMap),
+                  color: colors.secondary
+                }
+              ]}
+              animatedValue={scaleAnim}
+              backgroundColor={colors.background}
+              titleColor={colors.secondary}
+              iconBackgroundColor={colors.accent + '20'}
             />
-          }
-          ListEmptyComponent={EmptyState}
-        />
-      )}
+          </Animated.View>
+          
+          <CategoriesSection
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategorySelect={setSelectedCategory}
+          />
+          
+          <MarketplaceToolbar
+            resultCount={filteredProducts.length}
+            viewMode={viewMode}
+            onSortPress={() => setShowSortModal(true)}
+            onFilterPress={toggleFilters}
+            onViewModeChange={handleViewModeChange}
+          />
+          
+          <View className="flex-1">
+            {showMap ? (
+              <MapView />
+            ) : (
+              <FlatList
+                key={viewMode}
+                data={filteredProducts}
+                renderItem={renderProductItem}
+                keyExtractor={(item) => item.id}
+                numColumns={viewMode === 'grid' ? 2 : 1}
+                columnWrapperStyle={viewMode === 'grid' ? { 
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 20,
+                  gap: 12
+                } : undefined}
+                contentContainerStyle={{ 
+                  padding: viewMode === 'grid' ? 0 : 20,
+                  paddingBottom: 100 
+                }}
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={handleRefresh}
+                    colors={[colors.accent]}
+                    tintColor={colors.accent}
+                  />
+                }
+                ListEmptyComponent={EmptyState}
+                onEndReachedThreshold={0.5}
+                onEndReached={() => {
+                  // Implement infinite scroll
+                  console.log('Load more products');
+                }}
+                removeClippedSubviews={false}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                windowSize={5}
+              />
+            )}
+          </View>
 
-      <SortModal
-        visible={showSortModal}
-        sortOptions={sortOptions}
-        selectedSort={sortBy}
-        onClose={() => setShowSortModal(false)}
-        onSortSelect={setSortBy}
-      />
+          <SortModal
+            visible={showSortModal}
+            sortOptions={sortOptions}
+            selectedSort={sortBy}
+            onClose={() => setShowSortModal(false)}
+            onSortSelect={(sortKey) => setSortBy(sortKey as SortBy)}
+          />
 
-      <FiltersPanel
-        visible={showFilters}
-        selectedFilters={selectedFilters}
-        priceRange={priceRange}
-        slideAnim={filterSlideAnim}
-        onClose={toggleFilters}
-        onFiltersChange={setSelectedFilters}
-        onPriceRangeChange={setPriceRange}
-        onClearFilters={handleClearFilters}
-      />
+          <FiltersPanel
+            visible={showFilters}
+            selectedFilters={selectedFilters}
+            priceRange={priceRange}
+            slideAnim={filterSlideAnim}
+            onClose={toggleFilters}
+            onFiltersChange={setSelectedFilters}
+            onPriceRangeChange={setPriceRange}
+            onClearFilters={handleClearFilters}
+          />
 
-      <LocationModal
-        visible={showLocationModal}
-        locations={ghanaLocations}
-        selectedLocation={selectedLocation}
-        slideAnim={locationSlideAnim}
-        onClose={toggleLocationModal}
-        onLocationSelect={setSelectedLocation}
-      />
-    </View>
+          <LocationModal
+            visible={showLocationModal}
+            locations={ghanaLocations}
+            selectedLocation={selectedLocation}
+            slideAnim={locationSlideAnim}
+            onClose={toggleLocationModal}
+            onLocationSelect={setSelectedLocation}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+    </ErrorBoundary>
   );
 };
 
