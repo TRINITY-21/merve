@@ -3,7 +3,6 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-    Animated,
     Dimensions,
     FlatList,
     Image,
@@ -11,11 +10,18 @@ import {
     Platform,
     RefreshControl,
     ScrollView,
-    Text,
     TextInput,
     TouchableOpacity,
     View
 } from 'react-native';
+import Animated, {
+    interpolate,
+    SharedValue,
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring,
+    withTiming
+} from 'react-native-reanimated';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import Toast from 'react-native-toast-message';
 import { Typography } from '../../../components/common';
@@ -25,7 +31,6 @@ import { IRoute, IUser } from '../../../types/userProfileTypes';
 import { dummyActivities, dummyFollowers, dummyFollowing, dummyInvites, dummyMarketplaceData, dummyRecentBookings } from '../../../utils/userProfileDummyData';
 import { ActivityCard } from './compnents/ActivityCard';
 import { BookingCard } from './compnents/BookingCard';
-import { FilterButtons } from './compnents/FilterButtons';
 import { FollowerCard } from './compnents/FollowerCard';
 import { GradientButton } from './compnents/GradientButton';
 import { ProfessionalCard } from './compnents/ModernInput';
@@ -38,10 +43,108 @@ import { ProfessionalStatsCard } from './compnents/StatsCard';
 const { width: screenWidth } = Dimensions.get('window');
 const initialLayout = { width: screenWidth };
 
+interface IActivityData {
+    totalEvents: number;
+    connections: number;
+    interests: number;
+    notifications: number;
+    recentActivity: Array<{
+        id: string;
+        title: string;
+        description: string;
+        time: string;
+        status: 'completed' | 'pending' | 'upcoming';
+    }>;
+    upcomingEvents: Array<{
+        id: string;
+        title: string;
+        description: string;
+        time: string;
+        status: 'completed' | 'pending' | 'upcoming';
+    }>;
+}
 
+const dummyActivityData: IActivityData = {
+    totalEvents: 24,
+    connections: 156,
+    interests: 89,
+    notifications: 12,
+    recentActivity: [
+        {
+            id: '1',
+            title: 'Networking Event',
+            description: 'Attended the annual networking event',
+            time: '2 hours ago',
+            status: 'completed',
+        },
+        {
+            id: '2',
+            title: 'Workshop Registration',
+            description: 'Registered for the upcoming workshop',
+            time: '5 hours ago',
+            status: 'pending',
+        },
+        {
+            id: '3',
+            title: 'Profile Update',
+            description: 'Updated professional profile',
+            time: '1 day ago',
+            status: 'completed',
+        },
+    ],
+    upcomingEvents: [
+        {
+            id: '1',
+            title: 'Tech Conference',
+            description: 'Annual technology conference',
+            time: 'In 2 days',
+            status: 'upcoming',
+        },
+        {
+            id: '2',
+            title: 'Workshop',
+            description: 'Professional development workshop',
+            time: 'In 5 days',
+            status: 'upcoming',
+        },
+        {
+            id: '3',
+            title: 'Networking Mixer',
+            description: 'Monthly networking event',
+            time: 'In 1 week',
+            status: 'upcoming',
+        },
+    ],
+};
+
+interface ProductCardProps {
+    product: any;
+    fadeAnim: SharedValue<number>;
+    slideAnim: SharedValue<number>;
+    onPress: () => void;
+}
+
+interface BookingCardProps {
+    booking: any;
+    fadeAnim: SharedValue<number>;
+}
+
+interface ActivityCardProps {
+    activity: any;
+    fadeAnim: SharedValue<number>;
+    slideAnim: SharedValue<number>;
+    index: number;
+    isLast: boolean;
+    onPress: () => void;
+}
+
+interface PremiumUpgradeCardProps {
+    onUpgradePress: () => void;
+    fadeAnim: SharedValue<number>;
+}
 
 const UserProfileScreen: React.FC = () => {
-    const navigation = useNavigation();
+    const navigation = useNavigation<any>();
     const { updateUser, logout, currentUser } = useStore();
 
     // State management
@@ -58,7 +161,7 @@ const UserProfileScreen: React.FC = () => {
     const [refreshing, setRefreshing] = useState<boolean>(false);
 
     // Tab routes
-    const [routes] = useState<IRoute[]>([
+    const [routes] = useState<IRoute[]>([ 
         { key: 'profileInfo', title: 'Profile' },
         { key: 'bookings', title: 'Bookings' },
         { key: 'followers', title: 'Followers' },
@@ -68,11 +171,35 @@ const UserProfileScreen: React.FC = () => {
         { key: 'activity', title: 'Activity' },
     ]);
 
-    // Animated values
-    const fadeAnim = useRef(new Animated.Value(0)).current;
-    const slideAnim = useRef(new Animated.Value(50)).current;
-    const scaleAnim = useRef(new Animated.Value(0.9)).current;
-    const rotateAnim = useRef(new Animated.Value(0)).current;
+    // Use Reanimated's useSharedValue
+    const fadeAnim = useSharedValue(0);
+    const slideAnim = useSharedValue(50);
+    const scaleAnim = useSharedValue(0.9);
+    const rotateAnim = useSharedValue(0);
+    const searchAnimation = useSharedValue(0);
+
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            opacity: fadeAnim.value,
+            transform: [
+                { translateY: slideAnim.value },
+                { scale: scaleAnim.value }
+            ]
+        };
+    });
+
+    const searchAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            opacity: searchAnimation.value,
+            transform: [{
+                translateY: interpolate(
+                    searchAnimation.value,
+                    [0, 1],
+                    [-20, 0]
+                )
+            }]
+        };
+    });
 
     useEffect(() => {
         setFormData({
@@ -81,33 +208,11 @@ const UserProfileScreen: React.FC = () => {
             email: currentUser?.email || '',
         });
 
-        // Enhanced animation sequence
-        Animated.sequence([
-            Animated.parallel([
-                Animated.timing(fadeAnim, {
-                    toValue: 1,
-                    duration: 1,
-                    useNativeDriver: true,
-                }),
-                Animated.spring(slideAnim, {
-                    toValue: 0, 
-                    tension: 30,
-                    friction: 8,
-                    useNativeDriver: true,
-                }),
-                Animated.spring(scaleAnim, {
-                    toValue: 1,
-                    tension: 25,
-                    friction: 7,
-                    useNativeDriver: true,
-                }),
-            ]),
-            Animated.timing(rotateAnim, {
-                toValue: 1,
-                duration: 800,
-                useNativeDriver: true,
-            }),
-        ]).start();
+        // Update animation sequence to use Reanimated
+        fadeAnim.value = withTiming(1, { duration: 800 });
+        slideAnim.value = withSpring(0, { damping: 8, stiffness: 30 });
+        scaleAnim.value = withSpring(1, { damping: 7, stiffness: 25 });
+        rotateAnim.value = withTiming(1, { duration: 800 });
     }, [currentUser]);
 
     const onRefresh = React.useCallback(() => {
@@ -209,123 +314,201 @@ const UserProfileScreen: React.FC = () => {
             showsVerticalScrollIndicator={false}
         >
             {/* Monthly Overview */}
-            <View style={{ marginBottom: 32 }}>
-                <Text style={{
-                    fontSize: 20,
-                    fontWeight: '800',
-                    color: colors.text.primary,
-                    letterSpacing: 0.3,
-                    marginBottom: 16,
-                }}>
+            <Animated.View style={[animatedStyle, { marginBottom: 32 }]}>
+                <Typography variant="bold" size={24} style={{ color: colors.text.primary, letterSpacing: 0.3, marginBottom: 20 }}>
                     This Month's Activity
-                </Text>
+                </Typography>
 
                 <LinearGradient
-                    colors={colors.gradient.light}
+                    colors={[colors.primary, colors.accent]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
                     style={{
-                        borderRadius: 20,
+                        borderRadius: 24,
                         padding: 20,
                         shadowColor: '#000',
-                        shadowOpacity: 0.1,
-                        shadowOffset: { width: 0, height: 6 },
-                        shadowRadius: 10,
-                        elevation: 4,
+                        shadowOpacity: 0.15,
+                        shadowOffset: { width: 0, height: 8 },
+                        shadowRadius: 16,
+                        elevation: 8,
                     }}
                 >
                     <View style={{
                         flexDirection: 'row',
-                        flexWrap: 'wrap',
                         justifyContent: 'space-between',
                     }}>
                         {[
                             {
                                 icon: 'visibility',
-                                color: colors.primary,
+                                color: colors.white,
                                 label: 'Products Viewed',
                                 value: dummyMarketplaceData.monthlyStats.productsViewed,
                             },
                             {
                                 icon: 'question-answer',
-                                color: colors.accent,
+                                color: colors.white,
                                 label: 'Inquiries Made',
                                 value: dummyMarketplaceData.monthlyStats.inquiriesMade,
                             },
                             {
                                 icon: 'bookmark',
-                                color: colors.error,
+                                color: colors.white,
                                 label: 'Saved',
                                 value: dummyMarketplaceData.monthlyStats.favoriteProducts,
                                 onPress: () => navigation.navigate('FavoritesScreen' as never),
                             },
                             {
-                                icon: 'store',
-                                color: colors.success,
-                                label: 'Agents Contacted',
-                                value: dummyMarketplaceData.monthlyStats.agentsContacted,
+                                icon: 'shopping-cart',
+                                color: colors.white,
+                                label: 'Purchases',
+                                value: dummyMarketplaceData.monthlyStats.purchases || 0,
                             },
                         ].map((item, index) => (
-                            <TouchableOpacity
+                            <View
                                 key={index}
-                                onPress={item.onPress}
-                                activeOpacity={item.onPress ? 0.7 : 1}
                                 style={{
-                                    width: '48%',
                                     alignItems: 'center',
-                                    marginBottom: 20,
+                                    flex: 1,
                                 }}
                             >
-                                <MaterialIcons name={item.icon as any} size={24} color={item.color} />
-                                <Text style={{
-                                    fontSize: 22,
-                                    fontWeight: '900',
-                                    color: colors.text.primary,
-                                    marginTop: 8,
-                                    marginBottom: 4,
-                                    letterSpacing: 0.5,
-                                }}>
+                                <View
+                                    style={{
+                                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                        padding: 8,
+                                        borderRadius: 12,
+                                        marginBottom: 6,
+                                    }}
+                                >
+                                    <MaterialIcons name={item.icon as any} size={20} color={item.color} />
+                                </View>
+                                <Typography
+                                    variant="bold"
+                                    size={20}
+                                    style={{ color: colors.white, marginBottom: 2 }}
+                                >
                                     {item.value}
-                                </Text>
-                                <Text style={{
-                                    fontSize: 12,
-                                    color: colors.text.secondary,
-                                    fontWeight: '600',
-                                    textAlign: 'center',
-                                    letterSpacing: 0.3,
-                                }}>
+                                </Typography>
+                                <Typography
+                                    variant="bold"
+                                    size={10}
+                                    style={{ color: 'rgba(255, 255, 255, 0.8)', textAlign: 'center' }}
+                                >
                                     {item.label}
-                                </Text>
-                            </TouchableOpacity>
+                                </Typography>
+                            </View>
                         ))}
                     </View>
                 </LinearGradient>
-            </View>
+            </Animated.View>
 
-            {/* Recently Viewed */}
-            <View style={{ marginBottom: 40 }}>
-                <Typography style={{
-                    fontSize: 20,
-                    // fontWeight: '800',
-                    // color: colors.text.primary,
-                    letterSpacing: 0.3,
-                    marginBottom: 16,
-                }}>
-                    Recently Viewed
-                </Typography>
-                <View style={{ gap: 12 }}>
-                    {dummyMarketplaceData.recentlyViewed.map((product, index) => (
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                            fadeAnim={fadeAnim}
-                            scaleAnim={scaleAnim}
-                        // onPress={() => navigation.navigate('ProductDetailsScreen' as never, { product } as never)}
-                        />
+            {/* Recent Activity */}
+            <Animated.View style={[animatedStyle, { marginBottom: 32 }]}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                    <Typography variant="bold" size={20} style={{ color: colors.text.primary, letterSpacing: 0.3 }}>
+                        Recent Market place activity
+                    </Typography>
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: colors.primary,
+                            paddingHorizontal: 14,
+                            paddingVertical: 6,
+                            borderRadius: 12,
+                        }}
+                        activeOpacity={0.8}
+                    >
+                        <Typography variant="bold" size={12} style={{ color: colors.white }}>
+                            View All
+                        </Typography>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={{ gap: 16 }}>
+                    {dummyMarketplaceData.recentActivity?.map((activity) => (
+                        <TouchableOpacity
+                            key={activity.id}
+                            style={{
+                                backgroundColor: colors.white,
+                                borderRadius: 20,
+                                padding: 16,
+                                shadowColor: '#000',
+                                shadowOpacity: 0.08,
+                                shadowOffset: { width: 0, height: 4 },
+                                shadowRadius: 8,
+                                elevation: 4,
+                            }}
+                            activeOpacity={0.8}
+                        >
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                                <View style={{ flex: 1 }}>
+                                    <Typography variant="bold" size={16} style={{ color: colors.text.primary, marginBottom: 4 }}>
+                                        {activity.title}
+                                    </Typography>
+                                    <Typography variant="medium" size={14} style={{ color: colors.text.secondary }}>
+                                        {activity.description}
+                                    </Typography>
+                                </View>
+                                <View style={{ alignItems: 'flex-end' }}>
+                                    <Typography variant="medium" size={14} style={{ color: colors.text.secondary, marginBottom: 8 }}>
+                                        {activity.time}
+                                    </Typography>
+                                    <View
+                                        style={{
+                                            backgroundColor: getStatusColor(activity.status),
+                                            paddingHorizontal: 12,
+                                            paddingVertical: 6,
+                                            borderRadius: 12,
+                                        }}
+                                    >
+                                        <Typography variant="bold" size={12} style={{ color: colors.white }}>
+                                            {activity.status.toUpperCase()}
+                                        </Typography>
+                                    </View>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
                     ))}
                 </View>
-            </View>
+            </Animated.View>
+
+            {/* Recommended Products */}
+            <Animated.View style={animatedStyle}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                    <Typography variant="bold" size={20} style={{ color: colors.text.primary, letterSpacing: 0.3 }}>
+                        Recommended for You
+                    </Typography>
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: colors.primary,
+                            paddingHorizontal: 14,
+                            paddingVertical: 6,
+                            borderRadius: 12,
+                        }}
+                        activeOpacity={0.8}
+                    >
+                        <Typography variant="bold" size={12} style={{ color: colors.white }}>
+                            View All
+                        </Typography>
+                    </TouchableOpacity>
+                </View>
+
+                <FlatList
+                    data={dummyMarketplaceData.recommendedProducts}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ gap: 16, paddingRight: 16 }}
+                    renderItem={({ item }) => (
+                        <ProductCard
+                            product={item}
+                            fadeAnim={fadeAnim}
+                            slideAnim={slideAnim}
+                            onPress={() => navigation.navigate('ProductDetails', { product: item })}
+                        />
+                    )} 
+                    keyExtractor={(item) => item.id}
+                />
+            </Animated.View>
         </ScrollView>
     );
-
 
     // Profile Info Tab using reusable components
     const renderProfileInfo = () => (
@@ -334,17 +517,18 @@ const UserProfileScreen: React.FC = () => {
             showsVerticalScrollIndicator={false}
         >
             <Animated.View
-                style={{
-                    opacity: fadeAnim,
-                    transform: [{ translateY: slideAnim }, { scale: scaleAnim }],
-                }}
+                style={animatedStyle}
                 className="bg-white rounded-2xl p-5 mb-5 shadow-lg"
             >
                 <View className="flex-row justify-between items-center mb-5">
-                    <Text className="text-lg font-extrabold text-gray-900 tracking-wide">Personal Information</Text>
+                    <Typography variant="bold" size={18} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
+                        Personal Information
+                    </Typography>
                     <View className="flex-row items-center bg-accent px-3 py-1.5 rounded-2xl gap-1 shadow-md">
                         <MaterialIcons name="verified" size={14} color={colors.white} />
-                        <Text className="text-[11px] font-bold text-white tracking-wide">Verified</Text>
+                        <Typography variant="bold" size={11} style={{ color: colors.white, letterSpacing: 0.5 }}>
+                            Verified
+                        </Typography>
                     </View>
                 </View>
 
@@ -385,7 +569,7 @@ const UserProfileScreen: React.FC = () => {
 
 
                 <PremiumUpgradeCard
-                    onUpgradePress={() => navigation.navigate('UpgradeScreen' as never)}
+                    onUpgradePress={() => navigation.navigate('UpgradeScreen')}
                     fadeAnim={fadeAnim}
                 />
 
@@ -398,7 +582,9 @@ const UserProfileScreen: React.FC = () => {
                 activeOpacity={0.8}
             >
                 <MaterialIcons name="logout" size={20} color={colors.error} />
-                <Text className="text-red-500 font-extrabold text-sm tracking-wide">Sign out</Text>
+                <Typography variant="bold" size={14} style={{ color: colors.error, letterSpacing: 0.5 }}>
+                    Sign out
+                </Typography>
             </TouchableOpacity>
         </ScrollView>
     );
@@ -408,12 +594,15 @@ const UserProfileScreen: React.FC = () => {
         return (
             <FlatList
                 data={dummyRecentBookings}
-                renderItem={({ item }) => (
-                    <BookingCard
-                        booking={item}
-                        fadeAnim={fadeAnim}
-                    // onPress={() => navigation.navigate('BookingDetails', { bookingId: item.id })}
-                    />
+                renderItem={({ item, index }) => (
+                    <Animated.View
+                        style={animatedStyle}
+                    >
+                        <BookingCard
+                            booking={item}
+                            fadeAnim={fadeAnim}
+                        />
+                    </Animated.View>
                 )}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={{ padding: 14, paddingBottom: Platform.OS === 'ios' ? 80 : 70 }}
@@ -428,43 +617,188 @@ const UserProfileScreen: React.FC = () => {
                 }
                 ListHeaderComponent={
                     <>
-                        <View className="flex-row justify-between items-center mb-4 px-1">
-                            <Text className="text-xl font-extrabold text-gray-900 tracking-wide">Recent Bookings</Text>
-                            <TouchableOpacity
-                                className="rounded-2xl items-center justify-center"
-                                activeOpacity={0.7}
-                                onPress={() => navigation.navigate('ViewAllBookingsScreen' as never)}
-                            >
-                                <Text className="text-md font-normal text-secondary">View All</Text>
-                            </TouchableOpacity>
+                        {/* Header Section */}
+                        <View style={{ marginBottom: 24 }}>
+                            <View className="flex-row justify-between items-center mb-4 px-1">
+                                <View>
+                                    <Typography variant="bold" size={24} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
+                                        Recent Bookings
+                                    </Typography>
+                                    <Typography variant="regular" size={14} style={{ color: colors.text.secondary, marginTop: 4 }}>
+                                        Manage your appointments and schedules
+                                    </Typography>
+                                </View>
+                                <TouchableOpacity
+                                    className="rounded-2xl items-center justify-center bg-primary/10 px-4 py-2"
+                                    activeOpacity={0.7}
+                                    onPress={() => navigation.navigate('ViewAllBookingsScreen' as never)}
+                                >
+                                    <Typography variant="semibold" size={14} style={{ color: colors.primary }}>
+                                        View All
+                                    </Typography>
+                                </TouchableOpacity>
+                            </View>
+
+                            {/* Quick Actions */}
+                            <View style={{ 
+                                flexDirection: 'row', 
+                                gap: 12, 
+                                marginBottom: 24,
+                                paddingHorizontal: 4
+                            }}>
+                                <TouchableOpacity
+                                    style={{
+                                        flex: 1,
+                                        backgroundColor: colors.primary + '15',
+                                        borderRadius: 16,
+                                        padding: 16,
+                                        alignItems: 'center',
+                                        borderWidth: 1,
+                                        borderColor: colors.primary + '30',
+                                    }}
+                                    activeOpacity={0.7}
+                                    onPress={() => navigation.navigate('BookAppointments' as never)}
+                                >
+                                    <View style={{
+                                        width: 40,
+                                        height: 40,
+                                        borderRadius: 20,
+                                        backgroundColor: colors.primary + '20',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        marginBottom: 8
+                                    }}>
+                                        <MaterialIcons name="add" size={24} color={colors.primary} />
+                                    </View>
+                                    <Typography variant="semibold" size={14} style={{ color: colors.primary }}>
+                                        New Booking
+                                    </Typography>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    style={{
+                                        flex: 1,
+                                        backgroundColor: colors.success + '15',
+                                        borderRadius: 16,
+                                        padding: 16,
+                                        alignItems: 'center',
+                                        borderWidth: 1,
+                                        borderColor: colors.success + '30',
+                                    }}
+                                    activeOpacity={0.7}
+                                    onPress={() => navigation.navigate('UpcomingBookings' as never)}
+                                >
+                                    <View style={{
+                                        width: 40,
+                                        height: 40,
+                                        borderRadius: 20,
+                                        backgroundColor: colors.success + '20',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        marginBottom: 8
+                                    }}>
+                                        <MaterialIcons name="event" size={24} color={colors.success} />
+                                    </View>
+                                    <Typography variant="semibold" size={14} style={{ color: colors.success }}>
+                                        Upcoming
+                                    </Typography>
+                                </TouchableOpacity>
+                            </View>
+
+                            {/* Stats Overview */}
+                            <ProfessionalStatsCard
+                                title="Monthly Overview"
+                                subtitle="December 2024"
+                                stats={[
+                                    { 
+                                        label: "Total Bookings", 
+                                        value: "198", 
+                                        icon: "book", 
+                                        color: colors.primary,
+                                        trend: "up",
+                                        trendValue: "+12%"
+                                    },
+                                    { 
+                                        label: "Completed", 
+                                        value: "89", 
+                                        icon: "done-all", 
+                                        color: colors.success,
+                                        trend: "up",
+                                        trendValue: "+8%"
+                                    },
+                                    { 
+                                        label: "Pending", 
+                                        value: "8", 
+                                        icon: "pending-actions", 
+                                        color: colors.warning,
+                                        trend: "down",
+                                        trendValue: "-3%"
+                                    },
+                                    { 
+                                        label: "Cancelled", 
+                                        value: "34", 
+                                        icon: "cancel", 
+                                        color: colors.error,
+                                        trend: "down",
+                                        trendValue: "-5%"
+                                    }
+                                ]}
+                                onPress={() => console.log('View details')}
+                            />
                         </View>
-                        <ProfessionalStatsCard
-                            title="Monthly Overview"
-                            subtitle="December 2024"
-                            stats={[
-                                { label: "Total Bookings", value: "198", icon: "book", color: "#10b981", trend: "up" },
-                                { label: "Completed", value: "89", icon: "done-all", color: colors.success, trend: "up" },
-                                { label: "Pending", value: "8", icon: "pending-actions", color: "#3b82f6", trend: "up" },
-                                { label: "Cancelled", value: "34", icon: "cancel", color: colors.error, trend: "up" }
-                            ]}
-                            onPress={() => console.log('View details')}
-                        />
+
+                        {/* Empty State */}
                         {dummyRecentBookings.length === 0 && (
-                            <View className="items-center justify-center py-15">
-                                <MaterialIcons name="event-busy" size={64} color={colors.gray.medium} />
-                                <Text className="text-xl font-bold text-gray-900 mt-4 mb-2">No Recent Bookings</Text>
-                                <Text className="text-sm text-gray-600 text-center px-10 mb-6 leading-5">
-                                    Your booking history will appear here once you start making appointments
-                                </Text>
+                            <Animated.View
+                                style={{
+                                    opacity: fadeAnim,
+                                    transform: [{ scale: scaleAnim }],
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    paddingVertical: 40,
+                                    backgroundColor: colors.background,
+                                    borderRadius: 24,
+                                    marginHorizontal: 4,
+                                    borderWidth: 1,
+                                    borderColor: colors.gray.light,
+                                }}
+                            >
+                                <View style={{
+                                    width: 80,
+                                    height: 80,
+                                    borderRadius: 40,
+                                    backgroundColor: colors.gray.light,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    marginBottom: 16
+                                }}>
+                                    <MaterialIcons name="event-busy" size={40} color={colors.gray.medium} />
+                                </View>
+                                <Typography variant="bold" size={20} style={{ color: colors.text.primary, marginBottom: 8 }}>
+                                    No Recent Bookings
+                                </Typography>
+                                <Typography variant="regular" size={14} style={{ 
+                                    color: colors.text.secondary, 
+                                    textAlign: 'center', 
+                                    paddingHorizontal: 32,
+                                    marginBottom: 24,
+                                    lineHeight: 20
+                                }}>
+                                    Your booking history will appear here once you start making appointments with our professional agents
+                                </Typography>
                                 <GradientButton
-                                    title="Booking Appointment"
+                                    title="Book an Appointment"
                                     onPress={() => navigation.navigate('BookAppointments' as never)}
                                     icon="add"
+                                    size="large"
                                 />
-                            </View>
+                            </Animated.View>
                         )}
                     </>
                 }
+                ItemSeparatorComponent={() => (
+                    <View style={{ height: 12 }} />
+                )}
             />
         );
     };
@@ -480,35 +814,25 @@ const UserProfileScreen: React.FC = () => {
     // ================================
     // 2. ADD THIS ANIMATED VALUE (with your other animations)
     // ================================
-    const searchAnimation = useRef(new Animated.Value(0)).current;
+    // const searchAnimation = useSharedValue(0);
 
     // ================================
     // 3. ADD THESE TWO NEW FUNCTIONS
     // ================================
-    const toggleSearch = () => {
+    const handleSearchToggle = () => {
         if (!isSearchVisible) {
             setIsSearchVisible(true);
-            Animated.timing(searchAnimation, {
-                toValue: 1,
-                duration: 250,
-                useNativeDriver: false,
-            }).start(() => {
-                searchInputRef.current?.focus();
-            });
+            searchAnimation.value = withTiming(1, { duration: 300 });
+            searchInputRef.current?.focus();
         } else {
-            Animated.timing(searchAnimation, {
-                toValue: 0,
-                duration: 200,
-                useNativeDriver: false,
-            }).start(() => {
-                setIsSearchVisible(false);
-                setSearchQuery('');
-            });
+            searchAnimation.value = withTiming(0, { duration: 300 });
+            setIsSearchVisible(false);
+            setSearchQuery('');
         }
     };
 
     const getFilteredFollowers = () => {
-        if (!searchQuery.trim()) {
+        if (!searchQuery.trim()) { 
             return dummyFollowers;
         }
 
@@ -534,26 +858,26 @@ const UserProfileScreen: React.FC = () => {
                 {/* Header Section */}
                 <View className="mb-5 px-1">
                     <View className="flex-row justify-between items-center mb-4">
-                        <Text className="text-xl font-extrabold text-gray-900 tracking-wide">
+                        <Typography variant="bold" size={20} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
                             Followers
-                        </Text>
+                        </Typography>
                         <View className="flex-row gap-3">
                             <TouchableOpacity
                                 style={{
                                     width: 40,
                                     height: 40,
                                     borderRadius: 20,
-                                    backgroundColor: isSearchVisible ? '#3B82F6' : '#FFCC00',
+                                    backgroundColor: isSearchVisible ? colors.primary : colors.primary,
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    shadowColor: '#000',
+                                    shadowColor: colors.shadowColor,
                                     shadowOffset: { width: 0, height: 2 },
                                     shadowOpacity: 0.25,
                                     shadowRadius: 3.84,
                                     elevation: 5,
                                 }}
                                 activeOpacity={0.7}
-                                onPress={toggleSearch}
+                                onPress={handleSearchToggle}
                             >
                                 <MaterialIcons
                                     name={isSearchVisible ? "close" : "search"}
@@ -566,10 +890,10 @@ const UserProfileScreen: React.FC = () => {
                                     width: 40,
                                     height: 40,
                                     borderRadius: 20,
-                                    backgroundColor: '#FFCC00',
+                                    backgroundColor: colors.primary,
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    shadowColor: '#000',
+                                    shadowColor: colors.shadowColor,
                                     shadowOffset: { width: 0, height: 2 },
                                     shadowOpacity: 0.25,
                                     shadowRadius: 3.84,
@@ -585,22 +909,14 @@ const UserProfileScreen: React.FC = () => {
                     {/* Search Input */}
                     {isSearchVisible && (
                         <Animated.View
-                            style={{
-                                opacity: searchAnimation,
-                                transform: [{
-                                    translateY: searchAnimation.interpolate({
-                                        inputRange: [0, 1],
-                                        outputRange: [-20, 0],
-                                    })
-                                }],
-                                marginBottom: 16,
-                            }}
+                            style={searchAnimatedStyle}
+                            className="rounded-2xl overflow-hidden mb-6 shadow-lg"
                         >
                             <View style={{
-                                backgroundColor: '#F8FAFC',
+                                backgroundColor: colors.background,
                                 borderRadius: 12,
                                 borderWidth: 1,
-                                borderColor: '#E2E8F0',
+                                borderColor: colors.gray.light,
                                 paddingHorizontal: 16,
                                 paddingVertical: 4,
                             }}>
@@ -609,18 +925,18 @@ const UserProfileScreen: React.FC = () => {
                                     alignItems: 'center',
                                     paddingVertical: 8,
                                 }}>
-                                    <MaterialIcons name="search" size={20} color="#64748B" />
+                                    <MaterialIcons name="search" size={20} color={colors.text.secondary} />
                                     <TextInput
                                         ref={searchInputRef}
                                         style={{
                                             flex: 1,
                                             marginLeft: 12,
                                             fontSize: 16,
-                                            color: '#1E293B',
+                                            color: colors.text.primary,
                                             fontWeight: '500',
                                         }}
                                         placeholder="Search followers..."
-                                        placeholderTextColor="#94A3B8"
+                                        placeholderTextColor={colors.text.secondary}
                                         value={searchQuery}
                                         onChangeText={setSearchQuery}
                                         autoCapitalize="none"
@@ -633,20 +949,16 @@ const UserProfileScreen: React.FC = () => {
                                             style={{ padding: 4 }}
                                             activeOpacity={0.6}
                                         >
-                                            <MaterialIcons name="clear" size={18} color="#64748B" />
+                                            <MaterialIcons name="clear" size={18} color={colors.text.secondary} />
                                         </TouchableOpacity>
                                     )}
                                 </View>
 
                                 {searchQuery.length > 0 && (
                                     <View style={{ paddingBottom: 8 }}>
-                                        <Text style={{
-                                            fontSize: 13,
-                                            color: '#64748B',
-                                            fontWeight: '500',
-                                        }}>
+                                        <Typography variant="medium" size={13} style={{ color: colors.text.secondary }}>
                                             {filteredFollowers.length} {filteredFollowers.length === 1 ? 'follower' : 'followers'} found
-                                        </Text>
+                                        </Typography>
                                     </View>
                                 )}
                             </View>
@@ -670,17 +982,26 @@ const UserProfileScreen: React.FC = () => {
                         style={{ opacity: fadeAnim }}
                         className="items-center justify-center py-12 bg-white rounded-2xl"
                     >
-                        <MaterialIcons name="search" size={48} color="#CBD5E1" />
-                        <Text className="text-lg font-semibold text-gray-800 mt-4 mb-2">No results found</Text>
-                        <Text className="text-sm text-gray-600 text-center px-6 mb-4">
+                        <MaterialIcons name="search" size={48} color={colors.gray.light} />
+                        <Typography variant="semibold" size={18} style={{ color: colors.text.primary, marginTop: 16, marginBottom: 8 }}>
+                            No results found
+                        </Typography>
+                        <Typography variant="regular" size={14} style={{ color: colors.text.secondary, textAlign: 'center', paddingHorizontal: 24, marginBottom: 16 }}>
                             No followers match "{searchQuery}"
-                        </Text>
+                        </Typography>
                         <TouchableOpacity
-                            className="bg-gray-100 px-4 py-2 rounded-lg"
+                            style={{
+                                backgroundColor: colors.gray.light,
+                                paddingHorizontal: 16,
+                                paddingVertical: 8,
+                                borderRadius: 8,
+                            }}
                             onPress={() => setSearchQuery('')}
                             activeOpacity={0.7}
                         >
-                            <Text className="text-gray-700 font-medium text-sm">Clear search</Text>
+                            <Typography variant="medium" size={14} style={{ color: colors.text.secondary }}>
+                                Clear search
+                            </Typography>
                         </TouchableOpacity>
                     </Animated.View>
                 ) : (
@@ -694,37 +1015,198 @@ const UserProfileScreen: React.FC = () => {
                             onFollowPress={(follower) => console.log('Follow pressed:', follower.name)}
                         />
                     ))
-                )}
+                )} 
             </ScrollView>
         );
     };
     // Following Tab
     const renderFollowing = () => (
         <ScrollView
-            contentContainerStyle={{ padding: 14, paddingBottom: 100 }}
+            contentContainerStyle={{ 
+                padding: 14, 
+                paddingBottom: 100,
+                paddingTop: Platform.OS === 'ios' ? 14 : 8
+            }}
             showsVerticalScrollIndicator={false}
         >
+            {/* Header Section */}
+            <View style={{ marginBottom: 24 }}>
+                <View className="flex-row justify-between items-center mb-4 px-1">
+                    <View>
+                        <Typography variant="bold" size={24} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
+                            Recent Pinned Agents
+                        </Typography>
+                        <Typography variant="regular" size={14} style={{ color: colors.text.secondary, marginTop: 4 }}>
+                            Manage your pinned professional agents
+                        </Typography>
+                    </View>
+                    <TouchableOpacity
+                        className="rounded-2xl items-center justify-center bg-primary/10 px-4 py-2"
+                        activeOpacity={0.7}
+                        onPress={() => navigation.navigate('ViewAllBookingsScreen' as never)}
+                    >
+                        <Typography variant="semibold" size={14} style={{ color: colors.primary }}>
+                            View All
+                        </Typography>
+                    </TouchableOpacity>
+                </View>
 
+                {/* Quick Actions */}
+                <View style={{ 
+                    flexDirection: 'row', 
+                    gap: 12, 
+                    marginBottom: 24,
+                    paddingHorizontal: 4
+                }}>
+                    <TouchableOpacity
+                        style={{
+                            flex: 1,
+                            backgroundColor: colors.primary + '15',
+                            borderRadius: 16,
+                            padding: 16,
+                            alignItems: 'center',
+                            borderWidth: 1,
+                            borderColor: colors.primary + '30',
+                        }}
+                        activeOpacity={0.7}
+                        onPress={() => navigation.navigate('FindAgents' as never)}
+                    >
+                        <View style={{
+                            width: 40,
+                            height: 40, 
+                            borderRadius: 20, 
+                            backgroundColor: colors.primary + '20',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginBottom: 8
+                        }}>
+                            <MaterialIcons name="person-search" size={24} color={colors.primary} />
+                        </View>
+                        <Typography variant="semibold" size={14} style={{ color: colors.primary }}>
+                            Find Agents
+                        </Typography> 
+                    </TouchableOpacity>
+ 
+                    <TouchableOpacity 
+                        style={{
+                            flex: 1,
+                            backgroundColor: colors.success + '15',
+                            borderRadius: 16,
+                            padding: 16,
+                            alignItems: 'center',
+                            borderWidth: 1,
+                            borderColor: colors.success + '30',
+                        }}
+                        activeOpacity={0.7}
+                        onPress={() => navigation.navigate('RecommendedAgents' as never)}
+                    >
+                        <View style={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 20,
+                            backgroundColor: colors.success + '20',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginBottom: 8
+                        }}>
+                            <MaterialIcons name="recommend" size={24} color={colors.success} />
+                        </View>
+                        <Typography variant="semibold" size={14} style={{ color: colors.success }}>
+                            Recommended
+                        </Typography>
+                    </TouchableOpacity>
+                </View>
 
-            <View className="flex-row justify-between items-center mb-4 px-1">
-                <Text className="text-xl font-extrabold text-gray-900 tracking-wide">Recent Bookings</Text>
+                {/* Modern Filter Section */}
+                <View style={{ marginBottom: 24 }}>
+                    <Typography variant="medium" size={14} style={{ color: colors.text.secondary, marginBottom: 12, marginLeft: 4 }}>
+                        Filter by Location
+                    </Typography>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ paddingHorizontal: 4 }}
+                    >
+                        {['All', 'Accra', 'Takoradi', 'Sunyani', 'Volta', 'Kumasi'].map((filter, index) => (
+                            <TouchableOpacity
+                                key={filter}
+                                onPress={() => setSelectedCategory(filter)}
+                                style={{
+                                    marginRight: 8,
+                                    paddingHorizontal: 16,
+                                    paddingVertical: 8,
+                                    borderRadius: 20,
+                                    backgroundColor: selectedCategory === filter ? colors.primary : colors.background,
+                                    borderWidth: 1,
+                                    borderColor: selectedCategory === filter ? colors.primary : colors.gray.light,
+                                    shadowColor: colors.shadowColor,
+                                    shadowOffset: { width: 0, height: 2 },
+                                    shadowOpacity: selectedCategory === filter ? 0.1 : 0,
+                                    shadowRadius: 4,
+                                    elevation: selectedCategory === filter ? 2 : 0,
+                                }}
+                                activeOpacity={0.7}
+                            >
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    {selectedCategory === filter && (
+                                        <MaterialIcons
+                                            name="check"
+                                            size={16}
+                                            color={colors.white}
+                                            style={{ marginRight: 4 }}
+                                        />
+                                    )}
+                                    <Typography
+                                        variant="medium"
+                                        size={14}
+                                        style={{
+                                            color: selectedCategory === filter ? colors.white : colors.text.secondary,
+                                        }}
+                                    >
+                                        {filter}
+                                    </Typography>
+                                </View>
+                            </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                </View>
 
-                <TouchableOpacity className="rounded-2xl items-center justify-center"
-                    activeOpacity={0.7}
-                    onPress={() => navigation.navigate('ViewAllBookingsScreen' as never)}
-                >
-
-                    <Text className="text-md font-normal text-secondary">View All</Text>
-
-                </TouchableOpacity>
+                {/* Stats Overview */}
+                <View style={{ marginBottom: 24 }}>
+                    <ProfessionalStatsCard
+                        title="This Week"
+                        subtitle="December 2024"
+                        stats={[
+                            { 
+                                label: 'Total Agents', 
+                                value: '24', 
+                                icon: 'people', 
+                                color: colors.primary,
+                                trend: 'up',
+                                trendValue: '+12%'
+                            },
+                            { 
+                                label: 'Active', 
+                                value: '18', 
+                                icon: 'check-circle', 
+                                color: colors.success,
+                                trend: 'up',
+                                trendValue: '+8%'
+                            },
+                            { 
+                                label: 'Inactive', 
+                                value: '6', 
+                                icon: 'cancel', 
+                                color: colors.error,
+                                trend: 'down',
+                                trendValue: '-3%'
+                            }
+                        ]}
+                    />
+                </View>
             </View>
 
-            <FilterButtons
-                filters={['All', 'Accra', 'Takoradi', 'Sunyani', 'Volta', 'Kumasi']}
-                selectedFilter={selectedCategory}
-                onFilterChange={setSelectedCategory}
-            />
-
+            {/* Agent List */}
             {dummyFollowing
                 .filter(person => selectedCategory === 'All' || person.category === selectedCategory)
                 .map((person, index) => (
@@ -733,40 +1215,89 @@ const UserProfileScreen: React.FC = () => {
                         style={{
                             transform: [{ scale: scaleAnim }],
                             opacity: fadeAnim,
+                            marginBottom: 12,
                         }}
-                        className="bg-white rounded-2xl my-1 p-3 shadow-md"
                     >
-                        <View className="flex-row items-center">
-                            <Image
-                                source={{ uri: person.avatar }}
-                                className="w-16 h-16 rounded-xl mr-4"
-                            />
-                            <View className="flex-1">
-                                <View className="flex-row items-center">
-                                    <Text className="font-bold text-base">{person.name}</Text>
-                                    {person.verified && (
-                                        <MaterialIcons name="verified" size={16} color={colors.accent} className="ml-2" />
-                                    )}
-                                </View>
-                                <Text className="text-gray-500 mt-1">{person.username}</Text>
+                        <View style={{
+                            backgroundColor: colors.white,
+                            borderRadius: 16,
+                            padding: 16,
+                            shadowColor: colors.shadowColor,
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.1,
+                            shadowRadius: 8,
+                            elevation: 2,
+                        }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Image
+                                    source={{ uri: person.avatar }}
+                                    style={{
+                                        width: 64,
+                                        height: 64,
+                                        borderRadius: 16,
+                                        marginRight: 16,
+                                    }}
+                                />
+                                <View style={{ flex: 1 }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <Typography variant="bold" size={16} style={{ color: colors.text.primary }}>
+                                            {person.name}
+                                        </Typography>
+                                        {person.verified && (
+                                            <MaterialIcons 
+                                                name="verified" 
+                                                size={16} 
+                                                color={colors.accent} 
+                                                style={{ marginLeft: 4 }} 
+                                            />
+                                        )}
+                                    </View>
+                                    <Typography variant="regular" size={14} style={{ color: colors.text.secondary, marginTop: 4 }}>
+                                        {person.username}
+                                    </Typography>
 
-                                <View className="flex-row mt-2 gap-2">
-                                    <View className="bg-gray-100 rounded-2xl px-2 py-1">
-                                        <Text className="text-xs text-gray-800">{person.category}</Text>
-                                    </View>
-                                    <View className="bg-yellow-100 rounded-2xl px-2 py-1">
-                                        <Text className="text-xs text-teal-600">{person.followers} Pins</Text>
+                                    <View style={{ flexDirection: 'row', marginTop: 8, gap: 8 }}>
+                                        <View style={{
+                                            backgroundColor: colors.gray.light,
+                                            borderRadius: 12,
+                                            paddingHorizontal: 8,
+                                            paddingVertical: 4,
+                                        }}>
+                                            <Typography variant="medium" size={12} style={{ color: colors.text.primary }}>
+                                                {person.category}
+                                            </Typography>
+                                        </View>
+                                        <View style={{
+                                            backgroundColor: colors.accent + '15',
+                                            borderRadius: 12,
+                                            paddingHorizontal: 8,
+                                            paddingVertical: 4,
+                                        }}>
+                                            <Typography variant="medium" size={12} style={{ color: colors.accent }}>
+                                                {person.followers} Pins
+                                            </Typography>
+                                        </View>
                                     </View>
                                 </View>
+
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: colors.gray.light,
+                                        borderRadius: 12,
+                                        paddingHorizontal: 12,
+                                        paddingVertical: 8,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        gap: 4,
+                                    }}
+                                    activeOpacity={0.7}
+                                >
+                                    <MaterialIcons name="push-pin" size={16} color={colors.text.primary} />
+                                    <Typography variant="semibold" size={14} style={{ color: colors.text.primary }}>
+                                        Unpin
+                                    </Typography>
+                                </TouchableOpacity>
                             </View>
-
-                            <TouchableOpacity
-                                className="rounded-2xl px-3 py-1 flex-row items-center gap-1"
-                                activeOpacity={0.9}
-                            >
-                                <MaterialIcons name="push-pin" size={16} color={colors.black} />
-                                <Text className="text-gray-900 font-semibold">Unpin</Text>
-                            </TouchableOpacity>
                         </View>
                     </Animated.View>
                 ))}
@@ -776,132 +1307,164 @@ const UserProfileScreen: React.FC = () => {
     // Invites Tab
     const renderInvites = () => (
         <ScrollView
+            contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 18, paddingBottom: 120 }}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-                paddingHorizontal: 16,
-                paddingBottom: 100, // enough for safe area or bottom spacing
-            }}
         >
-            <Animated.View
-                style={{
-                    opacity: fadeAnim,
-                    transform: [{ translateY: slideAnim }],
-                }}
-            >
-                {/* Header */}
-                <View
+            {/* Invite Stats */}
+            <View style={{ marginBottom: 32 }}>
+                <Typography variant="bold" size={24} style={{ color: colors.text.primary, letterSpacing: 0.3, marginBottom: 20 }}>
+                    Invite Statistics
+                </Typography>
+
+                <LinearGradient
+                    colors={[colors.primary, colors.accent]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
                     style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        paddingTop: 20,
-                        paddingBottom: 12,
-                        marginBottom: 16,
+                        borderRadius: 24,
+                        padding: 20,
+                        shadowColor: '#000',
+                        shadowOpacity: 0.15,
+                        shadowOffset: { width: 0, height: 8 },
+                        shadowRadius: 16,
+                        elevation: 8,
                     }}
                 >
-                    <Text
-                        style={{
-                            fontSize: 18,
-                            fontWeight: '800',
-                            color: colors.text.primary,
-                            letterSpacing: 0.5,
-                        }}
-                    >
-                        Sent Invites
-                    </Text>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                    }}>
+                        {[
+                            {
+                                icon: 'send',
+                                color: colors.white,
+                                label: 'Total Sent',
+                                value: dummyInvites.length,
+                            },
+                            {
+                                icon: 'check-circle',
+                                color: colors.white,
+                                label: 'Accepted',
+                                value: dummyInvites.filter(invite => invite.status === 'accepted').length,
+                            },
+                            {
+                                icon: 'pending',
+                                color: colors.white,
+                                label: 'Pending',
+                                value: dummyInvites.filter(invite => invite.status === 'pending').length,
+                            },
+                            {
+                                icon: 'cancel',
+                                color: colors.white,
+                                label: 'Declined',
+                                value: dummyInvites.filter(invite => invite.status === 'declined').length,
+                            },
+                        ].map((item, index) => (
+                            <View
+                                key={index}
+                                style={{
+                                    alignItems: 'center',
+                                    flex: 1,
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                        padding: 8,
+                                        borderRadius: 12,
+                                        marginBottom: 6,
+                                    }}
+                                >
+                                    <MaterialIcons name={item.icon as any} size={20} color={item.color} />
+                                </View>
+                                <Typography
+                                    variant="bold"
+                                    size={20}
+                                    style={{ color: colors.white, marginBottom: 2 }}
+                                >
+                                    {item.value}
+                                </Typography>
+                                <Typography
+                                    variant="bold"
+                                    size={10}
+                                    style={{ color: 'rgba(255, 255, 255, 0.8)', textAlign: 'center' }}
+                                >
+                                    {item.label}
+                                </Typography>
+                            </View>
+                        ))}
+                    </View>
+                </LinearGradient>
+            </View>
 
+            {/* Recent Invites */}
+            <View style={{ marginBottom: 32 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                    <Typography variant="bold" size={20} style={{ color: colors.text.primary, letterSpacing: 0.3 }}>
+                        Recent Invites
+                    </Typography>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('InvitationsScreen' as never)}
-                        activeOpacity={0.7}
                         style={{
-                            padding: 8,
-                            borderRadius: 999,
-                            backgroundColor: colors.gray.light,
+                            backgroundColor: colors.primary,
+                            paddingHorizontal: 14,
+                            paddingVertical: 6,
+                            borderRadius: 12,
                         }}
+                        activeOpacity={0.8}
                     >
-                        <MaterialIcons name="send" size={20} color={colors.primary} />
+                        <Typography variant="bold" size={12} style={{ color: colors.white }}>
+                            View All
+                        </Typography>
                     </TouchableOpacity>
                 </View>
 
-                {/* Invite List */}
-                {dummyInvites.map((invite) => (
-                    <View
-                        key={invite.id}
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            paddingVertical: 14,
-                            paddingHorizontal: 16,
-                            borderBottomWidth: 1,
-                            borderBottomColor: colors.gray.light,
-                            backgroundColor: colors.background,
-                            borderRadius: 12,
-                            marginBottom: 8,
-                            shadowColor: '#000',
-                            shadowOffset: { width: 0, height: 1 },
-                            shadowOpacity: 0.04,
-                            shadowRadius: 2,
-                            elevation: 1,
-                        }}
-                    >
-                        {/* Info */}
-                        <View style={{ flex: 1 }}>
-                            <Text
-                                style={{
-                                    fontSize: 16,
-                                    fontWeight: '700',
-                                    color: colors.text.primary,
-                                    marginBottom: 2,
-                                    letterSpacing: 0.3,
-                                }}
-                            >
-                                {invite.name}
-                            </Text>
-                            <Text
-                                style={{
-                                    fontSize: 14,
-                                    color: colors.text.secondary,
-                                    marginBottom: 2,
-                                    fontWeight: '500',
-                                }}
-                            >
-                                {invite.phone}
-                            </Text>
-                            <Text
-                                style={{
-                                    fontSize: 12,
-                                    color: colors.text.secondary,
-                                    fontWeight: '500',
-                                }}
-                            >
-                                Sent: {invite.sentDate}
-                            </Text>
-                        </View>
-
-                        {/* Status Pill */}
-                        <View
+                <View style={{ gap: 16 }}>
+                    {dummyInvites.map((invite) => (
+                        <TouchableOpacity
+                            key={invite.id}
                             style={{
-                                paddingHorizontal: 12,
-                                paddingVertical: 6,
-                                borderRadius: 999,
-                                backgroundColor: getStatusColor(invite.status) + '22',
+                                backgroundColor: colors.white,
+                                borderRadius: 20,
+                                padding: 16,
+                                shadowColor: '#000',
+                                shadowOpacity: 0.08,
+                                shadowOffset: { width: 0, height: 4 },
+                                shadowRadius: 8,
+                                elevation: 4,
                             }}
+                            activeOpacity={0.8}
                         >
-                            <Text
-                                style={{
-                                    fontSize: 12,
-                                    fontWeight: '800',
-                                    letterSpacing: 0.4,
-                                    color: getStatusColor(invite.status),
-                                }}
-                            >
-                                {invite.status.charAt(0).toUpperCase() + invite.status.slice(1)}
-                            </Text>
-                        </View>
-                    </View>
-                ))}
-            </Animated.View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                                <View style={{ flex: 1 }}>
+                                    <Typography variant="bold" size={16} style={{ color: colors.text.primary, marginBottom: 4 }}>
+                                        {invite.name}
+                                    </Typography>
+                                    <Typography variant="medium" size={14} style={{ color: colors.text.secondary }}>
+                                        {invite.phone}
+                                    </Typography>
+                                </View>
+                                <View style={{ alignItems: 'flex-end' }}>
+                                    <Typography variant="medium" size={14} style={{ color: colors.text.secondary, marginBottom: 8 }}>
+                                        {invite.sentDate}
+                                    </Typography>
+                                    <View
+                                        style={{
+                                            backgroundColor: getStatusColor(invite.status),
+                                            paddingHorizontal: 12,
+                                            paddingVertical: 6,
+                                            borderRadius: 12,
+                                        }}
+                                    >
+                                        <Typography variant="bold" size={12} style={{ color: colors.white }}>
+                                            {invite.status.toUpperCase()}
+                                        </Typography>
+                                    </View>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+            </View>
         </ScrollView>
     );
 
@@ -924,7 +1487,7 @@ const UserProfileScreen: React.FC = () => {
                     marginBottom: 20,
                 }}
             >
-                <Text
+                <Typography
                     style={{
                         fontSize: 18,
                         fontWeight: '800',
@@ -933,7 +1496,7 @@ const UserProfileScreen: React.FC = () => {
                     }}
                 >
                     Recent Activity
-                </Text>
+                </Typography>
 
                 <TouchableOpacity
                     onPress={() => navigation.navigate('Activity' as never)}
@@ -947,7 +1510,9 @@ const UserProfileScreen: React.FC = () => {
                     <MaterialIcons name="tune" size={20} color={colors.primary} />
                 </TouchableOpacity>
             </View>
-            <View style={{ alignItems: 'center', marginHorizontal: -16 }}>
+
+            {/* Monthly Overview Card */}
+            <View style={{ alignItems: 'center', marginHorizontal:3 , marginBottom: 4 }}>
                 <ProfessionalStatsCard
                     title="Monthly Overview"
                     subtitle="December 2024"
@@ -956,7 +1521,7 @@ const UserProfileScreen: React.FC = () => {
                             label: "Activities",
                             value: "198",
                             icon: "book",
-                            color: "#10b981",
+                            color: "#10b981", 
                             trend: "up",
                         },
                         {
@@ -1020,7 +1585,6 @@ const UserProfileScreen: React.FC = () => {
                 indicatorStyle={{ backgroundColor: colors.primary, height: 4, borderRadius: 2 }}
                 style={{ backgroundColor: 'transparent', elevation: 0, paddingTop: 16, paddingBottom: 6 }}
                 tabStyle={{ height: 50, justifyContent: 'center' }}
-                labelStyle={{ fontSize: 13, fontWeight: '700', textTransform: 'capitalize', letterSpacing: 0.2 }}
                 activeColor={colors.primary}
                 inactiveColor={colors.gray.medium}
                 scrollEnabled
@@ -1029,9 +1593,17 @@ const UserProfileScreen: React.FC = () => {
                         { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 },
                         focused && { transform: [{ scale: 1.05 }] }
                     ]}>
-                        <Text style={{ fontSize: 13, fontWeight: '700', textTransform: 'capitalize', letterSpacing: 0.2, color }}>
+                        <Typography 
+                            variant="bold" 
+                            size={13} 
+                            style={{ 
+                                textTransform: 'capitalize', 
+                                letterSpacing: 0.2, 
+                                color 
+                            }}
+                        >
                             {route.title}
-                        </Text>
+                        </Typography>
                         {focused && (
                             <LinearGradient
                                 colors={colors.gradient.primary}
@@ -1041,9 +1613,9 @@ const UserProfileScreen: React.FC = () => {
                     </Animated.View>
                 )}
             />
-        </View>
+        </View> 
     );
- 
+  
     return ( 
         <View className="flex-1">
             <KeyboardAvoidingView
@@ -1059,9 +1631,9 @@ const UserProfileScreen: React.FC = () => {
                     onBack={() => navigation.goBack()}
                     onSettings={() => navigation.navigate('UserSettings' as never)}
                     onBookings={() => navigation.navigate('UserBookings' as never)}
-                    bookingsCount={dummyRecentBookings.length}
+                    bookingsCount={10}
                 />
-
+ 
                 {/* Tab View */}
                 <View className="flex-1 mt-0 bg-slate-50 rounded-t-lg">
                     <TabView

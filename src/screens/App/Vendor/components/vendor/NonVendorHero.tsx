@@ -16,7 +16,7 @@ const NonVendorHero: React.FC<INonVendorHeroProps> = ({ onGetStarted }) => {
         Become a MoMo Agent
       </Text>
       <Text className="text-base text-white opacity-90 text-center mt-2">
-        Join thousands of agents and grow your business with MoMoGo
+        Join thousands of agents and grow your business with Peyba
       </Text>
     </LinearGradient>
   );

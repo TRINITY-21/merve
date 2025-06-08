@@ -1,4 +1,3 @@
-
 // MarketplaceSection.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -24,66 +23,76 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({
     className="px-4 mb-5"
     style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
   >
-    <View className="flex-row justify-between items-center py-1.5 mb-3">
-      <Text className="text-lg font-extrabold pr-2.5" style={{ color: colors.text.primary }}>
+    <View className="flex-row justify-between items-center py-2 mb-4">
+      <Text className="text-xl font-black pr-2.5" style={{ color: colors.text.primary }}>
         Marketplace Analytics
       </Text>
       <TouchableOpacity
-        className="flex-row items-center px-3.5 py-2 rounded-2xl gap-1.5 shadow-sm elevation-4"
+        className="flex-row items-center px-4 py-2.5 rounded-2xl gap-2 shadow-lg"
         style={{ backgroundColor: colors.primary }}
         activeOpacity={0.8}
         onPress={() => navigation.navigate('AgentShopDashboardScreen')}
       >
-        <MaterialIcons name="dashboard" size={16} color={colors.white} />
-        <Text className="text-xs font-extrabold" style={{ color: colors.white }}>
+        <MaterialIcons name="dashboard" size={18} color={colors.white} />
+        <Text className="text-sm font-black" style={{ color: colors.white }}>
           Dashboard
         </Text>
       </TouchableOpacity>
     </View>
 
     {/* Monthly Overview */}
-    <View className="mb-5">
+    <View className="mb-6">
       <LinearGradient
-        colors={colors.gradient.light}
-        className="rounded-2xl p-5 shadow-sm shadow-black/8 elevation-6"
+        colors={[colors.primary, colors.accent]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        className="rounded-3xl p-6 shadow-xl"
       >
-        <Text className="text-lg font-extrabold mb-4" style={{ color: colors.text.primary }}>
+        <Text className="text-xl font-black mb-5 text-white">
           This Month's Performance
         </Text>
-        <View className="flex-row flex-wrap justify-between mb-5">
-          <View className="w-5/12 items-center mb-4">
-            <MaterialIcons name="inventory" size={24} color={colors.primary} />
-            <Text className="text-2xl font-black mt-2 mb-1" style={{ color: colors.text.primary }}>
+        <View className="flex-row flex-wrap justify-between">
+          <View className="w-5/12 items-center mb-6">
+            <View className="bg-white/20 p-3 rounded-2xl mb-3">
+              <MaterialIcons name="inventory" size={28} color={colors.white} />
+            </View>
+            <Text className="text-3xl font-black mb-1 text-white">
               {marketplaceData.monthlyStats.activeProducts}
             </Text>
-            <Text className="text-xs font-semibold text-center" style={{ color: colors.text.secondary }}>
+            <Text className="text-sm font-bold text-white/80">
               Active Products
             </Text>
           </View>
-          <View className="w-5/12 items-center mb-4">
-            <MaterialIcons name="visibility" size={24} color={colors.accent} />
-            <Text className="text-2xl font-black mt-2 mb-1" style={{ color: colors.text.primary }}>
+          <View className="w-5/12 items-center mb-6">
+            <View className="bg-white/20 p-3 rounded-2xl mb-3">
+              <MaterialIcons name="visibility" size={28} color={colors.white} />
+            </View>
+            <Text className="text-3xl font-black mb-1 text-white">
               {marketplaceData.monthlyStats.totalViews}
             </Text>
-            <Text className="text-xs font-semibold text-center" style={{ color: colors.text.secondary }}>
+            <Text className="text-sm font-bold text-white/80">
               Total Views
             </Text>
           </View>
           <View className="w-5/12 items-center">
-            <MaterialIcons name="question-answer" size={24} color={colors.success} />
-            <Text className="text-2xl font-black mt-2 mb-1" style={{ color: colors.text.primary }}>
+            <View className="bg-white/20 p-3 rounded-2xl mb-3">
+              <MaterialIcons name="question-answer" size={28} color={colors.white} />
+            </View>
+            <Text className="text-3xl font-black mb-1 text-white">
               {marketplaceData.monthlyStats.totalInquiries}
             </Text>
-            <Text className="text-xs font-semibold text-center" style={{ color: colors.text.secondary }}>
+            <Text className="text-sm font-bold text-white/80">
               Inquiries
             </Text>
           </View>
           <View className="w-5/12 items-center">
-            <MaterialIcons name="trending-up" size={24} color={colors.warning} />
-            <Text className="text-2xl font-black mt-2 mb-1" style={{ color: colors.text.primary }}>
+            <View className="bg-white/20 p-3 rounded-2xl mb-3">
+              <MaterialIcons name="trending-up" size={28} color={colors.white} />
+            </View>
+            <Text className="text-3xl font-black mb-1 text-white">
               +{marketplaceData.monthlyStats.monthlyGrowth}%
             </Text>
-            <Text className="text-xs font-semibold text-center" style={{ color: colors.text.secondary }}>
+            <Text className="text-sm font-bold text-white/80">
               Growth
             </Text>
           </View>
@@ -92,45 +101,45 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({
     </View>
 
     {/* Recent Inquiries */}
-    <View className="bg-white rounded-2xl p-4 mb-5 shadow-sm shadow-black/8 elevation-4">
-      <View className="flex-row justify-between items-center mb-3">
-        <Text className="text-base font-extrabold" style={{ color: colors.text.primary }}>
+    <View className="bg-white rounded-3xl p-5 shadow-xl">
+      <View className="flex-row justify-between items-center mb-4">
+        <Text className="text-lg font-black" style={{ color: colors.text.primary }}>
           Recent Product Inquiries
         </Text>
         <TouchableOpacity
-          className="px-3 py-1.5 rounded-2xl"
+          className="px-4 py-2 rounded-2xl"
           style={{ backgroundColor: colors.accent }}
           activeOpacity={0.8}
         >
-          <Text className="text-xs font-bold" style={{ color: colors.primary }}>
+          <Text className="text-sm font-bold" style={{ color: colors.primary }}>
             View All
           </Text>
         </TouchableOpacity>
       </View>
 
-      <View className="gap-3">
+      <View className="gap-4">
         {marketplaceData.recentInquiries.map((inquiry) => (
           <TouchableOpacity
             key={inquiry.id}
-            className="bg-gray-50 rounded-xl p-3.5 border-l-3"
+            className="bg-gray-50 rounded-2xl p-4 border-l-4"
             style={{ borderLeftColor: colors.primary }}
             activeOpacity={0.8}
           >
             <View className="flex-row justify-between items-start mb-2">
               <View className="flex-1">
-                <Text className="text-base font-bold mb-0.5" style={{ color: colors.text.primary }}>
+                <Text className="text-base font-black mb-1" style={{ color: colors.text.primary }}>
                   {inquiry.customerName}
                 </Text>
-                <Text className="text-xs font-semibold" style={{ color: colors.text.secondary }}>
+                <Text className="text-sm font-semibold" style={{ color: colors.text.secondary }}>
                   {inquiry.productTitle}
                 </Text>
               </View>
               <View className="items-end">
-                <Text className="text-xs mb-1 font-medium" style={{ color: colors.text.secondary }}>
+                <Text className="text-sm mb-1.5 font-medium" style={{ color: colors.text.secondary }}>
                   {inquiry.time}
                 </Text>
                 <View
-                  className="px-2 py-1 rounded-2xl"
+                  className="px-3 py-1.5 rounded-2xl"
                   style={{
                     backgroundColor:
                       inquiry.status === 'unread' ? colors.error :
@@ -138,14 +147,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({
                       colors.success
                   }}
                 >
-                  <Text className="text-xs font-extrabold text-white">
+                  <Text className="text-xs font-black text-white">
                     {inquiry.status.toUpperCase()}
                   </Text>
                 </View>
               </View>
             </View>
             <Text
-              className="text-xs leading-4 font-medium"
+              className="text-sm leading-5 font-medium"
               style={{ color: colors.text.primary }}
               numberOfLines={2}
             >

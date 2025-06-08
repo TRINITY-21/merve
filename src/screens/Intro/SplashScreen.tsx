@@ -150,7 +150,7 @@ const SplashScreen: React.FC<ISplashScreenProps> = ({ onFinish }) => {
                                 textShadowRadius: 5,
                             }}
                         >
-                            MoMoGo
+                            Peyba
                         </Typography>
 
                         <Typography

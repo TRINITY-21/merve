@@ -378,7 +378,7 @@ const RegisterScreen: React.FC = () => {
                 Toast.show({
                     type: 'success',
                     text1: 'Registration Successful!',
-                    text2: 'Welcome to MoMoGo',
+                    text2: 'Welcome to Peyba',
                 });
 
             } else {

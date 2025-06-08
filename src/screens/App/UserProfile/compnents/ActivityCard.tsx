@@ -2,7 +2,8 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { Animated, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated';
 import { colors } from '../../../../constants/theme/colors';
 
 interface Activity {
@@ -18,8 +19,8 @@ interface Activity {
 
 interface ActivityCardProps {
   activity: Activity;
-  fadeAnim: Animated.Value;
-  slideAnim: Animated.Value;
+  fadeAnim: SharedValue<number>;
+  slideAnim: SharedValue<number>;
   index: number;
   isLast?: boolean;
   onPress?: () => void;
@@ -33,19 +34,22 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
   isLast = false,
   onPress
 }) => {
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: fadeAnim.value,
+    transform: [
+      {
+        translateY: interpolate(
+          slideAnim.value,
+          [0, 50],
+          [0, index * 5]
+        )
+      }
+    ]
+  }));
+
   return (
     <Animated.View
-      style={{
-        opacity: fadeAnim,
-        transform: [
-          {
-            translateY: slideAnim.interpolate({
-              inputRange: [0, 50],
-              outputRange: [0, index * 5],
-            })
-          }
-        ],
-      }}
+      style={animatedStyle}
       className="flex-row mb-5"
     >
       <View className="items-center mr-5 relative">

@@ -63,9 +63,9 @@ export const ProfessionalStatsCard: React.FC<ProfessionalStatsCardProps> = ({
       </View>
 
       {/* Stats Row */}
-      <View className="flex-row">
+      <View className="flex-row justify-between w-full">
         {stats.map((stat, index) => (
-          <View key={index} className="flex-1 items-center">
+          <View key={index} className="items-center">
             {/* Icon */}
             {stat.icon && (
               <View className="w-10 h-10 bg-slate-50 rounded-xl items-center justify-center mb-2">

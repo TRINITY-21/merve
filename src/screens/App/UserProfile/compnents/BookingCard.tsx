@@ -1,23 +1,15 @@
 // components/ProfessionalBookingCard.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Animated, Text, TouchableOpacity, View } from 'react-native';
-
-interface Booking {
-  id: string;
-  agentName: string;
-  serviceType: 'cash_out' | 'cash_in' | 'bill_payment' | 'airtime';
-  amount: number;
-  date: string;
-  time: string;
-  location: string;
-  status: 'completed' | 'pending' | 'accepted' | 'cancelled' | 'declined';
-}
+import { Animated, TouchableOpacity, View } from 'react-native';
+import { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
+import { Typography } from '../../../../components/common/Typography';
+import { IBooking } from '../../../../types/userProfileTypes';
 
 interface BookingCardProps {
-  booking: Booking;
-  fadeAnim?: Animated.Value;
-  onPress?: () => void;
+  booking: IBooking;
+  fadeAnim: SharedValue<number>;
+  onPress?: () => void; 
 }
 
 export const BookingCard: React.FC<BookingCardProps> = ({ 
@@ -25,6 +17,10 @@ export const BookingCard: React.FC<BookingCardProps> = ({
   fadeAnim, 
   onPress 
 }) => {
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: fadeAnim.value
+  }));
+
   const getStatusConfig = (status: string) => {
     switch (status) {
       case 'completed': 
@@ -103,10 +99,7 @@ export const BookingCard: React.FC<BookingCardProps> = ({
   const serviceConfig = getServiceConfig(booking.serviceType);
 
   return (
-    <Animated.View 
-      style={{ opacity: fadeAnim || 1 }} 
-      className="mb-3"
-    >
+    <Animated.View style={animatedStyle} className="mb-3">
       <TouchableOpacity 
         onPress={onPress} 
         activeOpacity={0.7}
@@ -130,12 +123,12 @@ export const BookingCard: React.FC<BookingCardProps> = ({
               </View>
               
               <View className="flex-1">
-                <Text className="text-base font-bold text-slate-800 mb-1">
+                <Typography variant="bold" size={16} className="text-slate-800 mb-1">
                   {booking.agentName}
-                </Text>
-                <Text className="text-sm text-slate-600 font-medium">
+                </Typography>
+                <Typography variant="medium" size={14} className="text-slate-600">
                   {serviceConfig.label}
-                </Text>
+                </Typography>
               </View>
             </View>
 
@@ -149,20 +142,22 @@ export const BookingCard: React.FC<BookingCardProps> = ({
                 size={14} 
                 color={statusConfig.color}
               />
-              <Text 
-                className="text-xs font-semibold ml-1 capitalize"
+              <Typography 
+                variant="semibold"
+                size={12}
+                className="ml-1 capitalize"
                 style={{ color: statusConfig.color }}
               >
                 {booking.status}
-              </Text>
+              </Typography>
             </View>
           </View>
 
           {/* Amount */}
           <View className="mb-4">
-            <Text className="text-2xl font-bold text-slate-900">
+            <Typography variant="bold" size={24} className="text-slate-900">
               {formatCurrency(booking.amount)}
-            </Text>
+            </Typography>
           </View>
 
           {/* Details Row */}
@@ -170,23 +165,25 @@ export const BookingCard: React.FC<BookingCardProps> = ({
             {/* Date & Time */}
             <View className="flex-row items-center flex-1 mr-4">
               <MaterialIcons name="schedule" size={16} color="#64748b" />
-              <Text className="text-sm text-slate-600 ml-2 font-medium">
+              <Typography variant="medium" size={14} className="text-slate-600 ml-2">
                 {formatDate(booking.date)}
-              </Text>
-              <Text className="text-sm text-slate-500 ml-1">
+              </Typography>
+              <Typography variant="regular" size={14} className="text-slate-500 ml-1">
                 {booking.time}
-              </Text>
+              </Typography>
             </View>
 
             {/* Location */}
             <View className="flex-row items-center flex-1">
               <MaterialIcons name="location-on" size={16} color="#64748b" />
-              <Text 
-                className="text-sm text-slate-600 ml-2 font-medium flex-1" 
+              <Typography 
+                variant="medium"
+                size={14}
+                className="text-slate-600 ml-2 flex-1" 
                 numberOfLines={1}
               >
                 {booking.location}
-              </Text>
+              </Typography>
             </View>
           </View>
         </View>
@@ -194,9 +191,9 @@ export const BookingCard: React.FC<BookingCardProps> = ({
         {/* Bottom Action Indicator */}
         {onPress && (
           <View className="bg-slate-50 px-5 py-3 flex-row items-center justify-center">
-            <Text className="text-sm text-slate-600 font-medium mr-2">
+            <Typography variant="medium" size={14} className="text-slate-600 mr-2">
               Tap for details
-            </Text>
+            </Typography>
             <MaterialIcons name="chevron-right" size={16} color="#64748b" />
           </View>
         )}
@@ -207,7 +204,7 @@ export const BookingCard: React.FC<BookingCardProps> = ({
 
 // Usage Example:
 /*
-const sampleBooking: Booking = {
+const sampleBooking: IBooking = {
   id: '1',
   agentName: 'John Doe',
   serviceType: 'cash_out',

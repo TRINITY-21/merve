@@ -257,7 +257,7 @@ const LoginScreen: React.FC = () => {
                                 size={42}
                                 style={{ color: colors.white, marginBottom: 8 }}
                             >
-                                MoMoGo
+                                Peyba
                             </Typography>
                             <Typography
                                 variant="regular"

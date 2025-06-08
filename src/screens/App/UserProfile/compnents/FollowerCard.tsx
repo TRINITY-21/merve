@@ -1,7 +1,9 @@
 // components/ProfessionalFollowerCard.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Animated, Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
+import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
+import { Typography } from '../../../../components/common/Typography';
 import { colors } from '../../../../constants/theme/colors';
 import { IFollower } from '../../../../types/userProfileTypes';
 
@@ -18,8 +20,8 @@ interface Follower {
 
 interface FollowerCardProps {
   follower: IFollower;
-  fadeAnim?: Animated.Value;
-  slideAnim?: Animated.Value;
+  fadeAnim?: SharedValue<number>;
+  slideAnim?: SharedValue<number>;
   index?: number;
   onFollowPress?: (follower: Follower) => void;
   onCardPress?: (follower: Follower) => void;
@@ -37,16 +39,16 @@ export const FollowerCard: React.FC<FollowerCardProps> = ({
     if (isFollowing) {
       return {
         text: 'Following',
-        bg: '#f1f5f9',
-        textColor: '#475569',
-        borderColor: '#e2e8f0',
+        bg: colors.gray.light,
+        textColor: colors.text.secondary,
+        borderColor: colors.gray.light,
         icon: 'check'
       };
     }
     return {
       text: 'Follow',
       bg: colors.primary,
-      textColor: colors.secondary,
+      textColor: colors.white,
       borderColor: 'transparent',
       icon: 'person-add'
     };
@@ -54,20 +56,20 @@ export const FollowerCard: React.FC<FollowerCardProps> = ({
 
   const buttonConfig = getFollowButtonConfig(follower.following);
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: fadeAnim?.value ?? 1,
+      transform: slideAnim ? [
+        {
+          translateX: slideAnim.value * (index % 2 === 0 ? -0.4 : 0.4),
+        },
+      ] : [],
+    };
+  });
+
   return (
     <Animated.View
-      style={{
-        opacity: fadeAnim || 1,
-        transform: slideAnim ? [
-          {
-            translateX: slideAnim.interpolate({
-              inputRange: [0, 50],
-              outputRange: [0, index % 2 === 0 ? -20 : 20],
-            }),
-          },
-        ] : [],
-      }}
-      className="mb-3"
+      style={[animatedStyle, { marginBottom: 12 }]}
     >
       <TouchableOpacity
         onPress={() => onCardPress?.(follower)}
@@ -100,35 +102,37 @@ export const FollowerCard: React.FC<FollowerCardProps> = ({
             {/* User Info */}
             <View className="flex-1 mr-3">
               <View className="flex-row items-center mb-1">
-                <Text className="font-bold text-base text-slate-800 mr-2">
+                <Typography variant="bold" size={16} style={{ color: colors.text.primary, marginRight: 8 }}>
                   {follower.name}
-                </Text>
+                </Typography>
                 {follower.verified && (
                   <MaterialIcons name="verified" size={16} color={colors.primary} />
                 )}
               </View>
               
-              <Text className="text-sm text-slate-500 font-medium">
+              <Typography variant="medium" size={14} style={{ color: colors.text.secondary }}>
                 @{follower.username}
-              </Text>
+              </Typography>
               
               {/* Mutual Connections */}
               <View className="flex-row items-center mt-2">
-                <MaterialIcons name="people" size={14} color="#64748b" />
-                <Text className="text-xs text-slate-600 ml-1 font-medium">
+                <MaterialIcons name="people" size={14} color={colors.text.secondary} />
+                <Typography variant="medium" size={12} style={{ color: colors.text.secondary, marginLeft: 4 }}>
                   {follower.mutual} mutual connections
-                </Text>
+                </Typography>
               </View>
               
               {/* Location */}
               <View className="flex-row items-center mt-1">
-                <MaterialIcons name="location-on" size={14} color="#64748b" />
-                <Text 
-                  className="text-xs text-slate-600 ml-1 font-medium flex-1" 
+                <MaterialIcons name="location-on" size={14} color={colors.text.secondary} />
+                <Typography 
+                  variant="medium" 
+                  size={12} 
+                  style={{ color: colors.text.secondary, marginLeft: 4, flex: 1 }} 
                   numberOfLines={1}
                 >
                   {follower.location}
-                </Text>
+                </Typography>
               </View>
             </View>
 
@@ -148,12 +152,13 @@ export const FollowerCard: React.FC<FollowerCardProps> = ({
                 size={16} 
                 color={buttonConfig.textColor}
               />
-              <Text 
-                className="font-semibold text-sm ml-1"
-                style={{ color: buttonConfig.textColor }}
+              <Typography 
+                variant="semibold" 
+                size={14} 
+                style={{ color: buttonConfig.textColor, marginLeft: 4 }}
               >
                 {buttonConfig.text}
-              </Text>
+              </Typography>
             </TouchableOpacity>
           </View>
         </View>
@@ -161,10 +166,10 @@ export const FollowerCard: React.FC<FollowerCardProps> = ({
         {/* Action Indicator */}
         {onCardPress && (
           <View className="bg-slate-50 px-5 py-2 flex-row items-center justify-center border-t border-slate-100">
-            <Text className="text-xs text-slate-600 font-medium mr-1">
+            <Typography variant="medium" size={12} style={{ color: colors.text.secondary, marginRight: 4 }}>
               Tap to view profile
-            </Text>
-            <MaterialIcons name="chevron-right" size={14} color="#64748b" />
+            </Typography>
+            <MaterialIcons name="chevron-right" size={14} color={colors.text.secondary} />
           </View>
         )}
       </TouchableOpacity>

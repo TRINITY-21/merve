@@ -2,22 +2,27 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { Animated, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
 import { Button } from '../../../../components/common';
 import { colors } from '../../../../constants/theme/colors';
 
 interface PremiumUpgradeCardProps {
     onUpgradePress: () => void;
-    fadeAnim?: Animated.Value;
+    fadeAnim?: SharedValue<number>;
 }
 
 export const PremiumUpgradeCard: React.FC<PremiumUpgradeCardProps> = ({
     onUpgradePress,
     fadeAnim
 }) => {
+    const animatedStyle = useAnimatedStyle(() => ({
+        opacity: fadeAnim?.value ?? 1
+    }));
+
     return (
         <Animated.View
-            style={{ opacity: fadeAnim || 1 }}
+            style={animatedStyle}
             className="mx-0 mb-6"
         >
             <View className="rounded-2xl overflow-hidden shadow-xl bg-white">
@@ -54,7 +59,6 @@ export const PremiumUpgradeCard: React.FC<PremiumUpgradeCardProps> = ({
                     </View>
 
                     {/* CTA Button */}
-
                     <Button
                         title='Become an Agent Now'
                         icon="diamond"
@@ -62,9 +66,7 @@ export const PremiumUpgradeCard: React.FC<PremiumUpgradeCardProps> = ({
                         className="rounded-xl overflow-hidden shadow-lg"
                         style={{ top: 2 }}
                         onPress={onUpgradePress}
-
                     />
-
 
                     {/* Price hint */}
                     <Text className="text-center text-gray-500 text-xs mt-3">

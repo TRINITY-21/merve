@@ -78,7 +78,7 @@ export interface IProduct {
   title: string;
   agent: string;
   price: number;
-  image: string;
+  images: string[];
   viewedAt: string;
   inquired: boolean;
   favorited: boolean;
@@ -106,11 +106,21 @@ export interface IMarketplaceData {
     agentsContacted: number;
     timeSpent: string;
     avgSessionTime: string;
+    purchases: number;
   };
   categoryBreakdown: ICategoryBreakdown[];
   recentlyViewed: IProduct[];
   searchHistory: ISearchHistory[];
+  recentActivity: {
+    id: string;
+    title: string;
+    description: string;
+    time: string;
+    status: 'completed' | 'pending' | 'accepted' | 'cancelled' | 'declined';
+  }[];
+  recommendedProducts: IProduct[];
 }
+
 export interface IRoute {
   key: string;
   title: string;

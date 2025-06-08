@@ -554,7 +554,7 @@ export const mockProducts: IProduct[] = [
 export const introData: IIntroSlide[] = [
   {
     id: 1,
-    title: 'Welcome to MoMoGo',
+    title: 'Welcome to Peyba',
     subtitle: 'The Future of Mobile Money',
     description: 'Experience a revolutionary way to manage your mobile money transactions with cutting-edge technology.',
     icon: 'rocket-launch',

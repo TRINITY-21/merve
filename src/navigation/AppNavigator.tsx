@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
 import { Platform, View } from 'react-native';
 import { Typography } from '../components/common/Typography';
+import { colors } from '../constants/theme/colors';
 import ActivityScreen from '../screens/App/Activity/ActivityScreen';
 import AgentSettingsScreen from '../screens/App/AgentProfile/AgentSettingsScreen';
 import AgentsProfileScreen from '../screens/App/AgentProfile/AgentsProfileScreen';
@@ -56,7 +57,7 @@ export type RootTabParamList = {
 
 export type MapStackParamList = {
   MapHome: undefined;
-  Notifications: undefined;
+  Notification: undefined;
   Map: undefined;
   AgentsProfile: undefined;
   UserProfile: undefined;
@@ -206,34 +207,56 @@ const TabIcon: React.FC<TabIconProps> = ({
     items-center justify-center
     py-2 px-1
     min-h-14 min-w-[64px] max-w-[72px]
-    bg-transparent relative
-  "
+    relative
+    "
+    style={{
+      transform: [{ scale: focused ? 1.05 : 1 }],
+    }}
   >
-    <MaterialIcons name={name} size={22} color={color} />
+    <MaterialIcons 
+      name={name} 
+      size={20} 
+      color={color} 
+      style={{
+        opacity: focused ? 1 : 0.7,
+        transform: [{ scale: focused ? 1.1 : 1 }]
+      }}
+    />
     
     {/* Notification Badge */}
     {showBadge && badgeCount > 0 && (
       <View
         style={{
           position: 'absolute',
-          top: 14,
-          right: 24,
-          width: 6,
-          height: 6,
-          borderRadius: 4,
+          top: 12,
+          right: 20,
+          minWidth: 18,
+          height: 18,
+          borderRadius: 9,
           backgroundColor: '#EF4444',
-          borderWidth: 1,
+          borderWidth: 2,
           borderColor: '#FFFFFF',
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: 4,
         }}
-      />
+      >
+        <Typography
+          size={10}
+          variant="medium"
+          className="text-white"
+        >
+          {badgeCount > 99 ? '99+' : badgeCount}
+        </Typography>
+      </View>
     )}
     
     {focused && (
       <>
         <Typography
-          size={10}
-          variant="regular"
-          className="text-sm text-center mt-0.5 max-w-[48px] leading-tight tracking-tight"
+          size={9}
+          variant="medium"
+          className="text-sm text-center mt-1 max-w-[48px] leading-tight tracking-tight"
           style={{ color }}
           numberOfLines={2}
           ellipsizeMode="tail"
@@ -241,7 +264,12 @@ const TabIcon: React.FC<TabIconProps> = ({
           {label}
         </Typography>
 
-        <View className="absolute bottom-0 w-5 h-0.5 bg-yellow-400 rounded-sm" />
+        <View 
+          className="absolute bottom-0 w-6 h-0.5 rounded-full" 
+          style={{ 
+            backgroundColor: color,
+          }} 
+        />
       </>
     )}
   </View>
@@ -251,7 +279,7 @@ const TabIcon: React.FC<TabIconProps> = ({
 const MapStackNavigator: React.FC = () => (
   <MapStack.Navigator screenOptions={{ headerShown: false }}>
     <MapStack.Screen name="MapHome" component={MapScreen} />
-    <MapStack.Screen name="Notifications" component={NotificationsScreen} />
+    <MapStack.Screen name="Notification" component={NotificationsScreen} />
     <MapStack.Screen name="UserProfile" component={UserProfileScreen} />
     <MapStack.Screen name="UserSettings" component={UserSettingsScreen} />
     <MapStack.Screen name="UserAccountInfo" component={UserAccountInfoScreen} />
@@ -362,8 +390,8 @@ const AppNavigator: React.FC = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: '#FFCC00',
-        tabBarInactiveTintColor: '#8E8E93',
+        tabBarActiveTintColor: '#FFCC00', // App's primary color
+        tabBarInactiveTintColor: '#8E8E93', // App's secondary color
         tabBarShowLabel: false,
         tabBarItemStyle: {
           minWidth: 56,
@@ -372,13 +400,13 @@ const AppNavigator: React.FC = () => {
           justifyContent: 'center',
         },
         tabBarStyle: {
-          height: Platform.OS === 'ios' ? 78 : 68,
-          paddingBottom: Platform.OS === 'ios' ? 0 : 10,
+          height: Platform.OS === 'ios' ? 84 : 74,
+          paddingBottom: Platform.OS === 'ios' ? 20 : 12,
           paddingTop: 8,
           paddingHorizontal: 16,
           backgroundColor: '#FFFFFF',
           borderTopWidth: 0,
-          elevation: 20,
+          // elevation: 20,
           shadowColor: '#000',
           shadowOffset: { width: 0, height: -4 },
           shadowOpacity: 0.1,
@@ -387,6 +415,8 @@ const AppNavigator: React.FC = () => {
           bottom: 0,
           left: 0,
           right: 0,
+          // borderTopLeftRadius: 20,
+          // borderTopRightRadius: 20,
         },
         headerShown: false,
       }}
@@ -396,8 +426,13 @@ const AppNavigator: React.FC = () => {
         component={MapStackNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="location-on" color={color} focused={focused} label="Map" />
-          ),
+            <TabIcon 
+              name="location-on" 
+              color={focused ? colors.primary : '#8E8E93'} 
+              focused={focused} 
+              label="Map" 
+            />
+          ), 
         }}
       />
 
@@ -406,7 +441,12 @@ const AppNavigator: React.FC = () => {
         component={ShopStackNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="shop" color={color} focused={focused} label="Shop" />
+            <TabIcon 
+              name="shop" 
+              color={focused ? colors.primary : '#8E8E93'} 
+              focused={focused} 
+              label="Shop" 
+            />
           ),
         }}
       />
@@ -416,7 +456,12 @@ const AppNavigator: React.FC = () => {
         component={SearchAgentsStackNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="find-in-page" color={color} focused={focused} label="Agents" />
+            <TabIcon 
+              name="person-search" 
+              color={focused ? colors.primary : '#8E8E93'} 
+              focused={focused} 
+              label="Agents" 
+            />
           ),
         }}
       />
@@ -426,7 +471,12 @@ const AppNavigator: React.FC = () => {
         component={SearchUsersStackNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="group" color={color} focused={focused} label="Search" />
+            <TabIcon 
+              name="group" 
+              color={focused ? colors.primary : '#8E8E93'} 
+              focused={focused} 
+              label="Search" 
+            />
           ),
         }}
       />
@@ -436,28 +486,32 @@ const AppNavigator: React.FC = () => {
         component={AgentProfileStackNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="storefront" color={color} focused={focused} label="Agent" />
+            <TabIcon 
+              name="storefront" 
+              color={focused ? colors.primary : '#8E8E93'} 
+              focused={focused} 
+              label="Agent" 
+            />
           ),
         }}
       />
 
       <Tab.Screen
-        name="Notiificatons" 
+        name="Notiificaton" 
         component={NotificationsScreen}
         options={{
           tabBarIcon: ({ color, focused }) => (
             <TabIcon 
               name="notifications" 
-              color={color} 
+              color={focused ? colors.primary : '#8E8E93'} 
               focused={focused} 
-              label="notification"
+              label="Notification"
               showBadge={true}
               badgeCount={notificationCount}
             />
           ),
         }}
         listeners={{
-          // Clear notification count when user taps on notifications tab
           tabPress: () => {
             // Optional: Clear notifications when tab is pressed
             // updateNotificationCount(0);

@@ -92,9 +92,6 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                         <Typography className="text-[11px] text-secondary/90 tracking-wide" variant="semibold" size={11}>Following</Typography>
                     </TouchableOpacity>
                     <TouchableOpacity className="items-center">
-                        {/* <MaterialIcons name="person-add" size={23} color={colors.secondary} />
-                        <Typography className="text-md text-secondary/90 tracking-wide" variant="semibold" size={11}>Invite</Typography> */}
-
                         <MaterialIcons name="person-add" size={ Platform.OS === 'ios' ? 23 : 20} color={colors.secondary} />
                         <Typography className="text-md text-secondary/90 tracking-wide" variant="semibold" size={11}>Invite</Typography>
                     </TouchableOpacity>
