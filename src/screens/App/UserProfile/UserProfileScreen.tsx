@@ -6,9 +6,7 @@ import {
     Dimensions,
     FlatList,
     Image,
-    KeyboardAvoidingView,
     Platform,
-    RefreshControl,
     ScrollView,
     TextInput,
     TouchableOpacity,
@@ -22,7 +20,6 @@ import Animated, {
     withSpring,
     withTiming
 } from 'react-native-reanimated';
-import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import Toast from 'react-native-toast-message';
 import { Header, Typography } from '../../../components/common';
 import { colors } from '../../../constants/theme/colors';
@@ -511,10 +508,14 @@ const UserProfileScreen: React.FC = () => {
 
     // Profile Info Tab using reusable components
     const renderProfileInfo = () => (
-        <ScrollView
-            contentContainerStyle={{ padding: 14, paddingBottom: 100 }}
-            showsVerticalScrollIndicator={false}
-        >
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ padding: 14, paddingBottom: 100 }}
+        showsVerticalScrollIndicator={false}
+    >
+
+            
+            
             <Animated.View
                 style={animatedStyle}
                 className="bg-white rounded-2xl p-5 mb-5 shadow-lg"
@@ -589,218 +590,201 @@ const UserProfileScreen: React.FC = () => {
     );
 
     // Bookings Tab using reusable components
-    const renderBookings = () => {
-        return (
-            <FlatList
-                data={dummyRecentBookings}
-                renderItem={({ item, index }) => (
-                    <Animated.View
-                        style={animatedStyle}
+ const renderBookings = () => {
+    return (
+        <View style={{ padding: 14, paddingBottom: Platform.OS === 'ios' ? 80 : 70 }}>
+            {/* Header Section */}
+            <View style={{ marginBottom: 24 }}>
+                <View className="flex-row justify-between items-center mb-4 px-1">
+                    <View>
+                        <Typography variant="bold" size={24} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
+                            Recent Bookings
+                        </Typography>
+                        <Typography variant="regular" size={14} style={{ color: colors.text.secondary, marginTop: 4 }}>
+                            Manage your appointments and schedules
+                        </Typography>
+                    </View>
+                    <TouchableOpacity
+                        className="rounded-2xl items-center justify-center bg-primary/10 px-4 py-2"
+                        activeOpacity={0.7}
+                        onPress={() => navigation.navigate('ViewAllBookingsScreen' as never)}
                     >
+                        <Typography variant="semibold" size={14} style={{ color: colors.primary }}>
+                            View All
+                        </Typography>
+                    </TouchableOpacity>
+                </View>
+
+                {/* Quick Actions */}
+                <View style={{
+                    flexDirection: 'row',
+                    gap: 12,
+                    marginBottom: 24,
+                    paddingHorizontal: 4
+                }}>
+                    <TouchableOpacity
+                        style={{
+                            flex: 1,
+                            backgroundColor: colors.primary + '15',
+                            borderRadius: 16,
+                            padding: 16,
+                            alignItems: 'center',
+                            borderWidth: 1,
+                            borderColor: colors.primary + '30',
+                        }}
+                        activeOpacity={0.7}
+                        onPress={() => navigation.navigate('BookAppointments' as never)}
+                    >
+                        <View style={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 20,
+                            backgroundColor: colors.primary + '20',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginBottom: 8
+                        }}>
+                            <MaterialIcons name="add" size={24} color={colors.primary} />
+                        </View>
+                        <Typography variant="semibold" size={14} style={{ color: colors.primary }}>
+                            New Booking
+                        </Typography>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={{
+                            flex: 1,
+                            backgroundColor: colors.success + '15',
+                            borderRadius: 16,
+                            padding: 16,
+                            alignItems: 'center',
+                            borderWidth: 1,
+                            borderColor: colors.success + '30',
+                        }}
+                        activeOpacity={0.7}
+                        onPress={() => navigation.navigate('UpcomingBookings' as never)}
+                    >
+                        <View style={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 20,
+                            backgroundColor: colors.success + '20',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginBottom: 8
+                        }}>
+                            <MaterialIcons name="event" size={24} color={colors.success} />
+                        </View>
+                        <Typography variant="semibold" size={14} style={{ color: colors.success }}>
+                            Upcoming
+                        </Typography>
+                    </TouchableOpacity>
+                </View>
+
+                {/* Stats Overview */}
+                <ProfessionalStatsCard
+                    title="Monthly Overview"
+                    subtitle="December 2024"
+                    stats={[
+                        {
+                            label: "Total Bookings",
+                            value: "198",
+                            icon: "book",
+                            color: colors.primary,
+                            trend: "up",
+                            trendValue: "+12%"
+                        },
+                        {
+                            label: "Completed",
+                            value: "89",
+                            icon: "done-all",
+                            color: colors.success,
+                            trend: "up",
+                            trendValue: "+8%"
+                        },
+                        {
+                            label: "Pending",
+                            value: "8",
+                            icon: "pending-actions",
+                            color: colors.warning,
+                            trend: "down",
+                            trendValue: "-3%"
+                        },
+                        {
+                            label: "Cancelled",
+                            value: "34",
+                            icon: "cancel",
+                            color: colors.error,
+                            trend: "down",
+                            trendValue: "-5%"
+                        }
+                    ]}
+                    onPress={() => console.log('View details')}
+                />
+            </View>
+
+            {/* Empty State */}
+            {dummyRecentBookings.length === 0 && (
+                <Animated.View
+                    style={{
+                        opacity: fadeAnim,
+                        transform: [{ scale: scaleAnim }],
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        paddingVertical: 40,
+                        backgroundColor: colors.background,
+                        borderRadius: 24,
+                        marginHorizontal: 4,
+                        borderWidth: 1,
+                        borderColor: colors.gray.light,
+                    }}
+                >
+                    <View style={{
+                        width: 80,
+                        height: 80,
+                        borderRadius: 40,
+                        backgroundColor: colors.gray.light,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: 16
+                    }}>
+                        <MaterialIcons name="event-busy" size={40} color={colors.gray.medium} />
+                    </View>
+                    <Typography variant="bold" size={20} style={{ color: colors.text.primary, marginBottom: 8 }}>
+                        No Recent Bookings
+                    </Typography>
+                    <Typography variant="regular" size={14} style={{
+                        color: colors.text.secondary,
+                        textAlign: 'center',
+                        paddingHorizontal: 32,
+                        marginBottom: 24,
+                        lineHeight: 20
+                    }}>
+                        Your booking history will appear here once you start making appointments with our professional agents
+                    </Typography>
+                    <GradientButton
+                        title="Book an Appointment"
+                        onPress={() => navigation.navigate('BookAppointments' as never)}
+                        icon="add"
+                        size="large"
+                    />
+                </Animated.View>
+            )}
+
+            {/* Bookings List */}
+            {dummyRecentBookings.map((item, index) => (
+                <View key={item.id} style={{ marginBottom: 12 }}>
+                    <Animated.View style={animatedStyle}>
                         <BookingCard
                             booking={item}
                             fadeAnim={fadeAnim}
                         />
                     </Animated.View>
-                )}
-                keyExtractor={(item) => item.id}
-                contentContainerStyle={{ padding: 14, paddingBottom: Platform.OS === 'ios' ? 80 : 70 }}
-                showsVerticalScrollIndicator={false}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                        colors={[colors.primary]}
-                        tintColor={colors.primary}
-                    />
-                }
-                ListHeaderComponent={
-                    <>
-                        {/* Header Section */}
-                        <View style={{ marginBottom: 24 }}>
-                            <View className="flex-row justify-between items-center mb-4 px-1">
-                                <View>
-                                    <Typography variant="bold" size={24} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
-                                        Recent Bookings
-                                    </Typography>
-                                    <Typography variant="regular" size={14} style={{ color: colors.text.secondary, marginTop: 4 }}>
-                                        Manage your appointments and schedules
-                                    </Typography>
-                                </View>
-                                <TouchableOpacity
-                                    className="rounded-2xl items-center justify-center bg-primary/10 px-4 py-2"
-                                    activeOpacity={0.7}
-                                    onPress={() => navigation.navigate('ViewAllBookingsScreen' as never)}
-                                >
-                                    <Typography variant="semibold" size={14} style={{ color: colors.primary }}>
-                                        View All
-                                    </Typography>
-                                </TouchableOpacity>
-                            </View>
-
-                            {/* Quick Actions */}
-                            <View style={{
-                                flexDirection: 'row',
-                                gap: 12,
-                                marginBottom: 24,
-                                paddingHorizontal: 4
-                            }}>
-                                <TouchableOpacity
-                                    style={{
-                                        flex: 1,
-                                        backgroundColor: colors.primary + '15',
-                                        borderRadius: 16,
-                                        padding: 16,
-                                        alignItems: 'center',
-                                        borderWidth: 1,
-                                        borderColor: colors.primary + '30',
-                                    }}
-                                    activeOpacity={0.7}
-                                    onPress={() => navigation.navigate('BookAppointments' as never)}
-                                >
-                                    <View style={{
-                                        width: 40,
-                                        height: 40,
-                                        borderRadius: 20,
-                                        backgroundColor: colors.primary + '20',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        marginBottom: 8
-                                    }}>
-                                        <MaterialIcons name="add" size={24} color={colors.primary} />
-                                    </View>
-                                    <Typography variant="semibold" size={14} style={{ color: colors.primary }}>
-                                        New Booking
-                                    </Typography>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity
-                                    style={{
-                                        flex: 1,
-                                        backgroundColor: colors.success + '15',
-                                        borderRadius: 16,
-                                        padding: 16,
-                                        alignItems: 'center',
-                                        borderWidth: 1,
-                                        borderColor: colors.success + '30',
-                                    }}
-                                    activeOpacity={0.7}
-                                    onPress={() => navigation.navigate('UpcomingBookings' as never)}
-                                >
-                                    <View style={{
-                                        width: 40,
-                                        height: 40,
-                                        borderRadius: 20,
-                                        backgroundColor: colors.success + '20',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        marginBottom: 8
-                                    }}>
-                                        <MaterialIcons name="event" size={24} color={colors.success} />
-                                    </View>
-                                    <Typography variant="semibold" size={14} style={{ color: colors.success }}>
-                                        Upcoming
-                                    </Typography>
-                                </TouchableOpacity>
-                            </View>
-
-                            {/* Stats Overview */}
-                            <ProfessionalStatsCard
-                                title="Monthly Overview"
-                                subtitle="December 2024"
-                                stats={[
-                                    {
-                                        label: "Total Bookings",
-                                        value: "198",
-                                        icon: "book",
-                                        color: colors.primary,
-                                        trend: "up",
-                                        trendValue: "+12%"
-                                    },
-                                    {
-                                        label: "Completed",
-                                        value: "89",
-                                        icon: "done-all",
-                                        color: colors.success,
-                                        trend: "up",
-                                        trendValue: "+8%"
-                                    },
-                                    {
-                                        label: "Pending",
-                                        value: "8",
-                                        icon: "pending-actions",
-                                        color: colors.warning,
-                                        trend: "down",
-                                        trendValue: "-3%"
-                                    },
-                                    {
-                                        label: "Cancelled",
-                                        value: "34",
-                                        icon: "cancel",
-                                        color: colors.error,
-                                        trend: "down",
-                                        trendValue: "-5%"
-                                    }
-                                ]}
-                                onPress={() => console.log('View details')}
-                            />
-                        </View>
-
-                        {/* Empty State */}
-                        {dummyRecentBookings.length === 0 && (
-                            <Animated.View
-                                style={{
-                                    opacity: fadeAnim,
-                                    transform: [{ scale: scaleAnim }],
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    paddingVertical: 40,
-                                    backgroundColor: colors.background,
-                                    borderRadius: 24,
-                                    marginHorizontal: 4,
-                                    borderWidth: 1,
-                                    borderColor: colors.gray.light,
-                                }}
-                            >
-                                <View style={{
-                                    width: 80,
-                                    height: 80,
-                                    borderRadius: 40,
-                                    backgroundColor: colors.gray.light,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    marginBottom: 16
-                                }}>
-                                    <MaterialIcons name="event-busy" size={40} color={colors.gray.medium} />
-                                </View>
-                                <Typography variant="bold" size={20} style={{ color: colors.text.primary, marginBottom: 8 }}>
-                                    No Recent Bookings
-                                </Typography>
-                                <Typography variant="regular" size={14} style={{
-                                    color: colors.text.secondary,
-                                    textAlign: 'center',
-                                    paddingHorizontal: 32,
-                                    marginBottom: 24,
-                                    lineHeight: 20
-                                }}>
-                                    Your booking history will appear here once you start making appointments with our professional agents
-                                </Typography>
-                                <GradientButton
-                                    title="Book an Appointment"
-                                    onPress={() => navigation.navigate('BookAppointments' as never)}
-                                    icon="add"
-                                    size="large"
-                                />
-                            </Animated.View>
-                        )}
-                    </>
-                }
-                ItemSeparatorComponent={() => (
-                    <View style={{ height: 12 }} />
-                )}
-            />
-        );
-    };
+                </View>
+            ))}
+        </View>
+    );
+};
 
     // Followers Tab using FollowerCard
     // ================================
@@ -1567,7 +1551,56 @@ const UserProfileScreen: React.FC = () => {
     );
 
 
-    const renderScene = SceneMap({
+    // const renderScene = SceneMap({
+    //     profileInfo: renderProfileInfo,
+    //     bookings: renderBookings,
+    //     marketplace: renderMarketplace,
+    //     followers: renderFollowers,
+    //     following: renderFollowing,
+    //     invites: renderInvites,
+    //     activity: renderActivity,
+    // });
+
+
+    const renderTabBar = () => (
+    <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
+    >
+        <View className="flex-row">
+            {routes.map((route, idx) => (
+                <TouchableOpacity
+                    key={route.key}
+                    onPress={() => setIndex(idx)}
+                    className="px-4 py-3 mr-2"
+                    style={{
+                        borderBottomWidth: index === idx ? 4 : 0,
+                        borderBottomColor: colors.primary,
+                    }}
+                >
+                    <Typography
+                        variant="bold"
+                        size={13}
+                        style={{
+                            color: index === idx ? colors.primary : colors.text.secondary,
+                            textTransform: 'capitalize',
+                            letterSpacing: 0.2,
+                        }}
+                    >
+                        {route.title}
+                    </Typography>
+                </TouchableOpacity>
+            ))}
+        </View>
+    </ScrollView>
+);
+
+const [isTabsSticky, setIsTabsSticky] = useState(false);
+const scrollViewRef = useRef<ScrollView>(null);
+
+const renderScene = () => {
+    const scenes = {
         profileInfo: renderProfileInfo,
         bookings: renderBookings,
         marketplace: renderMarketplace,
@@ -1575,67 +1608,118 @@ const UserProfileScreen: React.FC = () => {
         following: renderFollowing,
         invites: renderInvites,
         activity: renderActivity,
-    });
+    };
+    
+    const currentRoute = routes[index];
+    return scenes[currentRoute.key as keyof typeof scenes]();
+};
 
 
-    const renderTabBar = (props: any) => (
-        <View className="">
-            <TabBar
-                {...props}
-                indicatorStyle={{ backgroundColor: colors.primary, height: 4, borderRadius: 0 }}
-                style={{ backgroundColor: 'transparent', elevation: 0, paddingTop: 0, paddingBottom: 0 }}
-                tabStyle={{ height: 50, justifyContent: 'center' }}
-                activeColor={colors.primary}
-                inactiveColor={colors.text.secondary}
-                scrollEnabled
-                renderLabel={({ route, focused, color }: any) => (
-                    <Animated.View style={[
-                        { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 },
-                        focused && { transform: [{ scale: 1.05 }] }
-                    ]}>
-                        <Typography
-                            variant="bold"
-                            size={13}
-                            style={{
-                                textTransform: 'capitalize',
-                                letterSpacing: 0.2,
-                                color: focused ? colors.primary : colors.text.secondary
-                            }}
-                        >
-                            {route.title}
-                        </Typography>
 
-                        {focused && (
-                            <LinearGradient
-                                colors={colors.gradient.primary}
-                                className="w-5 h-1 rounded-full mt-2"
-                            />
-                        )}
-                    </Animated.View>
-                )}
-            />
-        </View>
-    );
+const renderCurrentTab = () => {
+    const currentRoute = routes[index];
+    
+    const tabContent = (() => {
+        switch (currentRoute.key) {
+            case 'profileInfo':
+                return renderProfileInfo();
+            case 'bookings':
+                return renderBookings();
+            case 'marketplace':
+                return renderMarketplace();
+            case 'followers':
+                return renderFollowers();
+            case 'following':
+                return renderFollowing();
+            case 'invites':
+                return renderInvites();
+            case 'activity':
+                return renderActivity();
+            default:
+                return null;
+        }
+    })();
+
+    if (isTabsSticky) {
+        // When tabs are sticky, render with independent ScrollView
+        return (
+            <ScrollView 
+                className="flex-1"
+                showsVerticalScrollIndicator={false}
+                nestedScrollEnabled={true}
+            >
+                {tabContent}
+            </ScrollView>
+        );
+    } else {
+        // When not sticky, render as regular View (part of main scroll)
+        return <View>{tabContent}</View>;
+    }
+};
 
     return (
-        <View className="flex-1 bg-slate-100">
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                className="flex-1"
-            >
-
-                {/* Header */}
-                <Header title="Profile" withShadow={false}
-                    backgroundColor={colors.primary}
-
-                    leftIcon={{ name: 'chevron-left', onPress: navigation.goBack }}
-                    rightIcons={[
-                        { name: 'event', onPress: () => navigation.navigate('UserBookings') },
-                        { name: 'settings', onPress: () => navigation.navigate('UserSettings') },
-                    ]}
+    <View className="flex-1 bg-slate-100">
+        {/* Fixed Header */}
+        {/* Fixed Header */}
+{/* Fixed Header */}
+<Header 
+    title={!isTabsSticky ? 'Profile' : (currentUser?.name || 'Profile')}
+    withShadow={false}
+    backgroundColor={colors.primary}
+    fixed={true}
+    leftIcon={{ name: 'chevron-left', onPress: navigation.goBack }}
+    rightIcons={[
+        { name: 'event', onPress: () => navigation.navigate('UserBookings') },
+        { name: 'settings', onPress: () => navigation.navigate('UserSettings') },
+    ]}
+    customContent={isTabsSticky ? (
+        <View className="flex-row items-center justify-between px-4 h-14">
+            {/* Left Icon */}
+            <TouchableOpacity onPress={navigation.goBack} className="w-10 h-10 items-center justify-center">
+                <MaterialIcons name="chevron-left" size={24} color={colors.secondary} />
+            </TouchableOpacity>
+            
+            {/* Center Content - Profile */}
+            <View className="flex-1 flex-row items-center justify-center">
+                <Image
+                    source={{ uri: currentUser?.avatar || 'https://i.pravatar.cc/150?img=9' }}
+                    className="w-8 h-8 rounded-full mr-3"
                 />
+                <Typography 
+                    variant="bold" 
+                    size={18} 
+                    style={{ color: colors.secondary }}
+                    numberOfLines={1}
+                >
+                    {currentUser?.name || 'Profile'}
+                </Typography>
+            </View>
+            
+            {/* Right Icons */}
+            <View className="flex-row gap-2">
+                <TouchableOpacity onPress={() => navigation.navigate('UserBookings')} className="w-8 h-8 items-center justify-center">
+                    <MaterialIcons name="event" size={18} color={colors.secondary} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('UserSettings')} className="w-8 h-8 items-center justify-center">
+                    <MaterialIcons name="settings" size={18} color={colors.secondary} />
+                </TouchableOpacity>
+            </View>
+        </View>
+    ) : undefined}
+/>
 
-                {/* Profile Header view */}
+        {/* Scrollable Content */}
+        <ScrollView 
+            ref={scrollViewRef}
+            className="flex-1" 
+            showsVerticalScrollIndicator={false}
+            stickyHeaderIndices={[1]}
+            onScroll={({ nativeEvent }) => {
+                const offsetY = nativeEvent.contentOffset.y;
+                setIsTabsSticky(offsetY > 120); // Adjust threshold as needed
+            }}
+            scrollEventThrottle={16}
+        >
                 <View className="pt-4 pl-5 pr-5 pb-3 mb-1">
                     <View className="flex-row items-start">
                         <TouchableOpacity className="relative mr-4 mt-2 shadow-2xl" activeOpacity={0.8}>
@@ -1675,10 +1759,6 @@ const UserProfileScreen: React.FC = () => {
                             <Typography className="text-[11px] text-secondary/90 tracking-wide" variant="semibold" size={11}>Bookings</Typography>
                         </TouchableOpacity>
                         <TouchableOpacity className="items-center flex-1 border-white/40 pr-3">
-                            <Typography className="text-base text-secondary mb-0.5" variant="bold" size={16}>29.3K</Typography>
-                            <Typography className="text-[11px] text-secondary/90 tracking-wide" variant="semibold" size={11}>Followers</Typography>
-                        </TouchableOpacity>
-                        <TouchableOpacity className="items-center flex-1 border-white/40 pr-3">
                             <Typography className="text-base text-secondary mb-0.5" variant="bold" size={16}>340</Typography>
                             <Typography className="text-[11px] text-secondary/90 tracking-wide" variant="semibold" size={11}>Following</Typography>
                         </TouchableOpacity>
@@ -1688,19 +1768,18 @@ const UserProfileScreen: React.FC = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
+ 
+          {/* Sticky Tab Bar */}
+            <View className="bg-white">
+                {renderTabBar()}
+            </View>
 
-                {/* Tab View */}
-                <View className="flex-1 mt-0 bg-slate-50 rounded-t-lg">
-                    <TabView
-                        navigationState={{ index, routes }}
-                        renderScene={renderScene}
-                        onIndexChange={setIndex}
-                        initialLayout={initialLayout}
-                        renderTabBar={renderTabBar}
-                    />
-                </View>
-            </KeyboardAvoidingView>
-        </View>
-    );
+            {/* Dynamic Tab Content Container */}
+            <View style={{ minHeight: isTabsSticky ? 400 : 'auto' }}>
+                {renderCurrentTab()}
+            </View>
+        </ScrollView>
+    </View>
+);
 };
 export default UserProfileScreen; 
