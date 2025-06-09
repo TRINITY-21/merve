@@ -1759,12 +1759,16 @@ const renderCurrentTab = () => {
                             <Typography className="text-[11px] text-secondary/90 tracking-wide" variant="semibold" size={11}>Bookings</Typography>
                         </TouchableOpacity>
                         <TouchableOpacity className="items-center flex-1 border-white/40 pr-3">
-                            <Typography className="text-base text-secondary mb-0.5" variant="bold" size={16}>340</Typography>
-                            <Typography className="text-[11px] text-secondary/90 tracking-wide" variant="semibold" size={11}>Following</Typography>
+                            <Typography className="text-base text-secondary mb-0.5" variant="bold" size={16}>29.3K</Typography>
+                            <Typography className="text-[11px] text-secondary/90 tracking-wide" variant="semibold" size={11}>Agents Pinned</Typography>
+                        </TouchableOpacity>
+                        <TouchableOpacity className="items-center flex-1 border-white/40 pr-3">
+                          <MaterialIcons name="person-add-alt" size={Platform.OS === 'ios' ? 23 : 20} color={colors.secondary} />
+                            <Typography className="text-md text-secondary/90 tracking-wide" variant="semibold" size={11}>Invite</Typography>
                         </TouchableOpacity>
                         <TouchableOpacity className="items-center">
-                            <MaterialIcons name="person-add" size={Platform.OS === 'ios' ? 23 : 20} color={colors.secondary} />
-                            <Typography className="text-md text-secondary/90 tracking-wide" variant="semibold" size={11}>Invite</Typography>
+                            <MaterialIcons name="chat-bubble-outline" size={Platform.OS === 'ios' ? 23 : 20} color={colors.secondary} />
+                            <Typography className="text-md text-secondary/90 tracking-wide" variant="semibold" size={11}>Chat</Typography>
                         </TouchableOpacity>
                     </View>
                 </View>
