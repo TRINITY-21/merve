@@ -24,7 +24,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import Toast from 'react-native-toast-message';
-import { Typography } from '../../../components/common';
+import { Header, Typography } from '../../../components/common';
 import { colors } from '../../../constants/theme/colors';
 import useStore from '../../../store/useStore';
 import { IRoute, IUser } from '../../../types/userProfileTypes';
@@ -36,7 +36,6 @@ import { GradientButton } from './compnents/GradientButton';
 import { ProfessionalCard } from './compnents/ModernInput';
 import { PremiumUpgradeCard } from './compnents/PremiumCard';
 import { ProductCard } from './compnents/ProductCard';
-import { ProfileHeader } from './compnents/ProfileHeader';
 import { ProfessionalStatsCard } from './compnents/StatsCard';
 
 // Get screen dimensions
@@ -1578,15 +1577,16 @@ const UserProfileScreen: React.FC = () => {
         activity: renderActivity,
     });
 
+
     const renderTabBar = (props: any) => (
-        <View className="bg-white rounded-t-3xl shadow-2xl">
+        <View className="">
             <TabBar
                 {...props}
-                indicatorStyle={{ backgroundColor: colors.primary, height: 4, borderRadius: 2 }}
-                style={{ backgroundColor: 'transparent', elevation: 0, paddingTop: 16, paddingBottom: 6 }}
+                indicatorStyle={{ backgroundColor: colors.primary, height: 4, borderRadius: 0 }}
+                style={{ backgroundColor: 'transparent', elevation: 0, paddingTop: 0, paddingBottom: 0 }}
                 tabStyle={{ height: 50, justifyContent: 'center' }}
                 activeColor={colors.primary}
-                inactiveColor={colors.gray.medium}
+                inactiveColor={colors.text.secondary}
                 scrollEnabled
                 renderLabel={({ route, focused, color }: any) => (
                     <Animated.View style={[
@@ -1599,11 +1599,12 @@ const UserProfileScreen: React.FC = () => {
                             style={{
                                 textTransform: 'capitalize',
                                 letterSpacing: 0.2,
-                                color
+                                color: focused ? colors.primary : colors.text.secondary
                             }}
                         >
                             {route.title}
                         </Typography>
+
                         {focused && (
                             <LinearGradient
                                 colors={colors.gradient.primary}
@@ -1617,22 +1618,76 @@ const UserProfileScreen: React.FC = () => {
     );
 
     return (
-        <View className="flex-1">
+        <View className="flex-1 bg-slate-100">
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 className="flex-1"
             >
-                {/* Using ProfileHeader component */}
-                <ProfileHeader
-                    user={{
-                        name: currentUser?.name || 'Alex Johnson',
-                        avatar: currentUser?.avatar || 'https://i.pravatar.cc/150?img=9'
-                    }}
-                    onBack={() => navigation.goBack()}
-                    onSettings={() => navigation.navigate('UserSettings' as never)}
-                    onBookings={() => navigation.navigate('UserBookings' as never)}
-                    bookingsCount={10}
+
+                {/* Header */}
+                <Header title="Profile" withShadow={false}
+                    backgroundColor={colors.primary}
+
+                    leftIcon={{ name: 'chevron-left', onPress: navigation.goBack }}
+                    rightIcons={[
+                        { name: 'event', onPress: () => navigation.navigate('UserBookings') },
+                        { name: 'settings', onPress: () => navigation.navigate('UserSettings') },
+                    ]}
                 />
+
+                {/* Profile Header view */}
+                <View className="pt-4 pl-5 pr-5 pb-3 mb-1">
+                    <View className="flex-row items-start">
+                        <TouchableOpacity className="relative mr-4 mt-2 shadow-2xl" activeOpacity={0.8}>
+                            <Image
+                                source={{ uri: currentUser?.avatar || 'https://i.pravatar.cc/150?img=9' }}
+                                className="w-20 h-20 rounded-2xl border-2 border-white"
+                            />
+                            <View className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-white shadow-lg" />
+                            <TouchableOpacity
+                                className="absolute -top-2 -right-2 w-6 h-6 rounded-xl bg-white items-center justify-center border-2 border-white shadow-lg"
+                                activeOpacity={0.8}
+                            >
+                                <MaterialIcons name="verified" size={14} color={colors.primary} />
+                            </TouchableOpacity>
+                        </TouchableOpacity>
+
+                        <View className="flex-1 pr-3 pt-1">
+                            <View className="flex-row items-center mb-1">
+                                <Typography className="text-lg text-secondary tracking-wide mr-2" variant="bold" size={18}>
+                                    {currentUser?.name}
+                                </Typography>
+                                <View className="bg-accent/10 px-2 py-0.5 rounded-lg">
+                                    <Typography className="text-[10px] text-accent" variant="bold" size={10}>PRO</Typography>
+                                </View>
+                            </View>
+                            <Typography className="text-sm text-secondary/80 mb-1" variant="medium" size={14}>Mobile Money User</Typography>
+                            <View className="flex-row items-center">
+                                <MaterialIcons name="location-on" size={14} color={colors.secondary} style={{ opacity: 0.7 }} />
+                                <Typography className="text-xs text-secondary/70 ml-1" variant="medium" size={12}>Accra, Ghana</Typography>
+                            </View>
+                        </View>
+                    </View>
+
+                    <View className="mt-4 flex-row justify-between bg-white/10 backdrop-blur-md rounded-2xl px-4 py-2.5 mb-1 border-2 border-white/50">
+                        <TouchableOpacity className="items-center flex-1 border-white/40 pr-3">
+                            <Typography className="text-base text-secondary mb-0.5" variant="bold" size={16}>{23}</Typography>
+                            <Typography className="text-[11px] text-secondary/90 tracking-wide" variant="semibold" size={11}>Bookings</Typography>
+                        </TouchableOpacity>
+                        <TouchableOpacity className="items-center flex-1 border-white/40 pr-3">
+                            <Typography className="text-base text-secondary mb-0.5" variant="bold" size={16}>29.3K</Typography>
+                            <Typography className="text-[11px] text-secondary/90 tracking-wide" variant="semibold" size={11}>Followers</Typography>
+                        </TouchableOpacity>
+                        <TouchableOpacity className="items-center flex-1 border-white/40 pr-3">
+                            <Typography className="text-base text-secondary mb-0.5" variant="bold" size={16}>340</Typography>
+                            <Typography className="text-[11px] text-secondary/90 tracking-wide" variant="semibold" size={11}>Following</Typography>
+                        </TouchableOpacity>
+                        <TouchableOpacity className="items-center">
+                            <MaterialIcons name="person-add" size={Platform.OS === 'ios' ? 23 : 20} color={colors.secondary} />
+                            <Typography className="text-md text-secondary/90 tracking-wide" variant="semibold" size={11}>Invite</Typography>
+                        </TouchableOpacity>
+                    </View>
+                </View>
 
                 {/* Tab View */}
                 <View className="flex-1 mt-0 bg-slate-50 rounded-t-lg">
@@ -1648,5 +1703,4 @@ const UserProfileScreen: React.FC = () => {
         </View>
     );
 };
-
 export default UserProfileScreen; 

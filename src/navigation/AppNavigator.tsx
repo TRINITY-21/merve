@@ -217,10 +217,10 @@ const TabIcon: React.FC<TabIconProps> = ({
       name={name} 
       size={20} 
       color={color} 
-      style={{
-        opacity: focused ? 1 : 0.7,
-        transform: [{ scale: focused ? 1.1 : 1 }]
-      }}
+    style={{
+  opacity: focused ? 1 : 0.9, // Changed from 0.7 to 0.6 for better contrast
+  transform: [{ scale: focused ? 1.1 : 1 }]
+}}
     />
     
     {/* Notification Badge */}
@@ -389,37 +389,36 @@ const AppNavigator: React.FC = () => {
 
   return (
     <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: '#FFCC00', // App's primary color
-        tabBarInactiveTintColor: '#8E8E93', // App's secondary color
-        tabBarShowLabel: false,
-        tabBarItemStyle: {
-          minWidth: 56,
-          maxWidth: 72,
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
-        tabBarStyle: {
-          height: Platform.OS === 'ios' ? 84 : 74,
-          paddingBottom: Platform.OS === 'ios' ? 20 : 12,
-          paddingTop: 8,
-          paddingHorizontal: 16,
-          backgroundColor: '#FFFFFF',
-          borderTopWidth: 0,
-          // elevation: 20,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -4 },
-          shadowOpacity: 0.1,
-          shadowRadius: 12,
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          // borderTopLeftRadius: 20,
-          // borderTopRightRadius: 20,
-        },
-        headerShown: false,
-      }}
+    screenOptions={{
+  tabBarActiveTintColor: colors.primary, // Active teal
+  tabBarInactiveTintColor: colors.primary + '60', // Light teal (60% opacity)
+  tabBarShowLabel: false,
+  tabBarItemStyle: {
+    minWidth: 56,
+    maxWidth: 72,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tabBarStyle: {
+    height: Platform.OS === 'ios' ? 84 : 74,
+    paddingBottom: Platform.OS === 'ios' ? 20 : 12,
+    paddingTop: 8,
+    paddingHorizontal: 16,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 8,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  headerShown: false,
+}}
     >
       <Tab.Screen
         name="Map"
@@ -428,7 +427,7 @@ const AppNavigator: React.FC = () => {
           tabBarIcon: ({ color, focused }) => (
             <TabIcon 
               name="location-on" 
-              color={focused ? colors.primary : '#8E8E93'} 
+color={focused ? colors.primary : colors.primary + '60'}
               focused={focused} 
               label="Map" 
             />
@@ -443,7 +442,7 @@ const AppNavigator: React.FC = () => {
           tabBarIcon: ({ color, focused }) => (
             <TabIcon 
               name="shop" 
-              color={focused ? colors.primary : '#8E8E93'} 
+color={focused ? colors.primary : colors.primary + '60'}
               focused={focused} 
               label="Shop" 
             />
@@ -458,7 +457,7 @@ const AppNavigator: React.FC = () => {
           tabBarIcon: ({ color, focused }) => (
             <TabIcon 
               name="person-search" 
-              color={focused ? colors.primary : '#8E8E93'} 
+color={focused ? colors.primary : colors.primary + '60'}
               focused={focused} 
               label="Agents" 
             />
@@ -473,7 +472,7 @@ const AppNavigator: React.FC = () => {
           tabBarIcon: ({ color, focused }) => (
             <TabIcon 
               name="group" 
-              color={focused ? colors.primary : '#8E8E93'} 
+color={focused ? colors.primary : colors.primary + '60'}
               focused={focused} 
               label="Search" 
             />
@@ -488,7 +487,7 @@ const AppNavigator: React.FC = () => {
           tabBarIcon: ({ color, focused }) => (
             <TabIcon 
               name="storefront" 
-              color={focused ? colors.primary : '#8E8E93'} 
+color={focused ? colors.primary : colors.primary + '60'}
               focused={focused} 
               label="Agent" 
             />
@@ -503,7 +502,7 @@ const AppNavigator: React.FC = () => {
           tabBarIcon: ({ color, focused }) => (
             <TabIcon 
               name="notifications" 
-              color={focused ? colors.primary : '#8E8E93'} 
+color={focused ? colors.primary : colors.primary + '60'}
               focused={focused} 
               label="Notification"
               showBadge={true}

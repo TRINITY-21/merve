@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
-import { StatusBar, View } from 'react-native';
+import { View } from 'react-native';
 
 
 import { ErrorBoundary } from '../components/common/ErrorBoundary';
@@ -57,11 +57,7 @@ const RootNavigator: React.FC = () => {
   if (isAuthenticated) {
     return (
       <>
-        <StatusBar
-          barStyle="dark-content"
-          backgroundColor="white"
-          translucent={false}
-        />
+       
         {/* <SafeAreaView className="flex-1 bg-gray-50"> */}
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen

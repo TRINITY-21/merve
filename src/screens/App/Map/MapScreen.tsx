@@ -9,6 +9,7 @@ import {
     FlatList,
     Platform,
     Animated as RNAnimated,
+    StatusBar,
     StyleSheet,
     View
 } from 'react-native';
@@ -218,6 +219,12 @@ const MapScreen: React.FC = () => {
 
     return ( 
         <View className="flex-1">
+
+             <StatusBar
+          barStyle="dark-content"
+          backgroundColor="transparent"
+          translucent={false}
+        />
             <MapView
                 ref={mapRef}
                 style={styles.map}

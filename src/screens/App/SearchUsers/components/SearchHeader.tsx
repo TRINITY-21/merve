@@ -3,14 +3,15 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useRef } from 'react';
 import {
-    Animated,
-    Platform,
-    StatusBar,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Animated,
+  Platform,
+  StatusBar,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
+import { colors } from '../../../../constants/theme/colors';
 import { ISearchHeaderProps } from '../../../../types/searchUsersTypes';
 
 const SearchHeader: React.FC<ISearchHeaderProps> = ({
@@ -38,9 +39,9 @@ const SearchHeader: React.FC<ISearchHeaderProps> = ({
     <View className="shadow-lg z-10">
       <LinearGradient 
         colors={['#FFCC00', '#FFB300']} 
-        className={`${Platform.OS === 'ios' ? 'pt-12' : 'pt-2.5'} pb-5`}
+        className={`${Platform.OS === 'ios' ? 'pt-12' : 'pt-0'} pb-5`}
       >
-        <StatusBar barStyle="dark-content" backgroundColor="#FFCC00" />
+        <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
         
         <View className="px-5">
           <View className="flex-row items-center justify-between mb-5">
