@@ -103,13 +103,15 @@ AgentRegistration: undefined;
 
 export type ShopStackParamList = {
   ShopHome: undefined;
-  ProductDetails: undefined;
-  FavoriteProducts: undefined;
+
   PromoteProduct: undefined;
   Reviews: undefined;
   Vendor: undefined;
   Invitations: undefined;
   AgentRegistration: undefined;
+    ProductDetails: { productId: string }; // Add the param
+  FavoriteProducts: { productId: string }; // Add the param
+  FavoritesScreen: undefined; // Add this route
 };
 
 export type ProfileStackParamList = {
@@ -324,13 +326,11 @@ const ShopStackNavigator: React.FC = () => (
     <ShopStack.Screen name="ShopHome" component={MarketplaceScreen} />
     <ShopStack.Screen name="ProductDetails" component={ProductDetailsScreen} />
     <ShopStack.Screen name="FavoriteProducts" component={FavoriteProductsScreen} />
+    <ShopStack.Screen name="FavoritesScreen" component={FavoriteProductsScreen} />
     <ShopStack.Screen name="PromoteProduct" component={PromoteProductScreen} />
     <ShopStack.Screen name="Reviews" component={ReviewsScreen} />
     <ShopStack.Screen name="Invitations" component={InvitationScreen} />
     <ShopStack.Screen name="AgentRegistration" component={AgentRegistrationScreen} />
-
-
-
   </ShopStack.Navigator>
 );
 

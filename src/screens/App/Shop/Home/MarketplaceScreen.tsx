@@ -1,24 +1,25 @@
 // screens/MarketplaceScreen.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { Component, ErrorInfo, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
-  FlatList,
   Keyboard,
   RefreshControl,
+  ScrollView,
   StatusBar,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native';
+import { Typography } from '../../../../components/common';
 import { Header } from '../../../../components/common/Header';
 import { colors } from '../../../../constants/theme/colors';
-import { ISortOption } from '../../../../types/agentProductTypes';
-import { ICategory, IGhanaLocation, IMarketplaceScreenProps, IProduct, ISelectedFilters, SortBy, ViewMode } from '../../../../types/marketplaceTypes';
+import { ShopStackScreenProps } from '../../../../navigation/AppNavigator';
+import { ICategory, IMarketplaceScreenProps, IProduct, ISelectedFilters, SortBy, ViewMode } from '../../../../types/marketplaceTypes';
+import { ghanaLocations, products, sortOptions } from '../../../../utils/productDetailsDummyData';
 import { CategoriesSection, FiltersPanel, LocationModal, MarketplaceToolbar, ProductCard, SortModal } from './components/home';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -30,7 +31,7 @@ type RootStackParamList = {
   FavoritesScreen: undefined;
 };
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type NavigationProp = ShopStackScreenProps<'ShopHome'>['navigation'];
 
 // Custom Error Boundary Component
 class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; error: Error | null }> {
@@ -91,7 +92,6 @@ const ProductSkeleton = () => (
 );
 
 const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
-  const navigation = useNavigation<NavigationProp>();
   
   // State management
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -114,6 +114,9 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
     ratings: 0,
   });
   const [error, setError] = useState<string | null>(null);
+const [isToolbarSticky, setIsToolbarSticky] = useState(false);
+const scrollViewRef = useRef<ScrollView>(null);
+const navigation = useNavigation<NavigationProp>();
 
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -133,192 +136,6 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
     { key: 'essentials', label: 'Essentials', icon: 'shopping-bag', count: 345 },
   ];
 
-  const products: IProduct[] = [
-    {
-      id: 'p1',
-      title: 'MTN Airtime - GHS 10',
-      price: 10.00,
-      originalPrice: 12.00,
-      image: 'https://picsum.photos/300/300?random=1',
-      category: 'airtime',
-      agent: {
-        name: 'Alex Mobile Hub',
-        distance: 0.8,
-        rating: 4.8,
-        verified: true,
-        location: 'Madina, Accra'
-      },
-      inStock: true,
-      stockCount: 50,
-      discount: 17,
-      isPromoted: true,
-      tags: ['instant', 'popular'],
-      rating: 4.9,
-      reviews: 234,
-      lastUpdated: '2 mins ago'
-    },
-    {
-      id: 'p2',
-      title: 'iPhone 13 Pro - Unlocked',
-      price: 4500.00,
-      image: 'https://picsum.photos/300/300?random=2',
-      category: 'phones',
-      agent: {
-        name: 'Tech World GH',
-        distance: 1.2,
-        rating: 4.9,
-        verified: true,
-        location: 'East Legon, Accra'
-      },
-      inStock: true,
-      stockCount: 3,
-      isPromoted: false,
-      tags: ['premium', 'warranty'],
-      rating: 4.8,
-      reviews: 89,
-      lastUpdated: '1 hour ago'
-    },
-    {
-      id: 'p3',
-      title: 'AirPods Pro (2nd Gen)',
-      price: 1200.00,
-      originalPrice: 1400.00,
-      image: 'https://picsum.photos/300/300?random=3',
-      category: 'accessories',
-      agent: {
-        name: 'Premium Electronics',
-        distance: 2.1,
-        rating: 4.7,
-        verified: true,
-        location: 'Osu, Accra'
-      },
-      inStock: true,
-      stockCount: 8,
-      discount: 14,
-      isPromoted: true,
-      tags: ['trending', 'authentic'],
-      rating: 4.6,
-      reviews: 156,
-      lastUpdated: '3 hours ago'
-    },
-    {
-      id: 'p4',
-      title: 'Vodafone SIM Card',
-      price: 5.00,
-      image: 'https://picsum.photos/300/300?random=4',
-      category: 'sim',
-      agent: {
-        name: 'Connect Point',
-        distance: 0.5,
-        rating: 4.5,
-        verified: false,
-        location: 'Tema, Accra'
-      },
-      inStock: true,
-      stockCount: 25,
-      isPromoted: false,
-      tags: ['new', 'activated'],
-      rating: 4.4,
-      reviews: 67,
-      lastUpdated: '5 hours ago'
-    },
-    {
-      id: 'p5',
-      title: 'Samsung Galaxy Buds2',
-      price: 450.00,
-      originalPrice: 520.00,
-      image: 'https://picsum.photos/300/300?random=5',
-      category: 'accessories',
-      agent: {
-        name: 'Sound Heaven',
-        distance: 1.8,
-        rating: 4.6,
-        verified: true,
-        location: 'Kumasi, Ashanti'
-      },
-      inStock: false,
-      stockCount: 0,
-      discount: 13,
-      isPromoted: false,
-      tags: ['quality', 'warranty'],
-      rating: 4.3,
-      reviews: 91,
-      lastUpdated: '1 day ago'
-    },
-    {
-      id: 'p6',
-      title: 'Power Bank 20000mAh',
-      price: 120.00,
-      image: 'https://picsum.photos/300/300?random=6',
-      category: 'essentials',
-      agent: {
-        name: 'Power Solutions',
-        distance: 0.9,
-        rating: 4.4,
-        verified: true,
-        location: 'Adabraka, Accra'
-      },
-      inStock: true,
-      stockCount: 15,
-      isPromoted: false,
-      tags: ['essential', 'fast-charge'],
-      rating: 4.2,
-      reviews: 203,
-      lastUpdated: '6 hours ago'
-    }
-  ];
-
-  const sortOptions: ISortOption[] = [
-    { key: 'relevance', label: 'Most Relevant', icon: 'star' },
-    { key: 'distance', label: 'Nearest First', icon: 'location-on' },
-    { key: 'price_low', label: 'Price: Low to High', icon: 'trending-up' },
-    { key: 'price_high', label: 'Price: High to Low', icon: 'trending-down' },
-    { key: 'rating', label: 'Highest Rated', icon: 'grade' },
-    { key: 'newest', label: 'Recently Added', icon: 'schedule' },
-  ];
-
-  const ghanaLocations: IGhanaLocation[] = [
-    {
-      region: 'Greater Accra',
-      cities: ['Accra', 'Tema', 'Madina', 'East Legon', 'Osu', 'Adabraka', 'Dansoman', 'Kasoa']
-    },
-    {
-      region: 'Ashanti',
-      cities: ['Kumasi', 'Obuasi', 'Ejisu', 'Mampong', 'Konongo']
-    },
-    {
-      region: 'Western',
-      cities: ['Takoradi', 'Tarkwa', 'Axim', 'Half Assini']
-    },
-    {
-      region: 'Central',
-      cities: ['Cape Coast', 'Elmina', 'Winneba', 'Kasoa']
-    },
-    {
-      region: 'Eastern',
-      cities: ['Koforidua', 'Akosombo', 'Nkawkaw', 'Mpraeso']
-    },
-    {
-      region: 'Northern',
-      cities: ['Tamale', 'Yendi', 'Savelugu', 'Tolon']
-    },
-    {
-      region: 'Volta',
-      cities: ['Ho', 'Keta', 'Hohoe', 'Kpando']
-    },
-    {
-      region: 'Upper East',
-      cities: ['Bolgatanga', 'Navrongo', 'Bawku']
-    },
-    {
-      region: 'Upper West',
-      cities: ['Wa', 'Tumu', 'Lawra']
-    },
-    {
-      region: 'Brong-Ahafo',
-      cities: ['Sunyani', 'Techiman', 'Berekum', 'Dormaa Ahenkro']
-    }
-  ];
 
   useEffect(() => {
     // Initial animations
@@ -456,14 +273,16 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
     }
   }, [searchQuery, selectedCategory, selectedFilters, priceRange, sortBy]);
 
-  const handleProductPress = useCallback((productId: string) => {
-    navigation.navigate('ProductDetails', { productId });
-  }, [navigation]);
 
-  const handleFavoritePress = useCallback((productId: string) => {
-    navigation.navigate('FavoriteProducts', { productId });
-  }, [navigation]);
+const handleProductPress = useCallback((productId: string) => {
+  // Since ProductDetails expects no params in ShopStackParamList
+  navigation.navigate('ProductDetails');
+}, [navigation]);
 
+const handleFavoritePress = useCallback((productId: string) => {
+  // Since FavoriteProducts expects no params
+  navigation.navigate('FavoriteProducts');
+}, [navigation]);
   const handleSharePress = useCallback((productId: string) => {
     // Implement share functionality
     console.log('Share pressed for product:', productId);
@@ -520,29 +339,67 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
     return (
       <View className="flex-1 bg-background p-4">
         <Header
-          title="Marketplace"
-          leftIcon={{
-            name: 'arrow-back',
-            onPress: () => navigation.goBack(),
-            color: colors.secondary
-          }}
-          rightIcons={[
-            {
-              name: 'favorite-border',
-              onPress: () => navigation.navigate('FavoritesScreen'),
-              color: colors.secondary
-            },
-            {
-              name: 'grid-view',
-              onPress: () => {},
-              color: colors.secondary
-            } 
-          ]}
-          animatedValue={scaleAnim}
-          backgroundColor={colors.background}
-          titleColor={colors.secondary}
-          iconBackgroundColor={colors.accent + '20'}
-        />
+  title={!isToolbarSticky ? "Marketplace" : `${filteredProducts.length} Products`}
+  leftIcon={{
+    name: 'arrow-back',
+    onPress: () => navigation.goBack(),
+    color: colors.secondary
+  }}
+  rightIcons={[
+    {
+      name: 'favorite-border',
+      onPress: () => navigation.navigate('FavoritesScreen'),
+      color: colors.secondary
+    },
+    {
+      name: showMap ? 'grid-view' : 'map',
+      onPress: () => setShowMap(!showMap),
+      color: colors.secondary
+    }
+  ]}
+  fixed={true}
+  titleColor={colors.secondary}
+  iconBackgroundColor={colors.accent + '20'}
+  customContent={isToolbarSticky ? (
+    <View className="flex-row items-center justify-between px-4 h-14">
+      {/* Left Icon */}
+      <TouchableOpacity onPress={() => navigation.goBack()} className="w-10 h-10 items-center justify-center">
+        <MaterialIcons name="arrow-back" size={24} color={colors.secondary} />
+      </TouchableOpacity>
+
+      {/* Center Content - Search results */}
+      <View className="flex-1 items-center">
+        <Typography
+          variant="bold"
+          size={16}
+          style={{ color: colors.secondary }}
+          numberOfLines={1}
+        >
+          {filteredProducts.length} Products Found
+        </Typography>
+        {selectedCategory !== 'all' && (
+          <Typography
+            variant="medium"
+            size={12}
+            style={{ color: colors.secondary, opacity: 0.7 }}
+          >
+            in {categories.find(c => c.key === selectedCategory)?.label}
+          </Typography>
+        )}
+      </View>
+
+      {/* Right Icons */}
+      <View className="flex-row gap-2">
+        <TouchableOpacity onPress={() => navigation.navigate('FavoritesScreen')} className="w-8 h-8 items-center justify-center">
+          <MaterialIcons name="favorite-border" size={18} color={colors.secondary} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setShowMap(!showMap)} className="w-8 h-8 items-center justify-center">
+          <MaterialIcons name={showMap ? 'grid-view' : 'map'} size={18} color={colors.secondary} />
+        </TouchableOpacity>
+      </View>
+    </View>
+  ) : undefined}
+/>
         <View className="flex-row flex-wrap justify-between mt-4">
           {[1, 2, 3, 4,5,6,7,8,9,10].map((i) => (
             <ProductSkeleton key={i} />
@@ -552,10 +409,67 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
     );
   }
 
+
+ 
+  const renderProductContent = () => {
+  if (showMap) {
+    return <MapView />;
+  }
+
+  if (filteredProducts.length === 0) {
+    return <EmptyState />;
+  }
+
+  return (
+    <View style={{ padding: viewMode === 'grid' ? 0 : 20, paddingBottom: 100 }}>
+      {viewMode === 'grid' ? (
+        <View 
+          style={{ 
+            flexDirection: 'row', 
+            flexWrap: 'wrap', 
+            justifyContent: 'space-between',
+            paddingHorizontal: 20,
+            gap: 12
+          }}
+        >
+          {filteredProducts.map((item, index) => {
+            const cardWidth = (screenWidth - 52) / 2;
+            return (
+              <ProductCard
+                key={`${item.id}-${viewMode}-${index}`} // Unique key for view mode
+                product={item}
+                viewMode={viewMode}
+                cardWidth={cardWidth}
+                onPress={handleProductPress}
+                onFavoritePress={handleFavoritePress}
+                onSharePress={handleSharePress}
+              />
+            );
+          })}
+        </View>
+      ) : (
+        <View>
+          {filteredProducts.map((item, index) => (
+            <ProductCard
+              key={`${item.id}-${viewMode}-${index}`} // Unique key for view mode
+              product={item}
+              viewMode={viewMode}
+              onPress={handleProductPress}
+              onFavoritePress={handleFavoritePress}
+              onSharePress={handleSharePress}
+            />
+          ))}
+        </View>
+      )}
+    </View>
+  );
+};
+
+
   return (
     <ErrorBoundary>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View className="flex-1 bg-background">
+        <View className="flex-1 bg-background" style={{ backgroundColor: colors.background }}>
           <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
           
           <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
@@ -578,69 +492,90 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
                   color: colors.secondary
                 }
               ]}
-              animatedValue={scaleAnim}
-              backgroundColor={colors.background}
               titleColor={colors.secondary}
               iconBackgroundColor={colors.accent + '20'}
             />
           </Animated.View>
           
-          <CategoriesSection
-            categories={categories}
-            selectedCategory={selectedCategory}
-            onCategorySelect={setSelectedCategory}
-          />
-          
-          <MarketplaceToolbar
-            resultCount={filteredProducts.length}
-            viewMode={viewMode}
-            onSortPress={() => setShowSortModal(true)}
-            onFilterPress={toggleFilters}
-            onViewModeChange={handleViewModeChange}
-          />
-          
-          <View className="flex-1">
-            {showMap ? (
-              <MapView />
-            ) : (
-              <FlatList
-                key={viewMode}
-                data={filteredProducts}
-                renderItem={renderProductItem}
-                keyExtractor={(item) => item.id}
-                numColumns={viewMode === 'grid' ? 2 : 1}
-                columnWrapperStyle={viewMode === 'grid' ? { 
-                  justifyContent: 'space-between',
-                  paddingHorizontal: 20,
-                  gap: 12
-                } : undefined}
-                contentContainerStyle={{ 
-                  padding: viewMode === 'grid' ? 0 : 20,
-                  paddingBottom: 100 
-                }}
-                showsVerticalScrollIndicator={false}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={handleRefresh}
-                    colors={[colors.accent]}
-                    tintColor={colors.accent}
-                  />
-                }
-                ListEmptyComponent={EmptyState}
-                onEndReachedThreshold={0.5}
-                onEndReached={() => {
-                  // Implement infinite scroll
-                  console.log('Load more products');
-                }}
-                removeClippedSubviews={false}
-                initialNumToRender={10}
-                maxToRenderPerBatch={10}
-                windowSize={5}
-              />
-            )}
-          </View>
+{/* Replace the existing content structure with this: */}
+<ScrollView
+  ref={scrollViewRef}
+  className="flex-1"
+  showsVerticalScrollIndicator={false}
+  stickyHeaderIndices={[1]}
+  onScroll={({ nativeEvent }) => {
+    const offsetY = nativeEvent.contentOffset.y;
+    setIsToolbarSticky(offsetY > 80);
+  }}
+  scrollEventThrottle={16}
+  refreshControl={
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={handleRefresh}
+      colors={[colors.accent]}
+      tintColor={colors.accent}
+    />
+  }
+>
+  <CategoriesSection
+    categories={categories}
+    selectedCategory={selectedCategory}
+    onCategorySelect={setSelectedCategory}
+  />
+  
+  <View className="bg-white">
+    <MarketplaceToolbar
+      resultCount={filteredProducts.length}
+      viewMode={viewMode}
+      onSortPress={() => setShowSortModal(true)}
+      onFilterPress={toggleFilters}
+      onViewModeChange={handleViewModeChange}
+    />
+  </View>
 
+  {/* Simple product rendering - no conditional ScrollViews */}
+  <View style={{ padding: viewMode === 'grid' ? 0 : 20, paddingBottom: 100 }}>
+    {showMap ? (
+      <MapView />
+    ) : filteredProducts.length === 0 ? (
+      <EmptyState />
+    ) : viewMode === 'grid' ? (
+      <View 
+        style={{ 
+          flexDirection: 'row', 
+          flexWrap: 'wrap', 
+          justifyContent: 'space-between',
+          paddingHorizontal: 20,
+          gap: 12
+        }}
+      >
+        {filteredProducts.map((item) => (
+          <ProductCard
+            key={item.id}
+            product={item}
+            viewMode={viewMode}
+            cardWidth={(screenWidth - 52) / 2}
+            onPress={handleProductPress}
+            onFavoritePress={handleFavoritePress}
+            onSharePress={handleSharePress}
+          />
+        ))}
+      </View>
+    ) : (
+      filteredProducts.map((item) => (
+        <ProductCard
+          key={item.id}
+          product={item}
+          viewMode={viewMode}
+          onPress={handleProductPress}
+          onFavoritePress={handleFavoritePress}
+          onSharePress={handleSharePress}
+        />
+      ))
+    )}
+  </View>
+</ScrollView>       
+      
           <SortModal
             visible={showSortModal}
             sortOptions={sortOptions}
