@@ -144,7 +144,7 @@ const ProductCard: React.FC<IProductCardProps> = ({
       className="bg-white rounded-xl mb-4 shadow-md overflow-hidden"
       style={{ width: cardWidth }}
     >
-      <TouchableOpacity
+      <TouchableOpacity 
         className="flex-1"
         onPress={() => onPress(product.id)}
         activeOpacity={0.9}

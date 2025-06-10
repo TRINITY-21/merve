@@ -1,7 +1,7 @@
 // screens/MarketplaceScreen.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import React, { Component, ErrorInfo, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import React, { Component, ErrorInfo, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
@@ -20,6 +20,7 @@ import { ShopStackScreenProps } from '../../../../navigation/AppNavigator';
 import { ICategory, IMarketplaceScreenProps, IProduct, ISelectedFilters, SortBy, ViewMode } from '../../../../types/marketplaceTypes';
 import { ghanaLocations, products, sortOptions } from '../../../../utils/productDetailsDummyData';
 import { CategoriesSection, FiltersPanel, LocationModal, MarketplaceToolbar, ProductCard, SortModal } from './components/home';
+import MarketplaceSkeleton from './components/home/MarketPlaceSkeleton';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -72,24 +73,6 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
   }
 }
 
-// Temporary Skeleton component until the real one is implemented
-const Skeleton = ({ className }: { className: string }) => (
-    <View className={`bg-gray-200 animate-pulse ${className}`} />
-);
-
-// Loading skeleton component for grid view
-const ProductGridSkeleton = () => (
-    <View className="flex-1 max-w-[48%] bg-white rounded-3xl mb-4 shadow-md overflow-hidden p-3">
-        <Skeleton className="w-full h-32 rounded-2xl mb-3" />
-        <Skeleton className="w-3/4 h-5 rounded-lg mb-2" />
-        <Skeleton className="w-1/2 h-4 rounded-lg mb-3" />
-        <View className="flex-row justify-between">
-            <Skeleton className="w-1/3 h-4 rounded-lg" />
-            <Skeleton className="w-1/4 h-4 rounded-lg" />
-        </View>
-    </View>
-);
-
 
 const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
 
@@ -115,7 +98,19 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
   });
   const [error, setError] = useState<string | null>(null);
   const [isToolbarSticky, setIsToolbarSticky] = useState(false);
+  const [categoriesSectionHeight, setCategoriesSectionHeight] = useState(0);
   const navigation = useNavigation<NavigationProp>();
+
+
+  const flatListRef = useRef<FlatList>(null);
+  const [preservedScrollY, setPreservedScrollY] = useState(0);
+
+  // Update handleScroll to preserve scroll position
+  const handleScroll = useCallback((event: any) => {
+    const scrollY = event.nativeEvent.contentOffset.y;
+    setPreservedScrollY(scrollY);
+    setIsToolbarSticky(scrollY >= categoriesSectionHeight);
+  }, [categoriesSectionHeight]);
 
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -137,9 +132,9 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
   useEffect(() => {
     // Initial animations
     Animated.parallel([
-        Animated.timing(fadeAnim, { toValue: 1, duration: 800, useNativeDriver: true }),
-        Animated.spring(slideAnim, { toValue: 0, tension: 20, friction: 7, useNativeDriver: true }),
-        Animated.spring(scaleAnim, { toValue: 1, tension: 25, friction: 8, useNativeDriver: true }),
+      Animated.timing(fadeAnim, { toValue: 1, duration: 800, useNativeDriver: true }),
+      Animated.spring(slideAnim, { toValue: 0, tension: 20, friction: 7, useNativeDriver: true }),
+      Animated.spring(scaleAnim, { toValue: 1, tension: 25, friction: 8, useNativeDriver: true }),
     ]).start();
 
     const timer = setTimeout(() => setIsLoading(false), 1500);
@@ -156,7 +151,7 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
     const toValue = showLocationModal ? screenHeight : 0;
     if (!showLocationModal) setShowLocationModal(true);
     Animated.timing(locationSlideAnim, { toValue, duration: 300, useNativeDriver: true, }).start(() => {
-        if (showLocationModal) setShowLocationModal(false);
+      if (showLocationModal) setShowLocationModal(false);
     });
   }, [showLocationModal, locationSlideAnim]);
 
@@ -164,28 +159,34 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
     const toValue = showFilters ? screenHeight : 0;
     if (!showFilters) setShowFilters(true);
     Animated.timing(filterSlideAnim, { toValue, duration: 300, useNativeDriver: true }).start(() => {
-        if (showFilters) setShowFilters(false);
+      if (showFilters) setShowFilters(false);
     });
   }, [showFilters, filterSlideAnim]);
 
-  const filteredProducts = useCallback((): IProduct[] => {
+  const filteredProducts = useMemo((): IProduct[] => {
     try {
-      let filtered = products;
-      // Apply filtering and sorting logic here...
+      let filtered = products.filter(p => {
+        const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
+        const matchesPrice = p.price >= priceRange[0] && p.price <= priceRange[1];
+        return matchesCategory && matchesPrice;
+      });
+
+      // Add actual filtering logic here...
       return filtered;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred while filtering products');
+      setError(err instanceof Error ? err.message : 'Filtering error');
       return [];
     }
-  }, [searchQuery, selectedCategory, selectedFilters, priceRange, sortBy])();
+  }, [searchQuery, selectedCategory, selectedFilters, priceRange, sortBy]);
 
 
-  const handleProductPress = useCallback((productId: string) => navigation.navigate('ProductDetails'), [navigation]);
-  const handleFavoritePress = useCallback((productId: string) => navigation.navigate('FavoriteProducts'), [navigation]);
+
+  const handleProductPress = useCallback((productId: string) => navigation.navigate('ProductDetails', { productId }), [navigation]);
+  const handleFavoritePress = useCallback((productId: string) => navigation.navigate('FavoriteProducts', { productId }), [navigation]);
   const handleSharePress = useCallback((productId: string) => console.log('Share pressed for product:', productId), []);
-  const handleViewModeChange = useCallback((mode: ViewMode) => setViewMode(mode), []);
+  // const handleViewModeChange = useCallback((mode: ViewMode) => setViewMode(mode), []);
   const handleClearFilters = useCallback(() => setSelectedFilters({ inStock: false, verified: false, openNow: false, ratings: 0 }), []);
-  
+
   const renderProductItem = useCallback(({ item }: { item: IProduct }) => (
     <View style={{
       flex: 1,
@@ -210,8 +211,45 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
       <MaterialIcons name="search-off" size={64} color="#9E9E9E" />
       <Text className="text-lg font-bold text-text-primary mt-4 mb-2">No products found</Text>
       <Text className="text-sm text-text-secondary text-center">Try adjusting your search or filters</Text>
+      <TouchableOpacity onPress={handleClearFilters}>
+        <Text className="text-accent mt-3">Reset Filters</Text>
+      </TouchableOpacity>
+
     </View>
   );
+
+
+  // const handleViewModeChange = (mode: ViewMode) => {
+  //   LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  //   setViewMode(mode);
+  // }
+
+
+  const handleViewModeChange = useCallback((mode: ViewMode) => {
+    setViewMode(mode);
+    // Maintain sticky state if toolbar was sticky
+    if (preservedScrollY >= categoriesSectionHeight) {
+      setIsToolbarSticky(true);
+      // Restore scroll position after re-render
+      setTimeout(() => {
+        flatListRef.current?.scrollToOffset({
+          offset: preservedScrollY,
+          animated: false
+        });
+      }, 0);
+    }
+  }, [preservedScrollY, categoriesSectionHeight]);
+
+  const ToolbarComponent = useCallback(() => (
+    <MarketplaceToolbar
+      resultCount={filteredProducts.length}
+      viewMode={viewMode}
+      onSortPress={() => setShowSortModal(true)}
+      onFilterPress={toggleFilters}
+      onViewModeChange={handleViewModeChange}
+    />
+  ), [filteredProducts.length, viewMode, toggleFilters, handleViewModeChange]);
+
 
   const MapView = () => (
     <View className="items-center justify-center pt-20">
@@ -219,18 +257,33 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
     </View>
   );
 
+
+
   if (isLoading) {
     return (
-      <View className="flex-1 bg-background p-4 pt-0">
-          <Header title="Marketplace" /* ... other props ... */ />
-          <View className="flex-col flex-wrap justify-between mt-4 px-2">
-            {[...Array(8)].map((_, i) => <ProductGridSkeleton key={i} />)}
-          </View>
+      <View className="flex-1 bg-background">
+        <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+
+        <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+          <Header
+            title="Marketplace"
+            leftIcon={{ name: 'chevron-left', onPress: () => navigation.goBack(), color: colors.secondary }}
+            rightIcons={[
+              { name: 'favorite-border', onPress: () => navigation.navigate('FavoritesScreen'), color: colors.secondary },
+              { name: 'map', onPress: () => { }, color: colors.secondary }
+            ]}
+            titleColor={colors.secondary}
+            iconBackgroundColor={colors.accent + '20'}
+          />
+        </Animated.View>
+
+        <MarketplaceSkeleton viewMode={viewMode} />
       </View>
     );
   }
 
   return (
+
     <ErrorBoundary>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="flex-1 bg-background">
@@ -249,7 +302,15 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
             />
           </Animated.View>
 
+          {/* Sticky MarketplaceToolbar */}
+          {isToolbarSticky && (
+            <View className="bg-white border-b border-gray-100" style={{ zIndex: 10 }}>
+              <ToolbarComponent />
+            </View>
+          )}
+
           <FlatList
+            ref={flatListRef}
             key={viewMode}
             data={filteredProducts}
             renderItem={renderProductItem}
@@ -258,6 +319,8 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
             numColumns={viewMode === 'grid' ? 2 : 1}
             columnWrapperStyle={viewMode === 'grid' ? { justifyContent: 'space-between' } : undefined}
             contentContainerStyle={{ paddingBottom: 100 }}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
@@ -268,20 +331,22 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
             }
             ListHeaderComponent={
               <>
-                <CategoriesSection
-                  categories={categories}
-                  selectedCategory={selectedCategory}
-                  onCategorySelect={setSelectedCategory}
-                />
-                <View className="bg-white my-0">
-                  <MarketplaceToolbar
-                    resultCount={filteredProducts.length}
-                    viewMode={viewMode}
-                    onSortPress={() => setShowSortModal(true)}
-                    onFilterPress={toggleFilters}
-                    onViewModeChange={handleViewModeChange} 
-                  /> 
+                <View
+                  onLayout={(event) => {
+                    setCategoriesSectionHeight(event.nativeEvent.layout.height);
+                  }}
+                >
+                  <CategoriesSection
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    onCategorySelect={setSelectedCategory}
+                  />
                 </View>
+                {!isToolbarSticky && (
+                  <View className="bg-white">
+                    <ToolbarComponent />
+                  </View>
+                )}
               </>
             }
             ListEmptyComponent={showMap ? <MapView /> : <EmptyState />}

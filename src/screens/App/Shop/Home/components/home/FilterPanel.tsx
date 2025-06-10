@@ -46,7 +46,7 @@ const FiltersPanel: React.FC<IFiltersPanelInternalProps> = ({
     >
       <View className="flex-1 bg-black/50">
         <Animated.View 
-          className="flex-1 bg-white mt-25 rounded-t-3xl"
+          className="flex-1 bg-white mt-32 rounded-t-3xl"
           style={{ transform: [{ translateY: slideAnim }] }}
         >
           <View className="flex-row justify-between items-center px-6 py-5 border-b border-gray-light">
