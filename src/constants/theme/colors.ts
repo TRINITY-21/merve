@@ -4,7 +4,7 @@ export const colors = {
   secondary: '#1E3A5F', // Deep Blue
   secondaryLight: '#FFF8E1',
   accent: '#00BFA5', // Teal
-  background: '#F5F5F5',
+  background: '#f1f5f9',
   white: '#FFFFFF',
   black: '#000000',
   gray: {

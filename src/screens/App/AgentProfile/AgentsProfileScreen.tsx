@@ -168,7 +168,7 @@ const AgentsProfileScreen: React.FC = () => {
   };
 
   return (
-    <View className="flex-1" style={{ backgroundColor: colors.background }}>
+    <View className="flex-1 bg-slate-100" style={{ backgroundColor: colors.background }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
@@ -400,7 +400,7 @@ const AgentsProfileScreen: React.FC = () => {
             </View>
 
           </View>
-          
+
           <AgentMapView
             agentData={agentData}
             fadeAnim={fadeAnim}

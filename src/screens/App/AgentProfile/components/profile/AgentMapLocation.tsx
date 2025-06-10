@@ -55,7 +55,7 @@ export const AgentMapView: React.FC<AgentMapViewProps> = ({
       </View>
 
       <Animated.View
-        className="rounded-2xl overflow-hidden mb-4 border border-black/6 shadow-sm shadow-black/20 elevation-8 mx-4 mt-4"
+        className="rounded-2xl overflow-hidden mb-4 border border-gray-400 shadow-sm shadow-black/20 elevation-8 mx-4 mt-4"
         style={{ height: 180, opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
       >
         <MapView
