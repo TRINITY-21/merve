@@ -22,22 +22,22 @@ const ProductCard: React.FC<IProductCardProps> = ({
 
   if (viewMode === 'list') {
     return (
-      <View className="bg-white rounded-2xl mb-3 shadow-sm overflow-hidden">
+      <View className="bg-white rounded-2xl mb-0 shadow-sm overflow-hidden">
         <TouchableOpacity
-          className="flex-row p-3 items-stretch"
+          className="flex-row p-2 items-stretch"
           onPress={() => onPress(product.id)}
           activeOpacity={0.9}
         >
           {/* Product Image - Left Side */}
-          <View className="w-25 h-25 rounded-xl overflow-hidden bg-gray-light relative">
-            <Image 
-              source={{ uri: product.image }} 
+          <View className="w-24 h-24 rounded-xl overflow-hidden bg-gray-200 mr-3">
+            <Image
+              source={{ uri: product.image }}
               className="w-full h-full"
               resizeMode="cover"
             />
-            
+
             {/* Badges */}
-            <View className="absolute top-1.5 left-1.5 gap-1">
+            <View className="absolute top-1.5 left-1.5 gap-1 z-10">
               {product.isPromoted && (
                 <View className="flex-row items-center bg-accent rounded-lg px-1 py-0.5 gap-0.5">
                   <MaterialIcons name="star" size={8} color="#FFFFFF" />
@@ -101,15 +101,13 @@ const ProductCard: React.FC<IProductCardProps> = ({
                   <Text className="text-xs text-text-secondary">{product.agent.distance} km</Text>
                 </View>
                 <View className="flex-row items-center gap-1">
-                  <View 
-                    className={`w-1 h-1 rounded-full ${
-                      product.inStock ? 'bg-success' : 'bg-error'
-                    }`} 
+                  <View
+                    className={`w-1 h-1 rounded-full ${product.inStock ? 'bg-success' : 'bg-error'
+                      }`}
                   />
-                  <Text 
-                    className={`text-xs font-semibold ${
-                      product.inStock ? 'text-success' : 'text-error'
-                    }`}
+                  <Text
+                    className={`text-xs font-semibold ${product.inStock ? 'text-success' : 'text-error'
+                      }`}
                   >
                     {product.inStock ? `${product.stockCount} left` : 'Out of stock'}
                   </Text>
@@ -120,15 +118,15 @@ const ProductCard: React.FC<IProductCardProps> = ({
 
           {/* Quick Actions - Top Right */}
           <View className="absolute top-2 right-2 gap-1.5">
-            <TouchableOpacity 
-              className="w-6 h-6 rounded-xl bg-white/90 items-center justify-center shadow-sm" 
+            <TouchableOpacity
+              className="w-6 h-6 rounded-xl bg-white/90 items-center justify-center shadow-sm"
               onPress={handleFavorite}
               activeOpacity={0.8}
             >
               <MaterialIcons name="favorite-border" size={14} color="#9E9E9E" />
             </TouchableOpacity>
-            <TouchableOpacity 
-              className="w-6 h-6 rounded-xl bg-white/90 items-center justify-center shadow-sm" 
+            <TouchableOpacity
+              className="w-6 h-6 rounded-xl bg-white/90 items-center justify-center shadow-sm"
               onPress={handleShare}
               activeOpacity={0.8}
             >
@@ -142,8 +140,8 @@ const ProductCard: React.FC<IProductCardProps> = ({
 
   // Grid View
   return (
-    <View 
-      className="bg-white rounded-3xl mb-4 shadow-md overflow-hidden"
+    <View
+      className="bg-white rounded-xl mb-4 shadow-md overflow-hidden"
       style={{ width: cardWidth }}
     >
       <TouchableOpacity
@@ -153,12 +151,12 @@ const ProductCard: React.FC<IProductCardProps> = ({
       >
         {/* Product Image */}
         <View className="relative bg-gray-light">
-          <Image 
-            source={{ uri: product.image }} 
+          <Image
+            source={{ uri: product.image }}
             className="w-full h-40"
             resizeMode="cover"
           />
-          
+
           {/* Badges */}
           <View className="absolute top-3 left-3 gap-1.5">
             {product.isPromoted && (
@@ -176,15 +174,15 @@ const ProductCard: React.FC<IProductCardProps> = ({
 
           {/* Quick Actions */}
           <View className="absolute top-3 right-3 gap-2">
-            <TouchableOpacity 
-              className="w-8 h-8 rounded-2xl bg-black/50 items-center justify-center" 
+            <TouchableOpacity
+              className="w-8 h-8 rounded-2xl bg-black/50 items-center justify-center"
               onPress={handleFavorite}
               activeOpacity={0.8}
             >
               <MaterialIcons name="favorite-border" size={16} color="#FFFFFF" />
             </TouchableOpacity>
-            <TouchableOpacity 
-              className="w-8 h-8 rounded-2xl bg-black/50 items-center justify-center" 
+            <TouchableOpacity
+              className="w-8 h-8 rounded-2xl bg-black/50 items-center justify-center"
               onPress={handleShare}
               activeOpacity={0.8}
             >
@@ -240,15 +238,13 @@ const ProductCard: React.FC<IProductCardProps> = ({
               <Text className="text-xs text-text-secondary">{product.agent.distance} km</Text>
             </View>
             <View className="flex-row items-center gap-1.5">
-              <View 
-                className={`w-1.5 h-1.5 rounded-full ${
-                  product.inStock ? 'bg-success' : 'bg-error'
-                }`} 
+              <View
+                className={`w-1.5 h-1.5 rounded-full ${product.inStock ? 'bg-success' : 'bg-error'
+                  }`}
               />
-              <Text 
-                className={`text-xs font-semibold ${
-                  product.inStock ? 'text-success' : 'text-error'
-                }`}
+              <Text
+                className={`text-xs font-semibold ${product.inStock ? 'text-success' : 'text-error'
+                  }`}
               >
                 {product.inStock ? `${product.stockCount} left` : 'Out of stock'}
               </Text>
