@@ -105,12 +105,27 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
   const flatListRef = useRef<FlatList>(null);
   const [preservedScrollY, setPreservedScrollY] = useState(0);
 
-  // Update handleScroll to preserve scroll position
-  const handleScroll = useCallback((event: any) => {
-    const scrollY = event.nativeEvent.contentOffset.y;
-    setPreservedScrollY(scrollY);
-    setIsToolbarSticky(scrollY >= categoriesSectionHeight);
-  }, [categoriesSectionHeight]);
+const isToolbarStickyRef = useRef(false);
+const categoriesSectionHeightRef = useRef(0);
+
+// Remove state that causes re-renders and use refs instead
+// const [isToolbarSticky, setIsToolbarSticky] = useState(false);
+// const [categoriesSectionHeight, setCategoriesSectionHeight] = useState(0);
+
+// Keep only essential state
+
+// Optimized scroll handler without delays
+const handleScroll = useCallback((event: any) => {
+  const scrollY = event.nativeEvent.contentOffset.y;
+  setPreservedScrollY(scrollY);
+  
+  const shouldBeSticky = scrollY >= categoriesSectionHeightRef.current;
+  
+  if (shouldBeSticky !== isToolbarStickyRef.current) {
+    isToolbarStickyRef.current = shouldBeSticky;
+    setIsToolbarSticky(shouldBeSticky);
+  }
+}, []);
 
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -225,20 +240,20 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
   // }
 
 
-  const handleViewModeChange = useCallback((mode: ViewMode) => {
-    setViewMode(mode);
-    // Maintain sticky state if toolbar was sticky
-    if (preservedScrollY >= categoriesSectionHeight) {
-      setIsToolbarSticky(true);
-      // Restore scroll position after re-render
-      setTimeout(() => {
-        flatListRef.current?.scrollToOffset({
-          offset: preservedScrollY,
-          animated: false
-        });
-      }, 0);
-    }
-  }, [preservedScrollY, categoriesSectionHeight]);
+const handleViewModeChange = useCallback((mode: ViewMode) => {
+  setViewMode(mode);
+  
+  // Immediately restore scroll position if sticky
+  if (isToolbarStickyRef.current && flatListRef.current) {
+    // Use requestAnimationFrame for immediate but smooth execution
+    requestAnimationFrame(() => {
+      flatListRef.current?.scrollToOffset({
+        offset: preservedScrollY,
+        animated: false
+      });
+    });
+  }
+}, [preservedScrollY]);
 
   const ToolbarComponent = useCallback(() => (
     <MarketplaceToolbar
