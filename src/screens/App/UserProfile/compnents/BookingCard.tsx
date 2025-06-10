@@ -123,10 +123,10 @@ export const BookingCard: React.FC<BookingCardProps> = ({
               </View>
               
               <View className="flex-1">
-                <Typography variant="bold" size={16} className="text-slate-800 mb-1">
+                <Typography variant="semibold" size={16} className="text-slate-800 mb-1">
                   {booking.agentName}
                 </Typography>
-                <Typography variant="medium" size={14} className="text-slate-600">
+                <Typography variant="regular" size={14} className="text-slate-600">
                   {serviceConfig.label}
                 </Typography>
               </View>
@@ -154,8 +154,8 @@ export const BookingCard: React.FC<BookingCardProps> = ({
           </View>
 
           {/* Amount */}
-          <View className="mb-4">
-            <Typography variant="bold" size={24} className="text-slate-900">
+          <View className="mb-0">
+            <Typography variant="semibold" size={16} className="text-slate-900">
               {formatCurrency(booking.amount)}
             </Typography>
           </View>
@@ -165,20 +165,20 @@ export const BookingCard: React.FC<BookingCardProps> = ({
             {/* Date & Time */}
             <View className="flex-row items-center flex-1 mr-4">
               <MaterialIcons name="schedule" size={16} color="#64748b" />
-              <Typography variant="medium" size={14} className="text-slate-600 ml-2">
+              <Typography variant="medium" size={12} className="text-slate-600 ml-2">
                 {formatDate(booking.date)}
               </Typography>
-              <Typography variant="regular" size={14} className="text-slate-500 ml-1">
+              <Typography variant="regular" size={12} className="text-slate-500 ml-1">
                 {booking.time}
               </Typography>
             </View>
 
             {/* Location */}
             <View className="flex-row items-center flex-1">
-              <MaterialIcons name="location-on" size={16} color="#64748b" />
+              <MaterialIcons name="location-on" size={12} color="#64748b" />
               <Typography 
-                variant="medium"
-                size={14}
+                variant="regular"
+                size={12}
                 className="text-slate-600 ml-2 flex-1" 
                 numberOfLines={1}
               >

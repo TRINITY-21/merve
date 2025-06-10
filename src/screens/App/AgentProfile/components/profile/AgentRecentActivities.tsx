@@ -3,6 +3,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { JSX } from 'react';
 import { Animated, Text, TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IAgentData } from '../../../../../types/agentProfileTypes';
 
@@ -28,17 +29,17 @@ export const RecentActivities: React.FC<RecentActivitiesProps> = ({
     style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
   >
     <View className="flex-row justify-between items-center py-1.5 mb-3">
-      <Text className="text-lg font-extrabold pr-2.5" style={{ color: colors.text.primary }}>
+      <Typography variant="semibold" size={18} className="text-lg font-extrabold pr-2.5" style={{ color: colors.text.primary }}>
         Recent Activities
-      </Text>
+      </Typography>
       <TouchableOpacity
         className="flex-row items-center gap-1 mt-2"
         activeOpacity={0.8}
         onPress={() => navigation.navigate('ActivityScreen')}
       >
-        <Text className="text-xs font-bold" style={{ color: colors.primary }}>
+        <Typography variant="regular" size={12} className="text-xs font-bold" style={{ color: colors.primary }}>
           View All
-        </Text>
+        </Typography>
         <MaterialIcons name="chevron-right" size={16} color={colors.primary} />
       </TouchableOpacity>
     </View>
@@ -63,32 +64,32 @@ export const RecentActivities: React.FC<RecentActivitiesProps> = ({
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-start mb-1">
-              <Text className="text-base font-bold flex-1 mr-2" style={{ color: colors.text.primary }}>
+              <Typography variant="regular" size={14} className="text-base font-bold flex-1 mr-2" style={{ color: colors.text.primary }}>
                 {activity.title}
-              </Text>
+              </Typography>
               <Text className="text-xs font-medium" style={{ color: colors.text.secondary }}>
                 {activity.time}
               </Text>
             </View>
-            <Text className="text-xs mb-1 font-medium" style={{ color: colors.text.secondary }}>
+            <Typography variant="regular" size={12} className="text-xs mb-1 font-medium" style={{ color: colors.text.secondary }}>
               {activity.type === 'review' ? `Review by ${activity.customer}` :
                activity.type === 'booking' ? `${activity.customer} ${activity.action}` :
                activity.type === 'follow' ? `${activity.customer} ${activity.action}` :
                `Customer: ${activity.customer}`}
-            </Text>
+            </Typography>
             {activity.amount && (
-              <Text className="text-sm font-extrabold mb-1" style={{ color: colors.accent }}>
+              <Typography variant="regular" size={14} className="text-sm font-extrabold mb-1" style={{ color: colors.accent }}>
                 {activity.amount}
-              </Text>
+              </Typography>
             )}
             {activity.rating && (
               <View className="flex-row items-center gap-2 mb-1">
                 <View className="flex-row gap-0.5">
                   {renderStars(activity.rating)}
                 </View>
-                <Text className="flex-1 text-xs italic font-medium" style={{ color: colors.text.secondary }} numberOfLines={1}>
+                <Typography variant="regular" size={12} className="flex-1 text-xs italic font-medium" style={{ color: colors.text.secondary }} numberOfLines={1}>
                   "{activity.comment}"
-                </Text>
+                </Typography>
               </View>
             )}
             {activity.status && (
@@ -97,12 +98,12 @@ export const RecentActivities: React.FC<RecentActivitiesProps> = ({
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: getStatusColor(activity.status) }}
                 />
-                <Text
+                <Typography variant="regular" size={12}
                   className="text-xs font-bold"
                   style={{ color: getStatusColor(activity.status) }}
                 >
                   {activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}
-                </Text>
+                </Typography>
               </View>
             )}
           </View>

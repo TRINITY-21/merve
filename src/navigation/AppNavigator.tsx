@@ -466,21 +466,6 @@ color={focused ? colors.primary : colors.primary + '60'}
       />
 
       <Tab.Screen
-        name="SearchUsers"
-        component={SearchUsersStackNavigator}
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon 
-              name="group" 
-color={focused ? colors.primary : colors.primary + '60'}
-              focused={focused} 
-              label="Search" 
-            />
-          ),
-        }}
-      />
-
-      <Tab.Screen
         name="AgentsProfile"
         component={AgentProfileStackNavigator}
         options={{

@@ -1,7 +1,8 @@
 // FollowersSection.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Animated, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, Image, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IAgentData } from '../../../../../types/agentProfileTypes';
 
@@ -23,17 +24,17 @@ export const FollowersSection: React.FC<FollowersSectionProps> = ({
     style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
   >
     <View className="flex-row justify-between items-center py-1.5 mb-3">
-      <Text className="text-lg font-extrabold pr-2.5" style={{ color: colors.text.primary }}>
-        Recent Followers
-      </Text>
+     <Typography variant="semibold" size={18} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
+        Recent Customers
+      </Typography>
       <TouchableOpacity
         className="flex-row items-center gap-1 mt-2"
         activeOpacity={0.8}
         onPress={() => navigation.navigate('Followers')}
       >
-        <Text className="text-xs font-bold" style={{ color: colors.primary }}>
+         <Typography variant="semibold" size={12} style={{ color: colors.accent, letterSpacing: 0 }}>
           View All
-        </Text>
+        </Typography>
         <MaterialIcons name="chevron-right" size={16} color={colors.primary} />
       </TouchableOpacity>
     </View>
@@ -53,13 +54,11 @@ export const FollowersSection: React.FC<FollowersSectionProps> = ({
                 </View>
               )}
             </View>
-            <Text
-              className="text-xs font-semibold text-center"
-              style={{ color: colors.text.primary }}
-              numberOfLines={1}
-            >
+            <Typography variant="semibold" size={10} style={{ color: colors.text.secondary, letterSpacing: 0.5 }}
+            numberOfLines={1}>
+            
               {follower.name}
-            </Text>
+            </Typography>
           </TouchableOpacity>
         ))}
       </View>

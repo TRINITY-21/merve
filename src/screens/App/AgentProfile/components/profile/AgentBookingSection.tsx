@@ -2,6 +2,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Animated, Text, TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IBooking } from '../../../../../types/agentProfileTypes';
 
@@ -39,45 +40,45 @@ export const BookingsSection: React.FC<BookingsSectionProps> = ({
             />
           </View>
           <View className="flex-1">
-            <Text className="text-base font-bold mb-1" style={{ color: colors.text.primary }}>
+      <Typography variant="regular" className="mb-2" size={16} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
               {item.customerName}
-            </Text>
-            <Text className="text-xs font-semibold" style={{ color: colors.text.secondary }}>
+            </Typography>
+            <Typography variant="regular" size={10} className="mb-0" style={{ color: colors.text.secondary }}>
               {item.serviceType.replace('_', ' ').toUpperCase()} • GH₵{item.amount}
-            </Text>
+            </Typography>
           </View>
         </View>
         <View
           className="px-2.5 py-1.5 rounded-xl"
           style={{ backgroundColor: getStatusColor(item.status) }}
         >
-          <Text className="text-xs font-bold text-white uppercase">
+      <Typography variant="regular" size={12} style={{ color: colors.text.white, letterSpacing: 0 }}>
             {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
-          </Text>
+          </Typography>
         </View>
       </View>
 
       <View className="gap-1.5">
         <View className="flex-row items-center gap-1.5">
           <MaterialIcons name="event" size={14} color={colors.text.secondary} />
-          <Text className="text-xs font-medium" style={{ color: colors.text.secondary }}>
+      <Typography variant="semibold" size={10} style={{ color: colors.text.secondary, letterSpacing: 0.5 }}>
             {formatDate(item.requestedDate)} at {item.requestedTime}
-          </Text>
+          </Typography>
         </View>
 
         <View className="flex-row items-center gap-1.5">
           <MaterialIcons name="location-on" size={14} color={colors.text.secondary} />
-          <Text className="text-xs font-medium flex-1" style={{ color: colors.text.secondary }} numberOfLines={1}>
+      <Typography variant="semibold" size={10} style={{ color: colors.text.secondary, letterSpacing: 0.5 }}>
             {item.location}
-          </Text>
+          </Typography>
         </View>
 
         {item.notes && (
           <View className="flex-row items-center gap-1.5">
             <MaterialIcons name="note" size={14} color={colors.text.secondary} />
-            <Text className="text-xs font-medium flex-1" style={{ color: colors.text.secondary }} numberOfLines={1}>
+      <Typography variant="semibold" size={10} style={{ color: colors.text.secondary, letterSpacing: 0.5 }}>
               {item.notes}
-            </Text>
+            </Typography>
           </View>
         )}
       </View>
@@ -90,9 +91,9 @@ export const BookingsSection: React.FC<BookingsSectionProps> = ({
       style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
     >
       <View className="flex-row justify-between items-center py-1.5 mb-3">
-        <Text className="text-lg font-extrabold pr-2.5" style={{ color: colors.text.primary }}>
+      <Typography variant="semibold" size={18} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
           Recent Bookings
-        </Text>
+        </Typography>
         <TouchableOpacity
           className="flex-row items-center px-3.5 py-2 rounded-2xl gap-1.5 shadow-sm elevation-8"
           style={{ backgroundColor: colors.primary }}
@@ -100,41 +101,41 @@ export const BookingsSection: React.FC<BookingsSectionProps> = ({
           activeOpacity={0.8}
         >
           <MaterialIcons name="event" size={16} color={colors.white} />
-          <Text className="text-xs font-extrabold" style={{ color: colors.white }}>
+      <Typography variant="semibold" size={12} style={{ color: colors.text.white, letterSpacing: 0.5 }}>
             Manage
-          </Text>
+          </Typography>
         </TouchableOpacity>
       </View>
 
       <View className="mb-4">
         <View className="bg-white rounded-2xl p-4 shadow-sm shadow-black/8 elevation-8">
-          <Text className="text-base font-extrabold mb-3" style={{ color: colors.text.primary }}>
+      <Typography variant="semibold" className="mb-2" size={14} style={{ color: colors.text.secondary, letterSpacing: 0.5 }}>
             Today's Summary
-          </Text>
+          </Typography>
           <View className="flex-row justify-between">
             <View className="items-center">
-              <Text className="text-lg font-black" style={{ color: colors.text.primary }}>
+      <Typography variant="semibold" className='mt-1' size={16} style={{ color: colors.text.secondary, letterSpacing: 0 }}>
                 {bookings.length}
-              </Text>
-              <Text className="text-xs font-semibold text-center mt-1" style={{ color: colors.text.secondary }}>
+              </Typography>
+              <Typography variant='regular' size={12} className="semibold text-center mt-1" style={{ color: colors.text.secondary }}>
                 Total Requests
-              </Text>
+              </Typography>
             </View>
             <View className="items-center">
-              <Text className="text-lg font-black" style={{ color: colors.success }}>
+              <Typography variant='regular' size={16} className="semibold text-center mt-1" style={{ color: colors.success }}>
                 {bookings.filter(b => b.status === 'completed').length}
-              </Text>
-              <Text className="text-xs font-semibold text-center mt-1" style={{ color: colors.text.secondary }}>
+              </Typography>
+              <Typography variant='regular' size={12} className="semibold text-center mt-1" style={{ color: colors.text.secondary }}>
                 Completed
-              </Text>
+              </Typography>
             </View>
             <View className="items-center">
-              <Text className="text-lg font-black" style={{ color: colors.warning }}>
+              <Typography variant='regular' size={16} className="semibold text-center mt-1" style={{ color: colors.warning }}>
                 {bookings.filter(b => b.status === 'pending').length}
-              </Text>
-              <Text className="text-xs font-semibold text-center mt-1" style={{ color: colors.text.secondary }}>
+              </Typography>
+              <Typography variant='regular' size={12} className="semibold text-center mt-1" style={{ color: colors.text.secondary }}>
                 Pending
-              </Text>
+              </Typography>
             </View>
           </View>
         </View>
@@ -165,10 +166,10 @@ export const BookingsSection: React.FC<BookingsSectionProps> = ({
         activeOpacity={0.8}
         onPress={() => navigation.navigate('AgentBookingManagementScreen')}
       >
-        <Text className="text-xs font-bold" style={{ color: colors.primary }}>
+          <Typography variant='regular' size={12} className="semibold text-center mt-1" style={{ color: colors.accent }}>
           View All Bookings
-        </Text>
-        <MaterialIcons name="chevron-right" size={16} color={colors.primary} />
+        </Typography>
+        <MaterialIcons name="chevron-right" className="mt-1" size={16} color={colors.primary} />
       </TouchableOpacity>
     </Animated.View>
   );

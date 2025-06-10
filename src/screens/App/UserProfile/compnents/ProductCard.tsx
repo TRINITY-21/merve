@@ -1,7 +1,7 @@
 // components/ProductCard.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
-import { Dimensions, FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { Typography } from '../../../../components/common/Typography';
 import { colors } from '../../../../constants/theme/colors';
@@ -55,10 +55,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onPress, fade
                 activeOpacity={0.9}
             >
                 <View style={styles.imageContainer}>
-                    <FlatList
-                        ref={flatListRef}
-                        data={product.images}
-                        renderItem={renderImage}
+                    <ScrollView
                         horizontal
                         pagingEnabled
                         showsHorizontalScrollIndicator={false}
@@ -66,7 +63,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onPress, fade
                             const newIndex = Math.round(event.nativeEvent.contentOffset.x / CARD_WIDTH);
                             setActiveIndex(newIndex);
                         }}
-                    />
+                        scrollEventThrottle={16}
+                    >
+                        {product.images.map((item, index) => (
+                            <Image
+                                key={index}
+                                source={{ uri: item }}
+                                style={styles.image}
+                                resizeMode="cover"
+                            />
+                        ))}
+                    </ScrollView>
+
                     {renderDots()}
                 </View>
 

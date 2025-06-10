@@ -6,12 +6,16 @@ import React, { JSX, useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Animated,
+  Image,
   KeyboardAvoidingView,
   Platform,
   RefreshControl,
   ScrollView,
+  Switch,
+  TouchableOpacity,
   View
 } from 'react-native';
+import { Header, Typography } from '../../../components/common';
 import { colors } from '../../../constants/theme/colors';
 import { agentData, agentMarketplaceData, agentRecentBookings } from '../../../utils/agentProfileDummyData';
 import { BookingsSection } from './components/profile/AgentBookingSection';
@@ -21,7 +25,6 @@ import { InvitesSection } from './components/profile/AgentInvitesSection';
 import { AgentMapView } from './components/profile/AgentMapLocation';
 import { MarketplaceSection } from './components/profile/AgentMarketPlace';
 import { OperationalHours } from './components/profile/AgentOperationalHours';
-import { AgentProfileHeader } from './components/profile/AgentProfileHeader';
 import { ProvidersSection } from './components/profile/AgentProviderSection';
 import { RecentActivities } from './components/profile/AgentRecentActivities';
 import { ReviewsSection } from './components/profile/AgentReviewSection';
@@ -29,7 +32,7 @@ import { ServicesSection } from './components/profile/AgentServiceSection';
 
 interface NavigationProps {
   navigate: (screen: string, params?: any) => void;
-  goBack: () => void; 
+  goBack: () => void;
 }
 
 const AgentsProfileScreen: React.FC = () => {
@@ -41,7 +44,8 @@ const AgentsProfileScreen: React.FC = () => {
   const [showInviteModal, setShowInviteModal] = useState<boolean>(false);
   const [invitePhone, setInvitePhone] = useState<string>('');
   const [inviteMessage, setInviteMessage] = useState<string>('');
-
+  const [isHeaderSticky, setIsHeaderSticky] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(-30)).current;
@@ -142,13 +146,13 @@ const AgentsProfileScreen: React.FC = () => {
 
     for (let i = 0; i < fullStars; i++) {
       stars.push(
-        <MaterialIcons key={i} name="star" size={14} color={colors.white} />
+        <MaterialIcons key={i} name="star" size={14} color={colors.accent} />
       );
     }
 
     if (hasHalfStar) {
       stars.push(
-        <MaterialIcons key="half" name="star-half" size={14} color={colors.white} />
+        <MaterialIcons key="half" name="star-half" size={14} color={colors.accent} />
       );
     }
 
@@ -156,7 +160,7 @@ const AgentsProfileScreen: React.FC = () => {
 
     for (let i = 0; i < emptyStars; i++) {
       stars.push(
-        <MaterialIcons key={`empty-${i}`} name="star-border" size={14} color={colors.gray.medium} />
+        <MaterialIcons key={`empty-${i}`} name="star-border" size={14} color={colors.accent} />
       );
     }
 
@@ -169,20 +173,90 @@ const AgentsProfileScreen: React.FC = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
       >
-        <AgentProfileHeader
-          agentData={agentData}
-          isOnline={isOnline}
-          setIsOnline={setIsOnline}
-          onInvitePress={() => setShowInviteModal(true)}
-          headerScaleAnim={headerScaleAnim}
-          renderStars={renderStars}
-          navigation={navigation}
+        <Header
+          title={!isHeaderSticky ? 'Agent Profile' : agentData.name}
+          leftIcon={{
+            name: 'chevron-left',
+            onPress: () => navigation.goBack(),
+          }}
+          rightIcons={[
+            { name: 'shop-2', onPress: () => navigation.navigate('AgentShopDashboard') },
+            { name: 'event', onPress: () => navigation.navigate('AgentBookingManagement') },
+            { name: 'settings', onPress: () => navigation.navigate('AgentSettings') },
+          ]}
+          fixed={true}
+          customContent={isHeaderSticky ? (
+            <View className="flex-row items-center justify-between px-4 h-14">
+              {/* Left Icon */}
+              <TouchableOpacity onPress={() => navigation.goBack()} className="w-10 h-10 items-center justify-center">
+                <MaterialIcons name="chevron-left" size={24} color={colors.secondary} />
+              </TouchableOpacity>
+
+              {/* Center Content - Agent Profile with Image */}
+              <View className="flex-1 flex-row items-center justify-center">
+                <Image
+                  source={{ uri: agentData.avatar }}
+                  className="w-8 h-8 rounded-full mr-3 border border-white/20"
+                  style={{
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 1 },
+                    shadowOpacity: 0.2,
+                    shadowRadius: 2,
+                    // elevation: 2,
+                  }}
+                />
+                <View className="items-center">
+                  <Typography
+                    variant="bold"
+                    size={16}
+                    style={{ color: colors.secondary }}
+                    numberOfLines={1}
+                  >
+                    {agentData.name}
+                  </Typography>
+                  <View className="flex-row items-center mt-0.5">
+                    <View
+                      className="w-2 h-2 rounded-full mr-1"
+                      style={{ backgroundColor: isOnline ? colors.success : colors.error }}
+                    />
+                    <Typography
+                      variant="medium"
+                      size={11}
+                      style={{ color: colors.secondary, opacity: 0.8 }}
+                    >
+                      {isOnline ? 'Online' : 'Offline'}
+                    </Typography>
+                  </View>
+                </View>
+              </View>
+
+              {/* Right Icons */}
+              <View className="flex-row gap-1">
+                <TouchableOpacity onPress={() => navigation.navigate('AgentShopDashboard')} className="w-8 h-8 items-center justify-center">
+                  <MaterialIcons name="shop-2" size={18} color={colors.secondary} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('AgentBookingManagement')} className="w-8 h-8 items-center justify-center">
+                  <MaterialIcons name="event" size={18} color={colors.secondary} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('AgentSettings')} className="w-8 h-8 items-center justify-center">
+                  <MaterialIcons name="settings" size={18} color={colors.secondary} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : undefined}
         />
 
+
         <ScrollView
+          ref={scrollViewRef}
           className="flex-1"
           contentContainerStyle={{ paddingBottom: 32 }}
           showsVerticalScrollIndicator={false}
+          onScroll={({ nativeEvent }) => {
+            const offsetY = nativeEvent.contentOffset.y;
+            setIsHeaderSticky(offsetY > 100); // Adjust threshold as needed
+          }}
+          scrollEventThrottle={16}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -192,6 +266,141 @@ const AgentsProfileScreen: React.FC = () => {
             />
           }
         >
+
+          <View className="mb-5 mt-5 px-5">
+            {/* Profile Header */}
+            <View className="flex-row items-start">
+              {/* Avatar with Status */}
+              <View className="relative mr-4">
+                <View className="p-0.5 rounded-full" style={{ backgroundColor: colors.accent }}>
+                  <Image
+                    source={{ uri: agentData.avatar }}
+                    className="w-24 h-24 rounded-full border-[3px] border-white"
+                  />
+                </View>
+
+                {agentData.verified && (
+                  <View className="absolute top-0 right-0 bg-white rounded-full p-1 shadow-sm shadow-black/20">
+                    <MaterialIcons name="verified" size={18} color={colors.accent} />
+                  </View>
+                )}
+
+                <View
+                  className="absolute bottom-2 right-2 w-4 h-4 rounded-full border-[2px] border-white"
+                  style={{ backgroundColor: isOnline ? colors.success : colors.error }}
+                />
+              </View>
+
+              {/* Profile Info */}
+              <View className="flex-1">
+
+                <View className="flex-1 pr-3 pt-1">
+                  <View className="flex-row items-center mb-1">
+                    <Typography className="text-lg text-secondary tracking-wide mr-2" variant="bold" size={18}>
+                      {agentData?.name}
+                    </Typography>
+                    <View className="bg-accent/10 px-2 py-0.5 rounded-lg">
+                      <Typography className="text-[10px] text-accent" variant="bold" size={10}>PREMIUM</Typography>
+                    </View>
+                  </View>
+                  <Typography className="text-sm text-secondary/80 mb-1" variant="medium" size={14}>{agentData.businessName}</Typography>
+                  <View className="flex-row items-center">
+                    <MaterialIcons name="location-on" size={14} color={colors.secondary} style={{ opacity: 0.7 }} />
+                    <Typography className="text-xs text-secondary/70 ml-1" variant="medium" size={12}>Kumasi, Ghana</Typography>
+                  </View>
+                </View>
+
+
+
+                <View className="flex-row items-center gap-1.5 text-accent">
+                  <View className="flex-row gap-0.5">
+                    {renderStars(agentData.statistics.rating)}
+                  </View>
+                  <Typography
+                    className="semibold opacity-85"
+                    size={12}
+                    style={{ color: colors.secondary }}
+                  >
+                    {agentData.statistics.rating.toFixed(1)} • ({agentData.statistics.totalReviews} reviews)
+                  </Typography>
+                </View>
+              </View>
+            </View>
+
+            {/* Status & Actions */}
+            <View className="flex-row justify-between items-center my-5">
+              <View className="flex-row items-center gap-2">
+                <View
+                  className="w-2.5 h-2.5 rounded-full"
+                  style={{ backgroundColor: isOnline ? colors.success : colors.error }}
+                />
+                <Typography
+                  className="semibold tracking-wide"
+                  style={{ color: colors.secondary }}
+                  size={12}
+                >
+                  {isOnline ? 'ONLINE' : 'OFFLINE'}
+                </Typography>
+                <Switch
+                  value={isOnline}
+                  style={{ marginRight: 8 }}
+                  thumbColor={colors.white}
+                  onValueChange={setIsOnline}
+                  trackColor={{ false: colors.gray.light, true: colors.accent }}
+                />
+              </View>
+
+              <View className="flex-row gap-2.5">
+                {['push-pin', 'phone', 'chat-bubble-outline'].map((icon, index) => (
+                  <TouchableOpacity
+                    key={icon}
+                    className="w-11 h-11 rounded-full items-center justify-center bg-white/10 backdrop-blur-sm"
+                    onPress={() => console.log(`${icon} pressed`)}
+                    activeOpacity={0.8}
+                  >
+                    <MaterialIcons
+                      name={icon as any}
+                      size={20}
+                      color={colors.secondary}
+                      style={{ opacity: 0.9 }}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            {/* Stats Grid */}
+            <View className="flex-row justify-between bg-white/10 backdrop-blur-sm rounded-xl px-4">
+              {[
+                { value: agentData.statistics.totalBookings, label: 'Bookings' },
+                { value: agentData.statistics.followers, label: 'Pins' },
+                { value: agentData.statistics.following, label: 'Invites' },
+              ].map((item, index) => (
+                <TouchableOpacity
+                  key={item.label}
+                  activeOpacity={0.7}
+                  className={`flex-1 items-center justify-center ${index < 2 ? 'border-r border-white/20' : ''}`}
+                >
+                  <Typography
+                    className="text-lg font-extrabold mb-1 text-center tracking-tight"
+                    style={{ color: colors.secondary }}
+                  >
+                    {item.value > 999 ? `${(item.value / 1000).toFixed(1)}k` : item.value}
+                  </Typography>
+
+                  <Typography
+                    className="semibold text-center opacity-80 tracking-wide"
+                    style={{ color: colors.secondary }}
+                    size={14}
+                  >
+                    {item.label}
+                  </Typography>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+          </View>
+          
           <AgentMapView
             agentData={agentData}
             fadeAnim={fadeAnim}
@@ -213,7 +422,7 @@ const AgentsProfileScreen: React.FC = () => {
 
           <ProvidersSection
             fadeAnim={fadeAnim}
-            slideAnim={slideAnim}            
+            slideAnim={slideAnim}
           />
 
           <OperationalHours

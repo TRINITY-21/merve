@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IAgentData } from '../../../../../types/agentProfileTypes';
 
@@ -37,13 +38,18 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   >
     {/* Header */}
     <View style={styles.header}>
-      <Text style={styles.title}>Services Offered</Text>
+      <Typography variant="semibold" size={18} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
+     
+        Services Offered
+        </Typography>
       <TouchableOpacity
         style={styles.manageButton}
         activeOpacity={0.85}
         onPress={() => console.log('Manage services')}
       >
-        <Text style={styles.manageButtonText}>Manage</Text>
+    <Typography variant="semibold" size={10} style={{ color: colors.text.light, letterSpacing: 0.5 }}>
+        Manage
+        </Typography>
       </TouchableOpacity>
     </View>
 
@@ -85,23 +91,16 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                 />
               </View>
 
-              <Text
+              
+
+              <Typography
                 style={[
                   styles.serviceName,
                   { color: isActive ? colors.text.primary : colors.text.secondary },
                 ]}
               >
                 {service.name}
-              </Text>
-
-              <Text
-                style={[
-                  styles.commission,
-                  { color: isActive ? colors.gray.dark : colors.text.secondary },
-                ]}
-              >
-                {service.commission}
-              </Text>
+              </Typography>
 
               {!isActive && (
                 <View style={styles.inactiveBadge}>

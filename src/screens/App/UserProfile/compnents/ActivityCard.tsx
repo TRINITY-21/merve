@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated';
+import { Typography } from '../../../../components/common';
 import { colors } from '../../../../constants/theme/colors';
 
 interface Activity {
@@ -71,9 +72,9 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
       >
         <View className="flex-row justify-between">
           <View className="flex-1">
-            <Text className="text-base font-extrabold text-gray-900 mb-2 tracking-wide">
+            <Typography className=" text-gray-900 mb-2 tracking-wide" size={16} variant="semibold">
               {activity.type}
-            </Text>
+            </Typography>
             <Text className="text-sm text-gray-600 leading-5 mb-3 font-medium">
               {activity.description}
             </Text>

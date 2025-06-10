@@ -2,7 +2,8 @@
 // InvitesSection.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Animated, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IAgentData } from '../../../../../types/agentProfileTypes';
 
@@ -28,19 +29,19 @@ export const InvitesSection: React.FC<InvitesSectionProps> = ({
     style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
   >
     <View className="flex-row justify-between items-center py-1.5 mb-3">
-      <Text className="text-lg font-extrabold pr-2.5" style={{ color: colors.text.primary }}>
+      <Typography variant="semibold" size={18} className="text-lg font-extrabold pr-2.5" style={{ color: colors.text.primary }}>
         Sent Invites
-      </Text>
+      </Typography>
       <TouchableOpacity
         className="flex-row items-center px-3.5 py-2 rounded-2xl gap-1.5 shadow-sm elevation-8"
         style={{ backgroundColor: colors.primary }}
         onPress={onInvitePress}
         activeOpacity={0.8}
       >
-        <MaterialIcons name="send" size={16} color={colors.white} />
-        <Text className="text-xs font-extrabold" style={{ color: colors.white }}>
+        <Typography variant="regular" size={12} className="" style={{ color: colors.white }}>
           Send
-        </Text>
+        </Typography>
+        <MaterialIcons name="send" size={14} color={colors.white} />
       </TouchableOpacity>
     </View>
 
@@ -48,26 +49,26 @@ export const InvitesSection: React.FC<InvitesSectionProps> = ({
       {agentData.pendingInvites.map((invite) => (
         <View key={invite.id} className="flex-row justify-between items-center p-4 border-b border-black/6">
           <View className="flex-1">
-            <Text className="text-base font-bold mb-1" style={{ color: colors.text.primary }}>
+            <Typography className="text-base font-bold mb-1" style={{ color: colors.text.primary }}>
               {invite.name}
-            </Text>
-            <Text className="text-xs mb-0.5 font-medium" style={{ color: colors.text.secondary }}>
+            </Typography>
+            <Typography variant='regular' size={12} className="text-xs mb-0.5 font-medium" style={{ color: colors.text.secondary }}>
               {invite.phone}
-            </Text>
-            <Text className="text-xs font-medium" style={{ color: colors.text.secondary }}>
+            </Typography>
+            <Typography variant='regular' size={12} className="font-medium" style={{ color: colors.text.secondary }}>
               Sent: {invite.sentDate}
-            </Text>
+            </Typography>
           </View>
           <View
             className="px-3 py-1.5 rounded-2xl"
             style={{ backgroundColor: getStatusColor(invite.status) + '20' }}
           >
-            <Text
-              className="text-xs font-extrabold"
+            <Typography
+              variant='regular' size={12} className="font-extrabold"
               style={{ color: getStatusColor(invite.status) }}
             >
               {invite.status.charAt(0).toUpperCase() + invite.status.slice(1)}
-            </Text>
+            </Typography>
           </View>
         </View>
       ))}
@@ -78,9 +79,9 @@ export const InvitesSection: React.FC<InvitesSectionProps> = ({
       activeOpacity={0.8}
       onPress={() => navigation.navigate('Invitations')}
     >
-      <Text className="text-xs font-bold" style={{ color: colors.primary }}>
+      <Typography variant="regular" size={13} className="text-xs font-bold" style={{ color: colors.primary }}>
         View Invites
-      </Text>
+      </Typography>
       <MaterialIcons name="chevron-right" size={16} color={colors.primary} />
     </TouchableOpacity>
   </Animated.View>

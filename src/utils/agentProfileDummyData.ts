@@ -93,7 +93,7 @@ import { IAgentData, IBooking, IMarketplaceData } from "../types/agentProfileTyp
       profileViews: 1234,
       customerRetention: 89,
       averageTransactionValue: 'GH₵ 100',
-      followers: 342,
+      followers: 34200,
       following: 125,
       totalBookings: agentRecentBookings.length
     },

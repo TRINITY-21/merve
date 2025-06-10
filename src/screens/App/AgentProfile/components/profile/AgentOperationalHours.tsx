@@ -1,8 +1,9 @@
 
 // OperationalHours.tsx
 import { Ionicons } from '@expo/vector-icons';
-import React, { JSX, useEffect, useRef, useState } from 'react';
-import { Animated, Text, TouchableOpacity, View } from 'react-native';
+import React, { JSX, useRef, useState } from 'react';
+import { Animated, LayoutAnimation, TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IAgentData } from '../../../../../types/agentProfileTypes';
 
@@ -14,31 +15,13 @@ export const OperationalHours: React.FC<OperationalHoursProps> = ({ agentData })
   const [hoursExpanded, setHoursExpanded] = useState<boolean>(false);
   const animation = useRef(new Animated.Value(0)).current;
 
+
+
   const toggleHours = (): void => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setHoursExpanded(!hoursExpanded);
   };
 
-  useEffect(() => {
-    Animated.timing(animation, {
-      toValue: hoursExpanded ? 1 : 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }, [hoursExpanded]);
-
-  const hoursStyle = {
-    opacity: animation,
-    transform: [{
-      translateY: animation.interpolate({
-        inputRange: [0, 1],
-        outputRange: [-10, 0],
-      }),
-    }],
-    height: animation.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 100],
-    }),
-  };
 
   const formatTime = (time: string): string => {
     if (!time) return '';
@@ -50,13 +33,13 @@ export const OperationalHours: React.FC<OperationalHoursProps> = ({ agentData })
   };
 
   const renderDayHours = (day: string, hours: any, index: number): JSX.Element => (
-    <View key={index} className="flex-row justify-between py-0 border-b border-black/6 mb-2">
-      <Text className="text-xs font-bold" style={{ color: colors.text.primary }}>
+    <View key={index} className="flex-row justify-between py-1.5 border-b border-black/6 mb-2">
+      <Typography variant="semibold" size={14} style={{ color: colors.text.primary }}>
         {day.charAt(0).toUpperCase() + day.slice(1)}
-      </Text>
-      <Text className="text-xs font-medium" style={{ color: colors.text.secondary }}>
+      </Typography>
+      <Typography variant="regular" size={14} className="" style={{ color: colors.text.secondary }}>
         {hours.isClosed ? 'Closed' : `${formatTime(hours.open)} - ${formatTime(hours.close)}`}
-      </Text>
+      </Typography>
     </View>
   );
 
@@ -66,16 +49,19 @@ export const OperationalHours: React.FC<OperationalHoursProps> = ({ agentData })
       style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
     >
       <TouchableOpacity onPress={toggleHours} className="flex-row justify-between items-center py-1.5">
-        <Text className="text-lg font-extrabold pr-2.5" style={{ color: colors.text.primary }}>
+      <Typography variant="semibold" size={18} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
           Operating Hours
-        </Text>
+        </Typography>
         <Ionicons name={hoursExpanded ? 'chevron-up' : 'chevron-down'} size={24} color={colors.secondary} />
       </TouchableOpacity>
-      <Animated.View className="mt-2 mb-20 px-0.5" style={hoursStyle}>
-        {Object.entries(agentData.operatingHours).map(([day, hours], index) =>
-          renderDayHours(day, hours, index)
-        )}
-      </Animated.View>
+
+      {hoursExpanded && (
+        <View className="mt-2 mb-2 px-0.5">
+          {Object.entries(agentData.operatingHours).map(([day, hours], index) =>
+            renderDayHours(day, hours, index)
+          )}
+        </View>
+      )}
     </View>
   );
 };

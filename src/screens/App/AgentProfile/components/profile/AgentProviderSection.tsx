@@ -3,6 +3,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Animated, Dimensions, Text, View } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -20,19 +21,19 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({
     className="px-4 mb-4 mt-4"
     style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
   >
-    <Text className="text-lg font-extrabold pr-2.5" style={{ color: colors.text.primary }}>
+     <Typography variant="semibold" size={18} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
       Supported Providers
-    </Text>
+    </Typography>
     <View className="flex-row flex-wrap justify-between gap-2.5 mt-4">
-      <View className="rounded-2xl overflow-hidden shadow-sm shadow-black/15 elevation-8" style={{ width: (screenWidth - 80) / 2 }}>
-        <LinearGradient colors={[colors.vendor.mtn, '#FFB300']} className="p-4.5 items-center">
-          <MaterialIcons name="phone-android" size={28} color={colors.white} />
-          <Text
-            className="text-base font-black mt-2 mb-1 text-white"
+      <View className="rounded-2xl text-center overflow-hidden shadow-sm shadow-black/15 elevation-8" style={{ width: (screenWidth - 80) / 2 }}>
+        <LinearGradient colors={[colors.vendor.mtn, '#FFB300']} className="items-center">
+          <MaterialIcons name="phone-android" size={28} color={colors.white} style={{ textShadowColor: 'rgba(0,0,0,0.3)', textShadowOffset: { width: 0, height: 1 }, alignContent: 'center', alignSelf: 'center', marginTop: 10, textShadowRadius: 2 }} />
+          <Typography
+            className="text-base font-black mt-2 mb-1 text-white text-center"
             style={{ textShadowColor: 'rgba(0,0,0,0.3)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }}
           >
             MTN
-          </Text>
+          </Typography>
           <Text className="text-xs text-white opacity-95 text-center font-semibold">
             Mobile Money
           </Text>
@@ -40,14 +41,15 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({
       </View>
 
       <View className="rounded-2xl overflow-hidden shadow-sm shadow-black/15 elevation-8" style={{ width: (screenWidth - 80) / 2 }}>
-        <LinearGradient colors={[colors.vendor.vodafone, '#B71C1C']} className="p-4.5 items-center">
-          <MaterialIcons name="phone-android" size={28} color={colors.white} />
-          <Text
-            className="text-base font-black mt-2 mb-1 text-white"
+        <LinearGradient colors={[colors.vendor.vodafone, '#B71C1C']} className="p-4.5 items-center text-center">
+          <MaterialIcons name="phone-android" size={28} color={colors.white}
+          style={{ textShadowColor: 'rgba(0,0,0,0.3)', textShadowOffset: { width: 0, height: 1 }, marginTop: 10, alignContent: 'center', alignSelf: 'center', textShadowRadius: 2 }} />
+          <Typography
+            className="text-base font-black mt-2 mb-1 text-white text-center"
             style={{ textShadowColor: 'rgba(0,0,0,0.3)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }}
           >
             Vodafone
-          </Text>
+          </Typography>
           <Text className="text-xs text-white opacity-95 text-center font-semibold">
             Mobile Money
           </Text>
@@ -56,13 +58,13 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({
 
       <View className="rounded-2xl overflow-hidden shadow-sm shadow-black/15 elevation-8" style={{ width: (screenWidth - 80) / 2 }}>
         <LinearGradient colors={colors.gradient.warm} className="p-4.5 items-center">
-          <MaterialIcons name="phone-android" size={28} color={colors.white} />
-          <Text
-            className="text-base font-black mt-2 mb-1 text-white"
-            style={{ textShadowColor: 'rgba(0,0,0,0.3)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }}
+          <MaterialIcons name="phone-android" size={28} color={colors.white} style={{ textShadowColor: 'rgba(0,0,0,0.3)',  marginTop: 10,textShadowOffset: { width: 0, height: 1 }, alignContent: 'center', alignSelf: 'center', textShadowRadius: 2 }} />
+          <Typography
+            className="text-base font-black mt-2 mb-1 text-white text-center"
+            style={{ textShadowColor: 'rgba(0,0,0,0.6)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }}
           >
             AirtelTigo
-          </Text>
+          </Typography>
           <Text className="text-xs text-white opacity-95 text-center font-semibold">
             Mobile Services
           </Text>
@@ -71,13 +73,13 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({
 
       <View className="rounded-2xl overflow-hidden shadow-sm shadow-black/15 elevation-8" style={{ width: (screenWidth - 80) / 2 }}>
         <LinearGradient colors={colors.gradient.secondary} className="p-4.5 items-center">
-          <MaterialIcons name="phone-android" size={28} color={colors.white} />
-          <Text
-            className="text-base font-black mt-2 mb-1 text-white"
+          <MaterialIcons name="phone-android" size={28} color={colors.white} style={{ textShadowColor: 'rgba(0,0,0,0.3)', marginTop: 10, textShadowOffset: { width: 0, height: 1 }, alignContent: 'center', alignSelf: 'center', textShadowRadius: 2 }} />
+          <Typography
+            className="text-base font-black mt-2 mb-1 text-white text-center"
             style={{ textShadowColor: 'rgba(0,0,0,0.3)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }}
           >
             Others
-          </Text>
+          </Typography>
           <Text className="text-xs text-white opacity-95 text-center font-semibold">
             Mobile Services
           </Text>

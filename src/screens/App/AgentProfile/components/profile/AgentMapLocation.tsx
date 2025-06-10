@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Text, View } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IAgentData } from '../../../../../types/agentProfileTypes';
 
@@ -47,10 +48,10 @@ export const AgentMapView: React.FC<AgentMapViewProps> = ({
 
   return (
     <>
-      <View className="pl-4 pt-2.5">
-        <Text className="text-lg font-extrabold pr-2.5" style={{ color: colors.text.primary }}>
+      <View className="pl-4 pt-3">
+     <Typography variant="semibold" size={18} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
           Agent Location
-        </Text>
+        </Typography>
       </View>
 
       <Animated.View

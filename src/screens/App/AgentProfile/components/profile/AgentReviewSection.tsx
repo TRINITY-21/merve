@@ -2,7 +2,8 @@
 // ReviewsSection.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { JSX } from 'react';
-import { Animated, Image, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, Image, TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IAgentData } from '../../../../../types/agentProfileTypes';
 
@@ -22,21 +23,21 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({
   renderStars
 }) => (
   <Animated.View
-    className="px-4 mb-4"
+    className="px-4 mb-20"
     style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
   >
     <View className="flex-row justify-between items-center py-1.5 mb-3">
-      <Text className="text-lg font-extrabold pr-2.5" style={{ color: colors.text.primary }}>
+      <Typography variant="semibold" size={18} className="text-lg font-extrabold pr-2.5" style={{ color: colors.text.primary }}>
         Recent Reviews
-      </Text>
+      </Typography>
       <TouchableOpacity
         className="flex-row items-center gap-1 mt-2"
         activeOpacity={0.8}
         onPress={() => navigation.navigate('Reviews')}
       >
-        <Text className="text-xs font-bold" style={{ color: colors.primary }}>
+        <Typography variant="regular" size={12} className="text-xs font-bold" style={{ color: colors.primary }}>
           View All
-        </Text>
+        </Typography>
         <MaterialIcons name="chevron-right" size={16} color={colors.primary} />
       </TouchableOpacity>
     </View>
@@ -51,12 +52,12 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({
               style={{ borderColor: colors.primary }}
             />
             <View className="flex-1">
-              <Text className="text-base font-bold mb-0.5" style={{ color: colors.text.primary }}>
+              <Typography variant="regular" size={14} className="text-base font-bold mb-0.5" style={{ color: colors.text.primary }}>
                 {review.customer}
-              </Text>
-              <Text className="text-xs font-medium" style={{ color: colors.text.secondary }}>
+              </Typography>
+              <Typography variant="regular" size={12} className="text-xs font-medium" style={{ color: colors.text.secondary }}>
                 {review.date}
-              </Text>
+              </Typography>
             </View>
             {review.verified && (
               <MaterialIcons name="verified" size={16} color={colors.accent} />
@@ -67,9 +68,9 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({
               {renderStars(review.rating)}
             </View>
           </View>
-          <Text className="text-xs leading-4 font-medium" style={{ color: colors.text.primary }}>
+          <Typography variant="regular" size={12} className="text-xs leading-4 font-medium" style={{ color: colors.text.primary }}>
             {review.comment}
-          </Text>
+          </Typography>
         </View>
       ))}
     </View>

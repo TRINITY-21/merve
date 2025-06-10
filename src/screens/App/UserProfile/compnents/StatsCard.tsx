@@ -48,7 +48,7 @@ export const ProfessionalStatsCard: React.FC<ProfessionalStatsCardProps> = ({
       {/* Header */}
       <View className="flex-row items-center justify-between mb-6">
         <View className="flex-1">
-          <Typography className="text-lg text-slate-800 mb-1" variant="bold" size={18}>
+          <Typography className="text-lg text-slate-800 mb-1" variant="semibold" size={16}>
             {title}
           </Typography>
           {subtitle && (
