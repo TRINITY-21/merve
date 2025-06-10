@@ -74,20 +74,20 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
 
 // Temporary Skeleton component until the real one is implemented
 const Skeleton = ({ className }: { className: string }) => (
-  <View className={`bg-gray-200 animate-pulse ${className}`} />
+    <View className={`bg-gray-200 animate-pulse ${className}`} />
 );
 
 // Loading skeleton component for grid view
 const ProductGridSkeleton = () => (
-  <View className="flex-1 max-w-[48%] bg-white rounded-3xl mb-4 shadow-md overflow-hidden p-3">
-    <Skeleton className="w-full h-32 rounded-2xl mb-3" />
-    <Skeleton className="w-3/4 h-5 rounded-lg mb-2" />
-    <Skeleton className="w-1/2 h-4 rounded-lg mb-3" />
-    <View className="flex-row justify-between">
-      <Skeleton className="w-1/3 h-4 rounded-lg" />
-      <Skeleton className="w-1/4 h-4 rounded-lg" />
+    <View className="flex-1 max-w-[48%] bg-white rounded-3xl mb-4 shadow-md overflow-hidden p-3">
+        <Skeleton className="w-full h-32 rounded-2xl mb-3" />
+        <Skeleton className="w-3/4 h-5 rounded-lg mb-2" />
+        <Skeleton className="w-1/2 h-4 rounded-lg mb-3" />
+        <View className="flex-row justify-between">
+            <Skeleton className="w-1/3 h-4 rounded-lg" />
+            <Skeleton className="w-1/4 h-4 rounded-lg" />
+        </View>
     </View>
-  </View>
 );
 
 
@@ -123,14 +123,7 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
   const scaleAnim = useRef(new Animated.Value(0.95)).current;
   const filterSlideAnim = useRef(new Animated.Value(screenHeight)).current;
   const locationSlideAnim = useRef(new Animated.Value(screenHeight)).current;
-  const [categoriesHeight, setCategoriesHeight] = useState(0);
 
-  // Add this scroll handler function (around line 130 with other handlers):
-  const handleScroll = useCallback((event: any) => {
-    const scrollY = event.nativeEvent.contentOffset.y;
-    // Stick when toolbar would meet the header (i.e., when categories are scrolled past)
-    setIsToolbarSticky(scrollY >= categoriesHeight);
-  }, [categoriesHeight]);
   // Mock data
   const categories: ICategory[] = [
     { key: 'all', label: 'All', icon: 'apps', count: 1247 },
@@ -144,9 +137,9 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
   useEffect(() => {
     // Initial animations
     Animated.parallel([
-      Animated.timing(fadeAnim, { toValue: 1, duration: 800, useNativeDriver: true }),
-      Animated.spring(slideAnim, { toValue: 0, tension: 20, friction: 7, useNativeDriver: true }),
-      Animated.spring(scaleAnim, { toValue: 1, tension: 25, friction: 8, useNativeDriver: true }),
+        Animated.timing(fadeAnim, { toValue: 1, duration: 800, useNativeDriver: true }),
+        Animated.spring(slideAnim, { toValue: 0, tension: 20, friction: 7, useNativeDriver: true }),
+        Animated.spring(scaleAnim, { toValue: 1, tension: 25, friction: 8, useNativeDriver: true }),
     ]).start();
 
     const timer = setTimeout(() => setIsLoading(false), 1500);
@@ -163,7 +156,7 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
     const toValue = showLocationModal ? screenHeight : 0;
     if (!showLocationModal) setShowLocationModal(true);
     Animated.timing(locationSlideAnim, { toValue, duration: 300, useNativeDriver: true, }).start(() => {
-      if (showLocationModal) setShowLocationModal(false);
+        if (showLocationModal) setShowLocationModal(false);
     });
   }, [showLocationModal, locationSlideAnim]);
 
@@ -171,7 +164,7 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
     const toValue = showFilters ? screenHeight : 0;
     if (!showFilters) setShowFilters(true);
     Animated.timing(filterSlideAnim, { toValue, duration: 300, useNativeDriver: true }).start(() => {
-      if (showFilters) setShowFilters(false);
+        if (showFilters) setShowFilters(false);
     });
   }, [showFilters, filterSlideAnim]);
 
@@ -192,7 +185,7 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
   const handleSharePress = useCallback((productId: string) => console.log('Share pressed for product:', productId), []);
   const handleViewModeChange = useCallback((mode: ViewMode) => setViewMode(mode), []);
   const handleClearFilters = useCallback(() => setSelectedFilters({ inStock: false, verified: false, openNow: false, ratings: 0 }), []);
-
+  
   const renderProductItem = useCallback(({ item }: { item: IProduct }) => (
     <View style={{
       flex: 1,
@@ -229,10 +222,10 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
   if (isLoading) {
     return (
       <View className="flex-1 bg-background p-4 pt-0">
-        <Header title="Marketplace" /* ... other props ... */ />
-        <View className="flex-col flex-wrap justify-between mt-4 px-2">
-          {[...Array(8)].map((_, i) => <ProductGridSkeleton key={i} />)}
-        </View>
+          <Header title="Marketplace" /* ... other props ... */ />
+          <View className="flex-col flex-wrap justify-between mt-4 px-2">
+            {[...Array(8)].map((_, i) => <ProductGridSkeleton key={i} />)}
+          </View>
       </View>
     );
   }
@@ -255,6 +248,7 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
               iconBackgroundColor={colors.accent + '20'}
             />
           </Animated.View>
+
           <FlatList
             key={viewMode}
             data={filteredProducts}
@@ -263,11 +257,7 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
             showsVerticalScrollIndicator={false}
             numColumns={viewMode === 'grid' ? 2 : 1}
             columnWrapperStyle={viewMode === 'grid' ? { justifyContent: 'space-between' } : undefined}
-            contentContainerStyle={{
-              paddingBottom: 100
-            }}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
+            contentContainerStyle={{ paddingBottom: 100 }}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
@@ -277,51 +267,25 @@ const MarketplaceScreen: React.FC<IMarketplaceScreenProps> = () => {
               />
             }
             ListHeaderComponent={
-              <View
-                onLayout={(event) => {
-                  setCategoriesHeight(event.nativeEvent.layout.height + 60); // Include toolbar height
-                }}
-              >
+              <>
                 <CategoriesSection
                   categories={categories}
                   selectedCategory={selectedCategory}
                   onCategorySelect={setSelectedCategory}
                 />
-                {!isToolbarSticky && (
-                  <View className="bg-white">
-                    <MarketplaceToolbar
-                      resultCount={filteredProducts.length}
-                      viewMode={viewMode}
-                      onSortPress={() => setShowSortModal(true)}
-                      onFilterPress={toggleFilters}
-                      onViewModeChange={handleViewModeChange}
-                    />
-                  </View>
-                )}
-              </View>
+                <View className="bg-white my-0">
+                  <MarketplaceToolbar
+                    resultCount={filteredProducts.length}
+                    viewMode={viewMode}
+                    onSortPress={() => setShowSortModal(true)}
+                    onFilterPress={toggleFilters}
+                    onViewModeChange={handleViewModeChange} 
+                  /> 
+                </View>
+              </>
             }
             ListEmptyComponent={showMap ? <MapView /> : <EmptyState />}
           />
-          {isToolbarSticky && (
-            <View
-              style={{
-                position: 'absolute',
-                top: (StatusBar.currentHeight || 0) + 100, // Position below header
-                left: 0,
-                right: 0,
-                zIndex: 1000,
-                backgroundColor: 'white'
-              }}
-            >
-              <MarketplaceToolbar
-                resultCount={filteredProducts.length}
-                viewMode={viewMode}
-                onSortPress={() => setShowSortModal(true)}
-                onFilterPress={toggleFilters}
-                onViewModeChange={handleViewModeChange}
-              />
-            </View>
-          )}
 
           <SortModal
             visible={showSortModal}
