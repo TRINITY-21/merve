@@ -1,34 +1,35 @@
 // FavoritesScreen.tsx
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
-    Animated,
-    Dimensions,
-    FlatList,
-    RefreshControl,
-    View,
+  Animated,
+  Dimensions,
+  FlatList,
+  Platform,
+  RefreshControl,
+  StatusBar,
+  View,
 } from 'react-native';
-import { IFavoriteProduct, IFavoritesScreenProps, IFilters, TSortKey, TViewMode } from '../../../../types/favoriteProductTypes';
-import { categories, mockFavorites, sortOptions } from '../../../../utils/favoritesDummyData';
-import { CategoriesFilter } from './components/CategoriesFilter';
+import { Header } from '../../../../components/common';
+import { colors } from '../../../../constants/theme/colors';
+import { IFavoriteProduct, IFavoritesScreenProps, IFilters, TSortKey } from '../../../../types/favoriteProductTypes';
+import { mockFavorites, sortOptions } from '../../../../utils/favoritesDummyData';
 import { EmptyState } from './components/EmptyState';
-import { FavoritesHeader } from './components/FavoritesHeader';
 import { FiltersPanel } from './components/FilterPanel';
 import { ProductCard } from './components/ProductCard';
 import { SortModal } from './components/SortModal';
 import { Toolbar } from './components/Toolbar';
 
-
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const ITEM_HEIGHT = 140; // Approximate height for better performance
 
 const FavoriteProductsScreen: React.FC<IFavoritesScreenProps> = () => {
   const navigation = useNavigation();
-  
+
   // State management
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [viewMode, setViewMode] = useState<TViewMode>('grid');
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<TSortKey>('date_added');
   const [showSortModal, setShowSortModal] = useState<boolean>(false);
@@ -44,11 +45,16 @@ const FavoriteProductsScreen: React.FC<IFavoritesScreenProps> = () => {
   const slideAnim = useRef(new Animated.Value(-20)).current;
   const scaleAnim = useRef(new Animated.Value(0.95)).current;
   const filterSlideAnim = useRef(new Animated.Value(screenHeight)).current;
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  // Refs
+  const flatListRef = useRef<FlatList>(null);
 
   useEffect(() => {
     // Load favorites from storage/API
     setFavoriteProducts(mockFavorites);
-    
+    console.log('Loaded favoriteProducts:', mockFavorites);
+
     // Initial animations
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -71,15 +77,17 @@ const FavoriteProductsScreen: React.FC<IFavoritesScreenProps> = () => {
     ]).start();
   }, []);
 
-  const handleRefresh = (): void => {
+  const handleRefresh = useCallback((): void => {
     setRefreshing(true);
     // Simulate refresh
     setTimeout(() => {
+      setFavoriteProducts(mockFavorites);
       setRefreshing(false);
+      console.log('Refreshed favoriteProducts:', mockFavorites);
     }, 2000);
-  };
+  }, []);
 
-  const toggleFilters = (): void => {
+  const toggleFilters = useCallback((): void => {
     if (showFilters) {
       Animated.timing(filterSlideAnim, {
         toValue: screenHeight,
@@ -94,17 +102,19 @@ const FavoriteProductsScreen: React.FC<IFavoritesScreenProps> = () => {
         useNativeDriver: true,
       }).start();
     }
-  };
+  }, [showFilters, filterSlideAnim]);
 
-  const removeFavorite = (productId: string): void => {
+  const removeFavorite = useCallback((productId: string): void => {
+    console.log('Products after removal:', favoriteProducts.length)
+
     setFavoriteProducts(prev => prev.filter(product => product.id !== productId));
-  };
+  }, []);
 
-  const handleProductPress = (productId: string): void => {
+  const handleProductPress = useCallback((productId: string): void => {
     navigation.navigate('ProductDetails', { productId });
-  };
+  }, [navigation]);
 
-  const getFilteredProducts = (): IFavoriteProduct[] => {
+  const getFilteredProducts = useCallback((): IFavoriteProduct[] => {
     let filtered = favoriteProducts;
 
     // Search filter
@@ -156,68 +166,131 @@ const FavoriteProductsScreen: React.FC<IFavoritesScreenProps> = () => {
         break;
     }
 
+    console.log('Filtered products:', filtered);
     return filtered;
-  };
+  }, [favoriteProducts, searchQuery, selectedCategory, selectedFilters, sortBy]);
 
   const filteredProducts = getFilteredProducts();
-  const cardWidth = (screenWidth - 52) / 2;
+  const renderProductCard = useCallback(({ item, index }: { item: IFavoriteProduct; index: number }) => (
 
-  const renderProductCard = ({ item }: { item: IFavoriteProduct }) => (
+
     <ProductCard
       product={item}
-      viewMode={viewMode}
-      cardWidth={cardWidth}
+      index={index}
       onRemoveFavorite={removeFavorite}
       onProductPress={handleProductPress}
       fadeAnim={fadeAnim}
+      scrollY={scrollY}
     />
+  ), [removeFavorite, handleProductPress, fadeAnim, scrollY]);
+
+  const keyExtractor = useCallback((item: IFavoriteProduct) => item.id, []);
+
+  const getItemLayout = useCallback((data: any, index: number) => ({
+    length: ITEM_HEIGHT,
+    offset: ITEM_HEIGHT * index,
+    index,
+  }), []);
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    { useNativeDriver: false }
   );
 
   return (
-    <View className="flex-1 bg-gray-50">
-      <FavoritesHeader
-        favoriteProducts={favoriteProducts}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onBack={() => navigation.goBack()}
-        onClearAll={() => setFavoriteProducts([])}
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor={colors.gray.light}
+        translucent={Platform.OS === 'android'}
       />
-      
-      <CategoriesFilter
-        categories={categories}
-        selectedCategory={selectedCategory}
-        onCategorySelect={setSelectedCategory}
-      />
-      
-      <Toolbar
-        filteredCount={filteredProducts.length}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-        onSortPress={() => setShowSortModal(true)}
-        onFilterPress={toggleFilters}
-      />
-      
-      {filteredProducts.length === 0 ? (
-        <EmptyState onBrowsePress={() => navigation.navigate('ShopHome')} />
-      ) : (
-        <FlatList
-          data={filteredProducts}
-          renderItem={renderProductCard}
-          keyExtractor={(item) => item.id}
-          numColumns={viewMode === 'grid' ? 2 : 1}
-          key={`${viewMode}-${filteredProducts.length}`}
-          columnWrapperStyle={viewMode === 'grid' ? { justifyContent: 'space-between' } : undefined}
-          contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={handleRefresh}
-              colors={['#FFCC00']}
-              tintColor="#FFCC00"
-            />
-          }
+
+      <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+        <Header
+          title="Saved Items"
+          leftIcon={{
+            name: 'chevron-left',
+            onPress: () => navigation.goBack(),
+            color: colors.secondary
+          }}
+          rightIcons={[
+            { name: 'more-vert', onPress: () => { }, color: colors.secondary }
+          ]}
+          titleColor={colors.secondary}
+          iconBackgroundColor={colors.accent + '20'}
         />
+      </Animated.View>
+
+      <Animated.View
+        style={{
+          transform: [{ translateY: slideAnim }],
+          opacity: fadeAnim,
+        }}
+      >
+        <Toolbar
+          filteredCount={filteredProducts.length}
+          onSortPress={() => setShowSortModal(true)}
+          onFilterPress={toggleFilters}
+        />
+      </Animated.View>
+
+      {filteredProducts.length === 0 ? (
+        <Animated.View
+          style={{
+            flex: 1,
+            opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }],
+            justifyContent: 'center',
+          }}
+        >
+          <EmptyState onBrowsePress={() => navigation.navigate('ShopHome')} />
+        </Animated.View>
+      ) : (
+        <Animated.View
+          style={{
+            flex: 1,
+            opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }],
+          }}
+        >
+
+
+          <FlatList
+            ref={flatListRef}
+            data={filteredProducts}
+            renderItem={renderProductCard}
+            keyExtractor={keyExtractor}
+            getItemLayout={getItemLayout}
+            contentContainerStyle={{
+              paddingHorizontal: 16,
+              paddingTop: 8,
+              paddingBottom: Platform.OS === 'ios' ? 100 : 120,
+            }}
+            showsVerticalScrollIndicator={false}
+            scrollEventThrottle={16}
+            onScroll={handleScroll}
+            removeClippedSubviews={true}
+            maxToRenderPerBatch={10}
+            windowSize={10}
+            initialNumToRender={8}
+            updateCellsBatchingPeriod={50}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+                colors={[colors.accent]}
+                tintColor={colors.accent}
+                progressBackgroundColor={colors.white}
+              // size="small"
+              />
+            }
+            bounces={true}
+            bouncesZoom={false}
+            alwaysBounceVertical={true}
+            decelerationRate="normal"
+            scrollIndicatorInsets={{ right: 1 }}
+          />
+        </Animated.View>
       )}
 
       <SortModal

@@ -1,8 +1,8 @@
 // components/QuickFilter.tsx
 import {
-    Text,
-    TouchableOpacity,
-    View
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export const FilterSection: React.FC<IFilterSectionProps> = ({
@@ -47,6 +47,7 @@ export const QuickFilter: React.FC<IQuickFilterProps> = ({
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 
+import { colors } from '../../../../../constants/theme/colors';
 import { IFilterSectionProps, IQuickFilterProps, IRatingFilterProps } from '../../../../../types/favoriteProductTypes';
 
 export const RatingFilter: React.FC<IRatingFilterProps> = ({
@@ -67,7 +68,7 @@ export const RatingFilter: React.FC<IRatingFilterProps> = ({
             key={i}
             name="star"
             size={14}
-            color={i < rating ? '#FF9800' : '#E0E0E0'}
+            color={i < rating ? colors.accent : colors.gray.light}
           />
         ))}
       </View>

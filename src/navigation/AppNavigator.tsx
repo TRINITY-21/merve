@@ -324,7 +324,8 @@ const AgentProfileStackNavigator: React.FC = () => (
 const ShopStackNavigator: React.FC = () => (
   <ShopStack.Navigator screenOptions={{ headerShown: false }}>
     <ShopStack.Screen name="ShopHome" component={MarketplaceScreen} />
-    <ShopStack.Screen name="ProductDetails" component={ProductDetailsScreen} />
+    <ShopStack.Screen name="ProductDetails" component={ProductDetailsScreen} 
+   />
     <ShopStack.Screen name="FavoriteProducts" component={FavoriteProductsScreen} />
     <ShopStack.Screen name="FavoritesScreen" component={FavoriteProductsScreen} />
     <ShopStack.Screen name="PromoteProduct" component={PromoteProductScreen} />

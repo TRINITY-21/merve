@@ -2,9 +2,9 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import {
-    Text,
-    TouchableOpacity,
-    View,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { IEmptyStateProps } from '../../../../../types/favoriteProductTypes';
 
@@ -21,7 +21,7 @@ export const EmptyState: React.FC<IEmptyStateProps> = ({
         Start adding products to your favorites to see them here
       </Text>
       <TouchableOpacity 
-        className="flex-row items-center bg-[#FFCC00] rounded-2xl px-6 py-4 gap-2 shadow-lg"
+        className="flex-row items-center bg-primary rounded-2xl px-6 py-4 gap-2 shadow-lg"
         onPress={onBrowsePress}
         activeOpacity={0.8}
         style={{

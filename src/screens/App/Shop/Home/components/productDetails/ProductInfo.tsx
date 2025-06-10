@@ -11,7 +11,7 @@ const ProductInfo: React.FC<IProductInfoProps> = ({
 }) => {
   return (
     <Animated.View 
-      className="bg-white rounded-t-3xl -mt-6 pt-6 px-5"
+      className="bg-white -mt-6 pt-6 px-5"
       style={{ 
         opacity: fadeAnim,
         transform: [{ translateY: slideAnim }]

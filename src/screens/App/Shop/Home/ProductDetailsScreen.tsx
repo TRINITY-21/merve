@@ -1,18 +1,21 @@
 // screens/ProductDetailsScreen.tsx
-import { useNavigation, useRoute } from '@react-navigation/native';
+
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Keyboard, Text, View } from 'react-native';
+import { Animated, Keyboard, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IChatMessage, IDetailedProduct, IProductDetailsScreenProps, TabKey } from '../../../../types/productDetailsTypes';
 import { initialChatMessages, mockProduct, mockReviews, mockSimilarProducts, tabs } from '../../../../utils/productDetailsDummyData';
+import { LoadingState } from '../UserShop/components/details/LoadingState';
 import { BottomActions, ChatBottomSheet, ImageModal, OptionsMenu, ProductDescription, ProductDetailsHeader, ProductImageGallery, ProductInfo, ProductReviews, ProductSpecifications, ProductTabs, SellerInfo, SimilarProducts } from './components/productDetails';
-
-// Components
 
 const ProductDetailsScreen: React.FC<IProductDetailsScreenProps> = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const insets = useSafeAreaInsets();
   const { productId } = route.params as { productId: string };
-  
+  const [isLoading, setIsLoading] = useState(true);
+
   // State management
   const [product, setProduct] = useState<IDetailedProduct | null>(null);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
@@ -39,11 +42,10 @@ const ProductDetailsScreen: React.FC<IProductDetailsScreenProps> = () => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const chatSheetAnim = useRef(new Animated.Value(0)).current;
 
-
   useEffect(() => {
     setProduct(mockProduct);
     setChatMessages(initialChatMessages);
-    
+
     // Initial animations
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -66,8 +68,31 @@ const ProductDetailsScreen: React.FC<IProductDetailsScreenProps> = () => {
     ]).start();
   }, [productId]);
 
+
+    useFocusEffect(
+    React.useCallback(() => {
+      // Hide tab bar when this screen is focused
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'none' }
+      });
+      
+      return () => {
+        // Show tab bar when leaving this screen
+        navigation.getParent()?.setOptions({
+          tabBarStyle: { 
+            display: 'flex',
+            // Add your normal tab bar styling here
+          }
+        });
+      };
+    }, [navigation])
+  );
+
+
+
+  // Updated header opacity animation - starts appearing earlier
   const headerOpacity = scrollY.interpolate({
-    inputRange: [0, 200],
+    inputRange: [0, 150],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
@@ -138,9 +163,9 @@ const ProductDetailsScreen: React.FC<IProductDetailsScreenProps> = () => {
 
     // Simulate message delivery
     setTimeout(() => {
-      setChatMessages(prev => 
-        prev.map(msg => 
-          msg.id === newMessage.id 
+      setChatMessages(prev =>
+        prev.map(msg =>
+          msg.id === newMessage.id
             ? { ...msg, status: 'delivered' }
             : msg
         )
@@ -208,33 +233,51 @@ const ProductDetailsScreen: React.FC<IProductDetailsScreenProps> = () => {
     }
   };
 
-  if (!product) {
+  useEffect(() => {
+    // Simulate loading for 3 seconds
+    if (product) {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [product]);
+
+  if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center">
-        <Text className="text-base text-text-secondary">Loading...</Text>
+        <LoadingState />
       </View>
     );
   }
 
-  return (
+  if (!product) return null;
+
+  return ( 
     <View className="flex-1 bg-white">
       <ProductDetailsHeader
         productTitle={product.title}
         isFavorite={isFavorite}
         headerOpacity={headerOpacity}
-        onBack={() => navigation.goBack()}
+        onBack={() =>navigation.goBack()}
         onFavoritePress={toggleFavorite}
         onOptionsPress={() => setShowOptionsMenu(true)}
       />
-      
+
       <Animated.ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
+        bounces={true}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: false }
         )}
         scrollEventThrottle={16}
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingBottom: insets.bottom + 120, // Extra space for bottom actions + safe area
+        }}
       >
         <ProductImageGallery
           images={product.images}
@@ -247,29 +290,27 @@ const ProductDetailsScreen: React.FC<IProductDetailsScreenProps> = () => {
           onFavoritePress={toggleFavorite}
           onOptionsPress={() => setShowOptionsMenu(true)}
         />
-        
+
         <ProductInfo
           product={product}
           fadeAnim={fadeAnim}
           slideAnim={slideAnim}
         />
-        
+
         <ProductTabs
           tabs={tabs}
           activeTab={activeTab}
           onTabChange={(tabKey) => setActiveTab(tabKey as TabKey)}
         />
-        
+
         {renderTabContent()}
-        
+
         <SimilarProducts
           products={mockSimilarProducts}
           visible={showSimilarProducts}
           onClose={() => setShowSimilarProducts(false)}
           onProductPress={(id) => navigation.push('ProductDetails' as never, { productId: id } as never)}
         />
-        
-        <View className="h-30" />
       </Animated.ScrollView>
 
       <BottomActions

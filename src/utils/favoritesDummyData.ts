@@ -95,7 +95,126 @@ import { IFavoriteProduct, ISortOption } from "../types/favoriteProductTypes";
       lastUpdated: '2 hours ago'
     },
     {
-      id: 'f5',
+      id: 'f5s',
+      title: 'Gaming Chair RGB',
+      price: 850.00,
+      originalPrice: 950.00,
+      image: 'https://picsum.photos/300/300?random=8',
+      category: 'furniture',
+      agent: {
+        name: 'Office Plus',
+        distance: 3.2,
+        rating: 4.4,
+        verified: false,
+        location: 'Tema, Accra'
+      },
+      inStock: true,
+      stockCount: 12,
+      discount: 11,
+      isPromoted: false,
+      tags: ['gaming', 'comfort'],
+      rating: 4.2,
+      reviews: 78,
+      dateAdded: '2024-05-10',
+      lastUpdated: '4 hours ago'
+    },
+        {
+      id: 'f5f',
+      title: 'Gaming Chair RGB',
+      price: 850.00,
+      originalPrice: 950.00,
+      image: 'https://picsum.photos/300/300?random=8',
+      category: 'furniture',
+      agent: {
+        name: 'Office Plus',
+        distance: 3.2,
+        rating: 4.4,
+        verified: false,
+        location: 'Tema, Accra'
+      },
+      inStock: true,
+      stockCount: 12,
+      discount: 11,
+      isPromoted: false,
+      tags: ['gaming', 'comfort'],
+      rating: 4.2,
+      reviews: 78,
+      dateAdded: '2024-05-10',
+      lastUpdated: '4 hours ago'
+    },
+        {
+      id: 'fs5',
+      title: 'Gaming Chair RGB',
+      price: 850.00,
+      originalPrice: 950.00,
+      image: 'https://picsum.photos/300/300?random=8',
+      category: 'furniture',
+      agent: {
+        name: 'Office Plus',
+        distance: 3.2,
+        rating: 4.4,
+        verified: false,
+        location: 'Tema, Accra'
+      },
+      inStock: true,
+      stockCount: 12,
+      discount: 11,
+      isPromoted: false,
+      tags: ['gaming', 'comfort'],
+      rating: 4.2,
+      reviews: 78,
+      dateAdded: '2024-05-10',
+      lastUpdated: '4 hours ago'
+    },
+        {
+      id: 'f51',
+      title: 'Gaming Chair RGB',
+      price: 850.00,
+      originalPrice: 950.00,
+      image: 'https://picsum.photos/300/300?random=8',
+      category: 'furniture',
+      agent: {
+        name: 'Office Plus',
+        distance: 3.2,
+        rating: 4.4,
+        verified: false,
+        location: 'Tema, Accra'
+      },
+      inStock: true,
+      stockCount: 12,
+      discount: 11,
+      isPromoted: false,
+      tags: ['gaming', 'comfort'],
+      rating: 4.2,
+      reviews: 78,
+      dateAdded: '2024-05-10',
+      lastUpdated: '4 hours ago'
+    },
+        {
+      id: 'f52',
+      title: 'Gaming Chair RGB',
+      price: 850.00,
+      originalPrice: 950.00,
+      image: 'https://picsum.photos/300/300?random=8',
+      category: 'furniture',
+      agent: {
+        name: 'Office Plus',
+        distance: 3.2,
+        rating: 4.4,
+        verified: false,
+        location: 'Tema, Accra'
+      },
+      inStock: true,
+      stockCount: 12,
+      discount: 11,
+      isPromoted: false,
+      tags: ['gaming', 'comfort'],
+      rating: 4.2,
+      reviews: 78,
+      dateAdded: '2024-05-10',
+      lastUpdated: '4 hours ago'
+    },    {
+      id: 'f53',
       title: 'Gaming Chair RGB',
       price: 850.00,
       originalPrice: 950.00,
@@ -118,6 +237,78 @@ import { IFavoriteProduct, ISortOption } from "../types/favoriteProductTypes";
       dateAdded: '2024-05-10',
       lastUpdated: '4 hours ago'
     }
+    ,
+        {
+      id: 'f45',
+      title: 'Gaming Chair RGB',
+      price: 850.00,
+      originalPrice: 950.00,
+      image: 'https://picsum.photos/300/300?random=8',
+      category: 'furniture',
+      agent: {
+        name: 'Office Plus',
+        distance: 3.2,
+        rating: 4.4,
+        verified: false,
+        location: 'Tema, Accra'
+      },
+      inStock: true,
+      stockCount: 12,
+      discount: 11,
+      isPromoted: false,
+      tags: ['gaming', 'comfort'],
+      rating: 4.2,
+      reviews: 78,
+      dateAdded: '2024-05-10',
+      lastUpdated: '4 hours ago'
+    },    {
+      id: 'f15',
+      title: 'Gaming Chair RGB',
+      price: 850.00,
+      originalPrice: 950.00,
+      image: 'https://picsum.photos/300/300?random=8',
+      category: 'furniture',
+      agent: {
+        name: 'Office Plus',
+        distance: 3.2,
+        rating: 4.4,
+        verified: false,
+        location: 'Tema, Accra'
+      },
+      inStock: true,
+      stockCount: 12,
+      discount: 11,
+      isPromoted: false,
+      tags: ['gaming', 'comfort'],
+      rating: 4.2,
+      reviews: 78,
+      dateAdded: '2024-05-10',
+      lastUpdated: '4 hours ago'
+    },    {
+      id: 'f35',
+      title: 'Gaming Chair RGB',
+      price: 850.00,
+      originalPrice: 950.00,
+      image: 'https://picsum.photos/300/300?random=8',
+      category: 'furniture',
+      agent: {
+        name: 'Office Plus',
+        distance: 3.2,
+        rating: 4.4,
+        verified: false,
+        location: 'Tema, Accra'
+      },
+      inStock: true,
+      stockCount: 12,
+      discount: 11,
+      isPromoted: false,
+      tags: ['gaming', 'comfort'],
+      rating: 4.2,
+      reviews: 78,
+      dateAdded: '2024-05-10',
+      lastUpdated: '4 hours ago'
+    }
+    
   ];
 
 

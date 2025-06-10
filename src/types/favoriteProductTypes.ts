@@ -63,19 +63,18 @@ export interface ICategoriesFilterProps {
 
 export interface IToolbarProps {
   filteredCount: number;
-  viewMode: 'grid' | 'list';
-  onViewModeChange: (mode: 'grid' | 'list') => void;
   onSortPress: () => void;
   onFilterPress: () => void;
 }
 
 export interface IProductCardProps {
   product: IFavoriteProduct;
-  viewMode: 'grid' | 'list';
+  index?: number;
   cardWidth?: number;
   onRemoveFavorite: (productId: string) => void;
   onProductPress: (productId: string) => void;
-  fadeAnim: Animated.Value;
+  fadeAnim?: Animated.Value; // Made optional since each card creates its own
+  scrollY?: Animated.Value;
 }
 
 export interface ISortModalProps {
@@ -99,19 +98,16 @@ export interface IEmptyStateProps {
 
 export interface IProductBadgesProps {
   product: IFavoriteProduct;
-  isListView?: boolean;
 }
 
 export interface IProductInfoProps {
   product: IFavoriteProduct;
-  isListView?: boolean;
 }
 
 export interface IQuickActionsProps {
   productId: string;
   onRemoveFavorite: (productId: string) => void;
   onShare: (productId: string) => void;
-  isListView?: boolean;
 }
 
 export interface IRatingStarsProps {
@@ -149,15 +145,8 @@ export interface IFavoritesScreenProps {
   navigation: any;
 }
 
-export type TViewMode = 'grid' | 'list';
 export type TSortKey = 'date_added' | 'price_low' | 'price_high' | 'rating' | 'distance' | 'name';
 export type TCategoryKey = 'all' | 'phones' | 'accessories' | 'laptops' | 'furniture';
-
-export interface IProductCardGridProps extends IProductCardProps {
-  cardWidth: number;
-}
-
-export interface IProductCardListProps extends IProductCardProps {}
 
 export interface IAnimationConfig {
   fadeAnim: Animated.Value;

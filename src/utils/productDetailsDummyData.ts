@@ -14,6 +14,12 @@ import { IChatMessage, IDetailedProduct, IReview, ISimilarProduct, ITab } from "
       'https://picsum.photos/400/400?random=3',
       'https://picsum.photos/400/400?random=4',
       'https://picsum.photos/400/400?random=5',
+      'https://picsum.photos/400/400?random=6',
+      'https://picsum.photos/400/400?random=7',
+      'https://picsum.photos/400/400?random=8',
+      'https://picsum.photos/400/400?random=9',
+      'https://picsum.photos/400/400?random=11',
+
     ],
     description: 'Experience the ultimate in smartphone technology with the iPhone 13 Pro. Featuring the revolutionary A15 Bionic chip, ProRAW photography capabilities, and a stunning Super Retina XDR display with ProMotion technology.\n\nThe triple-camera system delivers exceptional photo and video quality, while the all-day battery life keeps you connected from morning to night.',
     category: 'phones',

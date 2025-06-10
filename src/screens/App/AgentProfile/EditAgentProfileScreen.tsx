@@ -2,12 +2,12 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-    Alert,
-    Animated,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    View,
+  Alert,
+  Animated,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  View,
 } from 'react-native';
 import { IAgentData, ITabConfig, IWorkingHours, IWorkingHoursDay } from '../../../types/editProfileTypes';
 import { EditProfileHeader, TabBar, TabContent } from './components/editProfile';

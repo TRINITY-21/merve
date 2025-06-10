@@ -2,11 +2,11 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import {
-    Modal,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  Modal,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 import { IFiltersPanelProps } from '../../../../../types/favoriteProductTypes';
@@ -42,7 +42,7 @@ export const FiltersPanel: React.FC<IFiltersPanelProps> = ({
       onRequestClose={onClose}
     >
       <View className="flex-1 bg-black/50">
-        <View className="flex-1 bg-white mt-25 rounded-t-3xl">
+        <View className="flex-1 bg-white mt-40 rounded-t-3xl">
           <View className="flex-row justify-between items-center px-6 py-5 border-b border-gray-200">
             <Text className="text-xl font-bold text-gray-800">
               Filters
@@ -94,7 +94,7 @@ export const FiltersPanel: React.FC<IFiltersPanelProps> = ({
               </Text>
             </TouchableOpacity>
             <TouchableOpacity 
-              className="flex-1 py-4 items-center bg-[#FFCC00] rounded-2xl"
+              className="flex-1 py-4 items-center bg-primary rounded-2xl"
               onPress={onClose}
             >
               <Text className="text-base font-bold text-white">

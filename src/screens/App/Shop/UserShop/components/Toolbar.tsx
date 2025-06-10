@@ -2,16 +2,14 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import {
-    Text,
-    TouchableOpacity,
-    View,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { IToolbarProps } from '../../../../../types/favoriteProductTypes';
 
 export const Toolbar: React.FC<IToolbarProps> = ({
   filteredCount,
-  viewMode,
-  onViewModeChange,
   onSortPress,
   onFilterPress,
 }) => {
@@ -41,39 +39,6 @@ export const Toolbar: React.FC<IToolbarProps> = ({
           <MaterialIcons name="tune" size={18} color="#212121" />
           <Text className="text-xs font-semibold text-gray-800">Filter</Text>
         </TouchableOpacity>
-
-        <View className="flex-row bg-gray-50 rounded-xl p-0.5">
-          <TouchableOpacity
-            className={`w-8 h-8 rounded-lg items-center justify-center ${
-              viewMode === 'grid' 
-                ? 'bg-white shadow-sm' 
-                : ''
-            }`}
-            onPress={() => onViewModeChange('grid')}
-            activeOpacity={0.8}
-          >
-            <MaterialIcons 
-              name="grid-view" 
-              size={16} 
-              color={viewMode === 'grid' ? '#00BFA5' : '#9E9E9E'} 
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            className={`w-8 h-8 rounded-lg items-center justify-center ${
-              viewMode === 'list' 
-                ? 'bg-white shadow-sm' 
-                : ''
-            }`}
-            onPress={() => onViewModeChange('list')}
-            activeOpacity={0.8}
-          >
-            <MaterialIcons 
-              name="view-list" 
-              size={16} 
-              color={viewMode === 'list' ? '#00BFA5' : '#9E9E9E'} 
-            />
-          </TouchableOpacity>
-        </View>
       </View>
     </View>
   );
