@@ -2,6 +2,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef } from 'react';
 import { Animated, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { colors } from '../../../../constants/theme/colors';
 import { IAddReviewSectionProps } from '../../../../types/reviewsTypes';
 
 const AddReviewSection: React.FC<IAddReviewSectionProps> = ({
@@ -48,7 +49,7 @@ const AddReviewSection: React.FC<IAddReviewSectionProps> = ({
         Review Your Agent
       </Text>
 
-      <View className="flex-col items-center bg-[#FFF8E1] p-4 rounded-xl mb-5 border border-[#FFCC00]">
+      <View className="flex-col items-center bg-primary/10 p-4 rounded-xl mb-5 border border-primary">
         <Text className="text-sm text-[#757575] mb-2">
           You are reviewing:
         </Text>
@@ -61,7 +62,7 @@ const AddReviewSection: React.FC<IAddReviewSectionProps> = ({
       </View>
 
       <View className="mb-5 items-center">
-        <Text className="text-sm font-semibold text-[#212121] mb-2.5">
+        <Text className="text-sm font-semibold text-secondary mb-2.5">
           Your Rating:
         </Text>
         <View className="flex-row gap-1">
@@ -70,7 +71,7 @@ const AddReviewSection: React.FC<IAddReviewSectionProps> = ({
               <MaterialIcons
                 name={star <= reviewRating ? 'star' : 'star-border'}
                 size={36}
-                color="#FFCC00"
+                color={colors.primary}
                 className="mx-0.5"
               />
             </TouchableOpacity>
@@ -93,12 +94,12 @@ const AddReviewSection: React.FC<IAddReviewSectionProps> = ({
       />
 
       <TouchableOpacity
-        className="flex-row items-center justify-center bg-[#FFCC00] py-4 rounded-3xl shadow-md"
+        className="flex-row items-center justify-center bg-primary py-4 rounded-3xl shadow-md"
         onPress={onSubmit}
         activeOpacity={0.8}
       >
-        <MaterialIcons name="send" size={24} color="#1E3A5F" />
-        <Text className="text-[#1E3A5F] text-lg font-extrabold ml-2.5">
+        <MaterialIcons name="send" size={24} color={colors.white} />
+        <Text className="text-white text-lg font-extrabold ml-2.5">
           Submit Review
         </Text>
       </TouchableOpacity>

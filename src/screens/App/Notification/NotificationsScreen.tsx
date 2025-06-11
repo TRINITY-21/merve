@@ -1040,33 +1040,11 @@ const NotificationsScreen: React.FC = () => {
                                 }
                             ]
                     }
-                    animatedValue={headerScaleAnim}
-                    barStyle="dark-content"
                     withShadow={true}
                 />
             </LinearGradient>
 
-            {/* Stats row */}
-            <View className="flex-row text-accent justify-between p-4" style={{ gap: 10 }}>
-                <View className="flex-1 bg-black/10 rounded-xl p-3 items-center">
-                    <Text className="text-lg font-bold text-secondary mb-0.5">
-                        {notifications.length}
-                    </Text>
-                    <Text className="text-xs text-secondary font-medium">Total</Text>
-                </View>
-                <View className="flex-1 bg-black/10 rounded-xl p-3 items-center">
-                    <Text className="text-lg font-bold text-secondary mb-0.5">
-                        {notifications.filter(n => !n.isRead).length}
-                    </Text>
-                    <Text className="text-xs text-secondary font-medium">Unread</Text>
-                </View>
-                <View className="flex-1 bg-black/10 rounded-xl p-3 items-center">
-                    <Text className="text-lg font-bold text-secondary mb-0.5">
-                        {notifications.filter(n => n.actionRequired).length}
-                    </Text>
-                    <Text className="text-xs text-secondary font-medium">Actions</Text>
-                </View>
-            </View>
+            
         </Animated.View>
     );
 

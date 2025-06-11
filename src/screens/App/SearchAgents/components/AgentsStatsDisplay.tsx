@@ -2,7 +2,9 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { IAgentStatsDisplayProps } from '../../../types/searchAgentTypes';
+import { Typography } from '../../../../components/common';
+import { colors } from '../../../../constants/theme/colors';
+import { IAgentStatsDisplayProps } from '../../../../types/searchAgentTypes';
 
 const AgentStatsDisplay: React.FC<IAgentStatsDisplayProps> = ({
   transactions,
@@ -11,21 +13,21 @@ const AgentStatsDisplay: React.FC<IAgentStatsDisplayProps> = ({
   return (
     <View className="flex-row items-center gap-3">
       <View className="flex-row items-center">
-        <MaterialIcons name="push-pin" size={16} color="#757575" />
-        <Text className="text-sm font-semibold text-[#212121] ml-1 mr-1">
+        <MaterialIcons name="push-pin" size={16} color={transactions < 1000? colors.primary : colors.gray.medium} />
+        <Typography variant='regular' size={12} className="text-sm font-medium ml-1 mr-1">
           {transactions}
-        </Text>
-        <Text className="text-xs text-[#757575]">Pins</Text>
+        </Typography>
+        <Typography variant='regular' size={11} className="text-xs text-gray-500">Pins</Typography>
       </View>
       
       <View className="flex-row items-center">
         <MaterialIcons 
           name={cashAvailable ? "account-balance-wallet" : "money-off"} 
           size={16} 
-          color={cashAvailable ? "#4CAF50" : "#F44336"} 
+          color={cashAvailable ? colors.primary : colors.error} 
         />
         <Text className={`text-xs font-medium ml-1 ${
-          cashAvailable ? 'text-[#4CAF50]' : 'text-[#F44336]'
+          cashAvailable ? 'text-primary' : 'text-error'
         }`}>
           {cashAvailable ? 'Cash Available' : 'No Cash'}
         </Text>

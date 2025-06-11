@@ -26,7 +26,6 @@ import { AgentMapView } from './components/profile/AgentMapLocation';
 import { MarketplaceSection } from './components/profile/AgentMarketPlace';
 import { OperationalHours } from './components/profile/AgentOperationalHours';
 import { ProvidersSection } from './components/profile/AgentProviderSection';
-import { RecentActivities } from './components/profile/AgentRecentActivities';
 import { ReviewsSection } from './components/profile/AgentReviewSection';
 import { ServicesSection } from './components/profile/AgentServiceSection';
 
@@ -456,14 +455,6 @@ const AgentsProfileScreen: React.FC = () => {
             getStatusColor={getStatusColor}
           />
 
-          <RecentActivities
-            agentData={agentData}
-            fadeAnim={fadeAnim}
-            slideAnim={slideAnim}
-            navigation={navigation}
-            renderStars={renderStars}
-            getStatusColor={getStatusColor}
-          />
 
           <ReviewsSection
             agentData={agentData}

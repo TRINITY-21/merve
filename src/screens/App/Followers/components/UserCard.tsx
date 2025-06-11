@@ -2,15 +2,15 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import {
-    Animated,
-    Image,
-    Text,
-    TouchableOpacity,
-    View,
+  Animated,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
+import { colors } from '../../../../constants/theme/colors';
 import { IAgent, IFollower, IUserCardProps } from '../../../../types/followersTypes';
-import { EngagementIndicator, RatingIndicator, UserActions, UserStats, UserTags } from './EngagementIndicator';
-
+import { UserActions } from './EngagementIndicator';
 
 export const UserCard: React.FC<IUserCardProps> = ({
   item,
@@ -30,101 +30,179 @@ export const UserCard: React.FC<IUserCardProps> = ({
 
   return (
     <Animated.View 
-      className="bg-white rounded-2xl mb-3 shadow-sm"
       style={{
+        backgroundColor: 'white',
+        borderRadius: 20,
+        marginBottom: 6,
+        marginHorizontal: 0,
+        // shadowColor: '#000',
+        // shadowOffset: { width: 0, height: 4 },
+        // shadowOpacity: 0.08,
+        // shadowRadius: 12,
+        // elevation: 8,
         opacity: fadeAnim,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 4,
+        overflow: 'hidden',
       }}
     >
       <TouchableOpacity
-        className="flex-row p-4 items-start"
+        style={{
+          padding: 16,
+          flexDirection: 'row',
+          alignItems: 'flex-start',
+        }}
         onPress={onPress}
-        activeOpacity={0.8}
+        activeOpacity={0.96}
       >
+        {/* Selection Checkbox */}
         {isSelectionMode && (
-          <View className="mr-3 mt-1">
-            <MaterialIcons 
-              name={isSelected ? "check-circle" : "radio-button-unchecked"} 
-              size={24} 
-              color={isSelected ? '#00BFA5' : '#9E9E9E'} 
-            />
+          <View style={{ marginRight: 16, marginTop: 4 }}>
+            <View style={{
+              width: 24,
+              height: 24,
+              borderRadius: 12,
+              backgroundColor: isSelected ? '#10B981' : '#F3F4F6',
+              borderWidth: isSelected ? 0 : 2,
+              borderColor: '#D1D5DB',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              {isSelected && (
+                <MaterialIcons name="check" size={16} color="white" />
+              )}
+            </View>
           </View>
         )}
 
-        <View className="relative mr-3">
-          <Image 
-            source={{ uri: item.avatar }} 
-            className="w-12 h-12 rounded-full border-2 border-white"
-          />
+        {/* Avatar Section */}
+        <View style={{ marginRight: 16, position: 'relative' }}>
+          <View style={{
+            width: 68,
+            height: 68,
+            borderRadius: 34,
+            backgroundColor: '#F9FAFB',
+            padding: 3,
+            // shadowColor: '#000',
+            // shadowOffset: { width: 0, height: 2 },
+            // shadowOpacity: 0.1,
+            // shadowRadius: 8,
+            // elevation: 4,
+          }}>
+            <Image 
+              source={{ uri: item.avatar }} 
+              style={{
+                width: 62,
+                height: 62,
+                borderRadius: 31,
+              }}
+            />
+          </View>
+          
+          {/* Verified Badge */}
           {item.verified && (
-            <View className="absolute -top-0.5 -right-0.5 bg-white rounded-lg p-0.5">
-              <MaterialIcons name="verified" size={12} color="#00BFA5" />
+            <View style={{
+              position: 'absolute',
+              top: -2,
+              right: -2,
+              backgroundColor: 'white',
+              borderRadius: 12,
+              padding: 2,
+              // shadowColor: '#000',
+              // shadowOffset: { width: 0, height: 1 },
+              // shadowOpacity: 0.2,
+              // shadowRadius: 3,
+              // elevation: 3,
+            }}>
+              <MaterialIcons name="verified" size={16} color={colors.primary} />
             </View>
           )}
-          
-          {isFollower ? (
-            <EngagementIndicator engagement={follower.engagement} />
-          ) : (
-            <RatingIndicator rating={agent.rating} />
-          )}
+
+          {/* Online Status Indicator */}
+          <View style={{
+            position: 'absolute',
+            bottom: 2,
+            right: 2,
+            width: 16,
+            height: 16,
+            borderRadius: 8,
+            backgroundColor: '#10B981',
+            borderWidth: 3,
+            borderColor: 'white',
+          }} />
         </View>
 
-        <View className="flex-1">
-          <View className="mb-1.5">
-            <Text className="text-base font-bold text-gray-800 mb-0.5">
+        {/* Content Section */}
+        <View style={{ flex: 1, marginRight: 12 }}>
+          {/* Name and Status */}
+          <View style={{ marginBottom: 8 }}>
+            <Text style={{
+              fontSize: 18,
+              fontWeight: '700',
+              // color: '#111827',
+              marginBottom: 4,
+              letterSpacing: -0.3,
+            }}>
               {item.name}
             </Text>
-            <Text className="text-sm text-gray-600 mb-0.5">
-              {item.username}
-            </Text>
-            {!isFollower && (
-              <Text className="text-xs text-gray-500 opacity-70">
-                {agent.agentCode}
-              </Text>
-            )}
+
           </View>
 
-          <UserStats item={item} activeTab={activeTab} />
-
-          <View className="flex-row justify-between mb-2">
-            <Text className="text-xs text-gray-600 flex-1">
-              📍 {item.location}
-            </Text>
-            <Text className="text-xs text-gray-600">
-              {item.lastActive}
-            </Text>
-          </View>
-
-          {!isFollower && agent.services && (
-            <View className="flex-row gap-1.5 mb-2 flex-wrap">
-              {agent.services.slice(0, 3).map((service, index) => (
-                <View key={index} className="bg-teal-100 rounded-lg px-1.5 py-0.5">
-                  <Text className="text-xs text-teal-600 font-semibold">
-                    {service}
-                  </Text>
-                </View>
-              ))}
-              {agent.services.length > 3 && (
-                <Text className="text-xs text-gray-600 font-semibold self-center">
-                  +{agent.services.length - 3}
-                </Text>
-              )}
+          {/* Location */}
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 8,
+            gap: 6,
+          }}>
+            <View style={{
+              // backgroundColor: '#ECFDF5',
+              padding: 4,
+              borderRadius: 6,
+            }}>
+              <MaterialIcons name="location-on" size={12} color="#059669" />
             </View>
-          )}
+            <Text style={{
+              fontSize: 13,
+              // color: '#6B7280',
+              fontWeight: '500',
+              flex: 1,
+            }} numberOfLines={1}>
+              {item.location}
+            </Text>
+          </View>
 
-          <UserTags tags={item.tags} itemType={isFollower ? 'follower' : 'agent'} />
+          {/* Member Since */}
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 6,
+          }}>
+            <View style={{
+              // backgroundColor: '#FEF3C7',
+              padding: 4,
+              borderRadius: 6,
+            }}>
+              <MaterialIcons name="schedule" size={12} color="#D97706" />
+            </View>
+            <Text style={{
+              fontSize: 12,
+              color: '#9CA3AF',
+              fontWeight: '500',
+            }}>
+              Member since: 10 May, 2024
+            </Text>
+          </View>
         </View>
 
-        <UserActions
-          item={item}
-          activeTab={activeTab}
-          onAction={onAction}
-          onMessage={onMessage}
-          onMore={onMore}
-        />
+        {/* Actions Section */}
+        <View style={{ alignItems: 'flex-end' }}>
+          <UserActions
+            item={item}
+            activeTab={activeTab}
+            onAction={onAction}
+            onMessage={onMessage}
+            onMore={onMore}
+          />
+        </View>
       </TouchableOpacity>
     </Animated.View>
   );

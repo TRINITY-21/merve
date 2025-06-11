@@ -2,7 +2,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import { AgentService, IAgentServicesProps } from '../../../types/searchAgentTypes';
+import { AgentService, IAgentServicesProps } from '../../../../types/searchAgentTypes';
 
 const AgentServices: React.FC<IAgentServicesProps> = ({ services }) => {
   const getServiceIcon = (service: AgentService): string => {

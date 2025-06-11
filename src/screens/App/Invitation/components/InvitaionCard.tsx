@@ -20,6 +20,7 @@ const InvitationCard: React.FC<IInvitationCardProps> = ({
   const isPending = item.status === 'pending';
   const isFollowInvite = item.type.includes('_follow_');
 
+
   const getStatusColor = () => {
     switch (item.status) {
       case 'accepted':

@@ -8,9 +8,9 @@ import { DUMMY_AGENTS, PROVIDER_OPTIONS, SERVICE_OPTIONS, SORT_OPTIONS, STATUS_O
 import { colors } from '../../../constants/theme/colors';
 import { FilterType, IAgent, IAgentsScreenProps, SortKey, SortOrder, ViewMode } from '../../../types/searchAgentTypes';
 import { calculateAgentStats, getDefaultFilters, hasActiveFilters, processAgents } from '../../../utils/searchAgentUtils';
-import AgentCard from './AgentCard';
-import AgentFilters from './AgentFilters';
-import EmptyAgentsState from './EmptyAgentState';
+import AgentCard from './components/AgentCard';
+import AgentFilters from './components/AgentFilters';
+import EmptyAgentsState from './components/EmptyAgentState';
 
 const SearchAgentsScreen: React.FC<IAgentsScreenProps> = ({
   initialAgents = DUMMY_AGENTS,
@@ -86,12 +86,12 @@ const SearchAgentsScreen: React.FC<IAgentsScreenProps> = ({
     setSortBy(sortKey);
     setSortOrder(order);
   };
-
+ 
   const handleAgentPress = (agent: IAgent): void => {
     if (onAgentPress) {
       onAgentPress(agent);
     } else {
-      navigation.navigate('AgentProfile' as never, { agent } as never);
+      navigation.navigate('AgentsProfile', { agent });
     }
   };
 
@@ -99,7 +99,7 @@ const SearchAgentsScreen: React.FC<IAgentsScreenProps> = ({
     if (onChatPress) {
       onChatPress(agent);
     } else {
-      navigation.navigate('Chat' as never, { agent } as never);
+      navigation.navigate('Chat', { agent });
     }
   };
 
@@ -131,11 +131,11 @@ const SearchAgentsScreen: React.FC<IAgentsScreenProps> = ({
   const filtersActive = hasActiveFilters(selectedProvider, selectedStatus, selectedService);
 
   return (
-    <View className="flex-1 bg-[#F5F5F5]">
+    <View className="flex-1 bg-background">
       <Header
         title="Search Agents"
         leftIcon={{
-          name: 'arrow-back',
+          name: 'chevron-left',
           onPress: () => navigation.goBack(),
           color: colors.secondary
         }}
@@ -145,14 +145,8 @@ const SearchAgentsScreen: React.FC<IAgentsScreenProps> = ({
             onPress: () => setShowFilters(!showFilters),
             color: colors.secondary
           },
-          {
-            name: viewMode === 'list' ? 'grid-view' : 'view-list',
-            onPress: handleViewModeToggle,
-            color: colors.secondary
-          }
+         
         ]}
-        animatedValue={scaleAnim}
-        backgroundColor={colors.background}
         titleColor={colors.secondary}
         iconBackgroundColor={colors.accent + '20'}
       />
@@ -188,9 +182,9 @@ const SearchAgentsScreen: React.FC<IAgentsScreenProps> = ({
             <RefreshControl
               refreshing={refreshing}
               onRefresh={handleRefresh}
-              colors={['#FFCC00']}
-              tintColor="#FFCC00"
-            />
+              colors={[colors.primary]}
+              tintColor={colors.primary}           
+               />
           }
           ListEmptyComponent={() => (
             <EmptyAgentsState

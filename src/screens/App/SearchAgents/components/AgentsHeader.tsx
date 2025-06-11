@@ -3,7 +3,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Platform, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { IAgentsHeaderProps } from '../../../types/searchAgentTypes';
+import { IAgentsHeaderProps } from '../../../../types/searchAgentTypes';
 const AgentsHeader: React.FC<IAgentsHeaderProps> = ({
   searchQuery,
   viewMode,

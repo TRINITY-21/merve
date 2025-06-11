@@ -1,8 +1,8 @@
 // components/TabSelector.tsx
 import {
-    Text,
-    TouchableOpacity,
-    View,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 export const TabSelector: React.FC<ITabSelectorProps> = ({
@@ -12,7 +12,7 @@ export const TabSelector: React.FC<ITabSelectorProps> = ({
   onTabChange,
 }) => {
   return (
-    <View className="flex-row bg-white/15 rounded-2xl p-1 mb-4">
+    <View className="flex-row bg-white/15 rounded-2xl pt-4 mb-4">
       <TouchableOpacity 
         className={`flex-1 flex-row items-center justify-center py-3 rounded-2xl gap-2 ${
           activeTab === 'followers' ? 'bg-white' : ''
@@ -23,7 +23,7 @@ export const TabSelector: React.FC<ITabSelectorProps> = ({
         <Text className={`text-sm font-bold ${
           activeTab === 'followers' ? 'text-[#1E3A5F]' : 'text-[#1E3A5F]/70'
         }`}>
-          Followers
+          Customers
         </Text>
         <View className="bg-[#1E3A5F]/20 rounded-2xl px-1.5 py-0.5 min-w-5 items-center">
           <Text className="text-xs font-bold text-[#1E3A5F]">
@@ -42,7 +42,7 @@ export const TabSelector: React.FC<ITabSelectorProps> = ({
         <Text className={`text-sm font-bold ${
           activeTab === 'following' ? 'text-[#1E3A5F]' : 'text-[#1E3A5F]/70'
         }`}>
-          Following
+          Invited Customers
         </Text>
         <View className="bg-[#1E3A5F]/20 rounded-2xl px-1.5 py-0.5 min-w-5 items-center">
           <Text className="text-xs font-bold text-[#1E3A5F]">
@@ -57,8 +57,8 @@ export const TabSelector: React.FC<ITabSelectorProps> = ({
 // components/SearchBar.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import {
-    Platform,
-    TextInput
+  Platform,
+  TextInput
 } from 'react-native';
 
 export const SearchBar: React.FC<ISearchBarProps> = ({
@@ -67,13 +67,13 @@ export const SearchBar: React.FC<ISearchBarProps> = ({
   onSearchChange,
 }) => {
   return (
-    <View className={`flex-row items-center bg-white rounded-2xl px-4 gap-3 mb-2.5 ${
+    <View className={`flex-row items-center bg-white rounded-2xl px-4 gap-3 mb-0 ${
       Platform.OS === 'ios' ? 'py-3' : 'py-0'
     }`}>
       <MaterialIcons name="search" size={20} color="#757575" />
       <TextInput
         className="flex-1 text-base text-[#1E3A5F]"
-        placeholder={`Search ${activeTab}...`}
+        placeholder={`Search customers...`}
         value={searchQuery}
         onChangeText={onSearchChange}
         placeholderTextColor="#9E9E9E"

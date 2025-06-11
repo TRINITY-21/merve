@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, Keyboard, RefreshControl, ScrollView, View } from 'react-native';
 import { FIXED_AGENT_TO_REVIEW, INITIAL_GIVEN_REVIEWS, INITIAL_RECEIVED_REVIEWS, REFRESH_TIMEOUT } from '../../../constants';
+import { colors } from '../../../constants/theme/colors';
 import { IAgent, IHelpfulVotes, IReview, IReviewsScreenProps, IUserVotes, TabType } from '../../../types/reviewsTypes';
 import { createNewReview, generateReviewId, initializeHelpfulVotes, isOwnReview, validateReview } from '../../../utils/reviewsUtil';
 import AddReviewSection from './components/AddReviewSection';
@@ -277,8 +278,8 @@ const ReviewsScreen: React.FC<IReviewsScreenProps> = ({
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}
-            colors={['#FFCC00']}
-            tintColor="#FFCC00"
+            colors={[colors.primary]}
+            tintColor={colors.primary}
           />
         }
       >

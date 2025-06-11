@@ -14,7 +14,7 @@ import {
     Vibration,
     View
 } from 'react-native';
-import { IChatScreenProps, IMediaAttachment, IMessage, IReplyTo, IUser } from '../../../types/chatTypes';
+import { IAgent, IMediaAttachment, IMessage, IReplyTo, IUser } from '../../../types/chatTypes';
 import { ChatHeader } from './components/ChatHeader';
 import { ChatInput } from './components/ChatInput';
 import { MessageItem } from './components/MessageItem';
@@ -30,7 +30,7 @@ const QUICK_REPLIES = [
     'On my way',
 ];
 
-const ChatScreen: React.FC<IChatScreenProps> = ({ route }) => {
+const ChatScreen: React.FC = ({  }) => {
     const navigation = useNavigation();
 
     // Mock agent data - in real app this would come from route params or API

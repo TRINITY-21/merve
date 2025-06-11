@@ -2,6 +2,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { colors } from '../../../../constants/theme/colors';
 import { IReplySectionProps } from '../../../../types/reviewsTypes';
 
 const ReplySection: React.FC<IReplySectionProps> = ({
@@ -40,12 +41,12 @@ const ReplySection: React.FC<IReplySectionProps> = ({
       {/* Reply Button */}
       {!review.reply && (
         <TouchableOpacity
-          className="flex-row items-center justify-center bg-[#FFCC00] py-2.5 rounded-full mt-4 shadow-sm"
+          className="flex-row items-center justify-center bg-primary py-2.5 rounded-full mt-4 shadow-sm"
           onPress={() => onReplyStart(review.id)}
           activeOpacity={0.8}
         >
-          <MaterialIcons name="reply" size={18} color="#1E3A5F" />
-          <Text className="text-[#1E3A5F] text-sm font-bold ml-2">
+          <MaterialIcons name="reply" size={18} color={colors.white} />
+          <Text className="text-white text-sm font-bold ml-2">
             Reply to Review
           </Text>
         </TouchableOpacity>

@@ -23,7 +23,6 @@ import NotificationsScreen from '../screens/App/Notification/NotificationsScreen
 import PromoteProductScreen from '../screens/App/Promote/PromoteProductScreen';
 import ReviewsScreen from '../screens/App/Reviews/ReviewsScreen';
 import SearchAgentsScreen from '../screens/App/SearchAgents/SearchAgentsScreen';
-import SearchUsersScreen from '../screens/App/SearchUsers/SearchUsersScreen';
 import AddProductScreen from '../screens/App/Shop/AgentShop/AddProductScreen';
 import AgentEditProductScreen from '../screens/App/Shop/AgentShop/AgentEditProductScreen';
 import AgentProductAnalyticsScreen from '../screens/App/Shop/AgentShop/AgentProductAnalyticsScreen';
@@ -84,9 +83,23 @@ AgentRegistration: undefined;
 
 export type SearchAgentsStackParamList = {
   SearchAgentsHome: undefined;
-  Vendor: undefined;
 AgentRegistration: undefined;
-
+  AgentProfile: undefined;
+  AgentBookingManagement: undefined;  
+  AgentShopDashboard: undefined;     
+  AddProduct: undefined;
+  AgentProducts: undefined;
+  AgentEditProduct: undefined;
+  AgentProductAnalytics: undefined;
+  AgentSettings: undefined;
+  EditAgentProfile: undefined;
+  Chat: undefined;
+  Followers: undefined;
+  PromoteProduct: undefined;
+  Reviews: undefined;
+  Vendor: undefined;
+  Invitations: undefined;
+  SearchAgents: undefined;
 
 };
 
@@ -141,6 +154,7 @@ export type AgentProfileStackParamList = {
   Vendor: undefined;
   Invitations: undefined;
   AgentRegistration: undefined;
+  SearchAgents: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
@@ -315,7 +329,7 @@ const AgentProfileStackNavigator: React.FC = () => (
     <AgentProfileStack.Screen name="Vendor" component={VendorScreen} />
     <AgentProfileStack.Screen name="Invitations" component={InvitationScreen} />
     <AgentProfileStack.Screen name="AgentRegistration" component={AgentRegistrationScreen} />
-
+    <AgentProfileStack.Screen name="SearchAgents" component={SearchAgentsScreen} />
 
   </AgentProfileStack.Navigator>
 );
@@ -336,23 +350,11 @@ const ShopStackNavigator: React.FC = () => (
 );
 
 
-
-const SearchUsersStackNavigator: React.FC = () => (
-  <SearchUserStack.Navigator screenOptions={{ headerShown: false }}>
-    <SearchUserStack.Screen name="SearchUsersHome" component={SearchUsersScreen} />
-    <AgentProfileStack.Screen name="Invitations" component={InvitationScreen} />
-    <AgentProfileStack.Screen name="AgentRegistration" component={AgentRegistrationScreen} />
-
-
-  </SearchUserStack.Navigator>
-);
-
-
 const SearchAgentsStackNavigator: React.FC = () => (
   <SearchAgentsStack.Navigator screenOptions={{ headerShown: false }}>
     <SearchAgentsStack.Screen name="SearchAgentsHome" component={SearchAgentsScreen} />
-    <AgentProfileStack.Screen name="Invitations" component={InvitationScreen} />
-
+    <SearchAgentsStack.Screen name="Invitations" component={InvitationScreen} />
+    <SearchAgentsStack.Screen name="AgentProfile" component={AgentsProfileScreen} />
 
   </SearchAgentsStack.Navigator>
 );
@@ -482,7 +484,7 @@ color={focused ? colors.primary : colors.primary + '60'}
       />
 
       <Tab.Screen
-        name="Notiificaton" 
+        name="Notiificatons" 
         component={NotificationsScreen}
         options={{
           tabBarIcon: ({ color, focused }) => (

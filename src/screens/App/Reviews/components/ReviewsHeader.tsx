@@ -1,8 +1,8 @@
 // components/ReviewsHeader.tsx
 import { MaterialIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { Platform, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { Header } from '../../../../components/common';
 import { IReviewsHeaderProps, TabType } from '../../../../types/reviewsTypes';
 
 const ReviewsHeader: React.FC<IReviewsHeaderProps> = ({
@@ -46,37 +46,28 @@ const ReviewsHeader: React.FC<IReviewsHeaderProps> = ({
   );
 
   return (
-    <LinearGradient 
-      colors={['#FFCC00', '#FFB300']} 
-      className={`${Platform.OS === 'ios' ? 'pt-15' : 'pt-2.5'} pb-2.5 shadow-lg`}
+    <View
     >
-      <StatusBar barStyle="dark-content" backgroundColor="#FFCC00" />
       
-      <View className="flex-row items-center justify-between px-5 mb-2.5">
-        <TouchableOpacity
-          className="w-10 h-10 rounded-full bg-white/15 items-center justify-center"
-          onPress={onBack}
-          activeOpacity={0.7}
-        >
-          <MaterialIcons name="chevron-left" size={24} color="#1E3A5F" />
-        </TouchableOpacity>
-        
-        <Text className="text-2xl font-extrabold text-[#1E3A5F] text-center flex-1">
-          Reviews
-        </Text>
 
-        <TouchableOpacity
-          className="w-10 h-10 rounded-full bg-white/15 items-center justify-center"
-          onPress={onHeaderAction}
-          activeOpacity={0.7}
-        >
-          <MaterialIcons 
-            name={userRole === 'user' ? 'rate-review' : 'build'} 
-            size={24} 
-            color="#1E3A5F" 
-          />
-        </TouchableOpacity>
-      </View>
+
+      <Header title="Reviews" 
+      leftIcon={{
+        name: 'chevron-left',
+        onPress: onBack,
+        color: '#1E3A5F'
+      }}
+      
+      rightIcons={[
+        {
+          name: userRole === 'user' ? 'rate-review' : 'build',
+          onPress: onHeaderAction,
+          color: '#1E3A5F'
+        }
+      ]}
+      
+      
+      />
 
       <View className="flex-row justify-around px-7.5">
         {renderTabButton('received', 'Received', receivedReviewsCount)}
@@ -85,7 +76,7 @@ const ReviewsHeader: React.FC<IReviewsHeaderProps> = ({
         
         {userRole === 'user' && renderTabButton('add_review', 'Add Review', undefined, 'add')}
       </View>
-    </LinearGradient>
+    </View>
   );
 };
 

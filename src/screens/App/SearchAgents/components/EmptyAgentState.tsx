@@ -2,7 +2,8 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { IEmptyAgentsStateProps } from '../../../types/searchAgentTypes';
+import { Typography } from '../../../../components/common';
+import { IEmptyAgentsStateProps } from '../../../../types/searchAgentTypes';
 
 const EmptyAgentsState: React.FC<IEmptyAgentsStateProps> = ({
   searchQuery,
@@ -34,18 +35,18 @@ const EmptyAgentsState: React.FC<IEmptyAgentsStateProps> = ({
   const message = getEmptyMessage();
 
   return (
-    <View className="items-center justify-center py-15">
+    <View className="items-center justify-center py-20">
       <MaterialIcons name={message.icon as any} size={64} color="#9E9E9E" />
-      <Text className="text-xl font-bold text-[#212121] mt-4 mb-2">
+      <Typography variant='medium' size={20} className="text-xl font-bold text-[#212121] mt-4 mb-2">
         {message.title}
-      </Text>
-      <Text className="text-sm text-[#757575] text-center px-10 mb-6">
+      </Typography>
+      <Typography variant='regular' size={14} className="text-sm text-[#757575] text-center px-10 mb-6">
         {message.subtitle}
-      </Text>
+      </Typography>
       
       {hasFilters && onClearFilters && (
         <TouchableOpacity 
-          className="bg-[#FFCC00] px-6 py-3 rounded-2xl flex-row items-center gap-2"
+          className="bg-primary px-6 py-3 rounded-2xl flex-row items-center gap-2"
           onPress={onClearFilters}
           activeOpacity={0.8}
         >

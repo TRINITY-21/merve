@@ -1,7 +1,7 @@
 // utils/Agents.utils.ts
 // import { IAgent, SortKey, SortOrder, FilterType, IAgentStats } from '../types/Agents.types';
 
-import { FilterType, IAgent, IAgentStats, SortKey, SortOrder } from "../types/searchAgentTypes";
+import { AgentProvider, FilterType, IAgent, IAgentStats, SortKey, SortOrder } from "../types/searchAgentTypes";
 
 /**
  * Filter agents based on search query
@@ -19,9 +19,10 @@ export const filterAgentsBySearch = (agents: IAgent[], searchQuery: string): IAg
 /**
  * Filter agents based on provider
  */
-export const filterAgentsByProvider = (agents: IAgent[], provider: FilterType): IAgent[] => {
+
+const filterAgentsByProvider = (agents: IAgent[], provider: FilterType): IAgent[] => {
   if (provider === 'all') return agents;
-  return agents.filter(agent => agent.provider === provider);
+  return agents.filter(agent => agent.provider.includes(provider as AgentProvider));
 };
 
 /**
@@ -84,6 +85,7 @@ export const processAgents = (
   filtered = filterAgentsByService(filtered, service);
   return sortAgents(filtered, sortBy, sortOrder);
 };
+
 
 /**
  * Calculate agent statistics

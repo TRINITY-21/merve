@@ -151,13 +151,13 @@ export interface IVoiceNoteProps {
   onPlay: () => void;
 }
 
-export interface IChatScreenProps {
-  route: {
-    params: {
-      agent?: IAgent;
-    };
-  };
-}
+// export interface IChatScreenProps {
+//   route: {
+//     params: {
+//       agent?: IAgent;
+//     };
+//   };
+// }
 
 export interface IMediaOption {
   type: 'image' | 'video' | 'camera' | 'file';

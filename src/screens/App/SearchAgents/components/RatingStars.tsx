@@ -2,7 +2,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { IRatingStarsProps } from '../../../types/searchAgentTypes';
+import { IRatingStarsProps } from '../../../../types/searchAgentTypes';
 
 const RatingStars: React.FC<IRatingStarsProps> = ({
   rating,

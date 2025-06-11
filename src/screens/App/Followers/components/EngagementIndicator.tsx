@@ -119,7 +119,7 @@ export const UserActions: React.FC<IUserActionsProps> = ({
 
   return (
     <View className="items-center gap-2 ml-2">
-      {isFollower && !follower.isFollowingBack && (
+      {/* {isFollower && !follower.isFollowingBack && (
         <TouchableOpacity
           className="w-8 h-8 rounded-full bg-teal-500 items-center justify-center"
           onPress={() => onAction('follow_back')}
@@ -127,9 +127,9 @@ export const UserActions: React.FC<IUserActionsProps> = ({
         >
           <MaterialIcons name="person-add" size={16} color="white" />
         </TouchableOpacity>
-      )}
+      )} */}
       
-      {!isFollower && (
+      {/* {!isFollower && (
         <TouchableOpacity 
           className="w-8 h-8 rounded-full bg-red-500 items-center justify-center"
           onPress={() => onAction('unfollow')}
@@ -137,7 +137,7 @@ export const UserActions: React.FC<IUserActionsProps> = ({
         >
           <MaterialIcons name="person-remove" size={16} color="white" />
         </TouchableOpacity>
-      )}
+      )} */}
       
       <TouchableOpacity 
         className="w-8 h-8 rounded-full bg-teal-100 items-center justify-center"

@@ -28,7 +28,7 @@ import { MarketplaceTab } from './tabs/MarketplaceTab';
 import { ProfileInfoTab } from './tabs/ProfileInfoTab';
 
 // Get screen dimensions
-const { width: screenWidth } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get('window'); 
 
 const UserProfileScreen: React.FC = () => {
     const navigation = useNavigation<any>();
@@ -51,7 +51,6 @@ const UserProfileScreen: React.FC = () => {
         { key: 'following', title: 'Pinned Agents' },
         { key: 'marketplace', title: 'Marketplace' },
         { key: 'invites', title: 'Invites' },
-        { key: 'activity', title: 'Activity' },
     ]);
 
     // Use Reanimated's useSharedValue

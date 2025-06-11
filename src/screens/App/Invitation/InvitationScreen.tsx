@@ -1,12 +1,34 @@
 import React, { useState } from 'react';
 import { Alert, FlatList, View } from 'react-native';
 import { IInvitation } from '../../../types/invitationTypes';
+import { InviteModal } from '../AgentProfile/components/profile/AgentInviteModal';
 import InvitationCard from './components/InvitaionCard';
 import EmptyState from './components/InvitationEmptyState';
 import InvitationHeader from './components/InvitationHeader';
 
 const InvitationsScreen: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<'received' | 'sent'>('received');
+  const [invitePhone, setInvitePhone] = useState<string>('');
+  const [showInviteModal, setShowInviteModal] = useState<boolean>(false);
+  const [inviteMessage, setInviteMessage] = useState<string>('');
+
+      const handleComposeInvitation = (): void => {
+      if (!invitePhone.trim()) {
+        Alert.alert('Error', 'Please enter a phone number');
+        return;
+      }
+      Alert.alert(
+        'Invite Sent!',
+        `Invitation sent to ${invitePhone}`,
+        [{
+          text: 'OK', onPress: () => {
+            setShowInviteModal(false);
+            setInvitePhone('');
+            setInviteMessage('');
+          }
+        }]
+      );
+    };
 
   // Sample data for invitations
   const [invitations, setInvitations] = useState<IInvitation[]>([
@@ -225,23 +247,36 @@ const InvitationsScreen: React.FC = () => {
     />
   );
 
+
+
   return (
-    <View className="flex-1 bg-[#F5F5F5]">
+    <View className="flex-1 bg-background">
       <InvitationHeader
         invitationsCount={invitations.length}
         sentInvitationsCount={sentInvitations.length}
         selectedTab={selectedTab}
         onTabChange={setSelectedTab}
+        setShowInviteModal={() => setShowInviteModal(true)}
       />
 
       <FlatList
         data={currentData}
         renderItem={renderInvitationCard}
         keyExtractor={item => item.id}
-        contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
+        contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => <EmptyState selectedTab={selectedTab} />}
       />
+
+        <InviteModal
+                visible={showInviteModal}
+                invitePhone={invitePhone}
+                inviteMessage={inviteMessage}
+                setInvitePhone={setInvitePhone}
+                setInviteMessage={setInviteMessage}
+                onClose={() => setShowInviteModal(false)}
+                onSend={handleComposeInvitation}
+              />
     </View>
   );
 };

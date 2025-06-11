@@ -2,18 +2,18 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-    ActionSheetIOS,
-    Alert,
-    Animated,
-    Dimensions,
-    FlatList,
-    Platform,
-    RefreshControl,
-    View
+  ActionSheetIOS,
+  Alert,
+  Animated,
+  Dimensions,
+  FlatList,
+  Platform,
+  RefreshControl,
+  View
 } from 'react-native';
-import { IAgent, IFollower, IFollowersData, IFollowersManagementScreenProps, TFilterKey, TTabType } from '../../../types/followersTypes';
+import { colors } from '../../../constants/theme/colors';
+import { IAgent, IFilterOption, IFollower, IFollowersData, IFollowersManagementScreenProps, IFollowingData, TFilterKey, TTabType } from '../../../types/followersTypes';
 import { BulkActions } from './components/BulkActions';
-import { FilterChips } from './components/FilterChips';
 import { EmptyState, FilterModal } from './components/FilterModal';
 import { FollowersHeader } from './components/FollowersHeader';
 import { UserCard } from './components/UserCard';
@@ -65,8 +65,104 @@ const FollowersScreen: React.FC<IFollowersManagementScreenProps> = () => {
         email: 'emma.wilson@email.com',
         type: 'user' as const
       },
+      
       {
-        id: 'f2',
+        id: 'f2ss',
+        name: 'James Miller',
+        username: '@james_miller',
+        avatar: 'https://i.pravatar.cc/150?img=2',
+        verified: true,
+        isFollowingBack: false,
+        followedDate: '2025-05-24',
+        lastActive: '1 day ago',
+        transactionHistory: 8,
+        totalSpent: 'GH₵ 850',
+        location: 'Kumasi, Ghana',
+        mutualFollowers: 12,
+        engagement: 'medium' as const,
+        tags: ['customer', 'verified'],
+        phone: '+233 24 222 0002',
+        email: 'james.miller@email.com',
+        type: 'user' as const
+      },
+       {
+        id: 'f2ff',
+        name: 'James Miller',
+        username: '@james_miller',
+        avatar: 'https://i.pravatar.cc/150?img=2',
+        verified: true,
+        isFollowingBack: false,
+        followedDate: '2025-05-24',
+        lastActive: '1 day ago',
+        transactionHistory: 8,
+        totalSpent: 'GH₵ 850',
+        location: 'Kumasi, Ghana',
+        mutualFollowers: 12,
+        engagement: 'medium' as const,
+        tags: ['customer', 'verified'],
+        phone: '+233 24 222 0002',
+        email: 'james.miller@email.com',
+        type: 'user' as const
+      },
+       {
+        id: 'f2rw',
+        name: 'James Miller',
+        username: '@james_miller',
+        avatar: 'https://i.pravatar.cc/150?img=2',
+        verified: true,
+        isFollowingBack: false,
+        followedDate: '2025-05-24',
+        lastActive: '1 day ago',
+        transactionHistory: 8,
+        totalSpent: 'GH₵ 850',
+        location: 'Kumasi, Ghana',
+        mutualFollowers: 12,
+        engagement: 'medium' as const,
+        tags: ['customer', 'verified'],
+        phone: '+233 24 222 0002',
+        email: 'james.miller@email.com',
+        type: 'user' as const
+      },
+       {
+        id: 'wf2',
+        name: 'James Miller',
+        username: '@james_miller',
+        avatar: 'https://i.pravatar.cc/150?img=2',
+        verified: true,
+        isFollowingBack: false,
+        followedDate: '2025-05-24',
+        lastActive: '1 day ago',
+        transactionHistory: 8,
+        totalSpent: 'GH₵ 850',
+        location: 'Kumasi, Ghana',
+        mutualFollowers: 12,
+        engagement: 'medium' as const,
+        tags: ['customer', 'verified'],
+        phone: '+233 24 222 0002',
+        email: 'james.miller@email.com',
+        type: 'user' as const
+      },
+       {
+        id: 'fr2',
+        name: 'James Miller',
+        username: '@james_miller',
+        avatar: 'https://i.pravatar.cc/150?img=2',
+        verified: true,
+        isFollowingBack: false,
+        followedDate: '2025-05-24',
+        lastActive: '1 day ago',
+        transactionHistory: 8,
+        totalSpent: 'GH₵ 850',
+        location: 'Kumasi, Ghana',
+        mutualFollowers: 12,
+        engagement: 'medium' as const,
+        tags: ['customer', 'verified'],
+        phone: '+233 24 222 0002',
+        email: 'james.miller@email.com',
+        type: 'user' as const
+      },
+       {
+        id: 'fs2',
         name: 'James Miller',
         username: '@james_miller',
         avatar: 'https://i.pravatar.cc/150?img=2',
@@ -141,25 +237,25 @@ const FollowersScreen: React.FC<IFollowersManagementScreenProps> = () => {
   const getFilterOptions = (): IFilterOption[] => {
     if (activeTab === 'followers') {
       return [
-        { key: 'all', label: 'All Followers', count: followersData.totalFollowers },
-        { key: 'following_back', label: 'Following Back', count: 186 },
-        { key: 'not_following_back', label: 'Not Following Back', count: 156 },
+        // { key: 'all', label: 'All Followers', count: followersData.totalFollowers },
+        // { key: 'following_back', label: 'Following Back', count: 186 },
+        // { key: 'not_following_back', label: 'Not Following Back', count: 156 },
         { key: 'verified', label: 'Verified', count: 23 },
-        { key: 'customers', label: 'Customers', count: 234 },
-        { key: 'vip', label: 'VIP', count: 18 },
+        // { key: 'customers', label: 'Customers', count: 234 },
+        // { key: 'vip', label: 'VIP', count: 18 },
         { key: 'new', label: 'New (This Week)', count: 23 },
         { key: 'inactive', label: 'Inactive', count: 44 }
       ];
     } else {
       return [
-        { key: 'all', label: 'All Following', count: followingData.totalFollowing },
-        { key: 'agents', label: 'Agents', count: 85 },
+        // { key: 'all', label: 'All Following', count: followingData.totalFollowing },
+        // { key: 'agents', label: 'Agents', count: 85 },
         { key: 'verified', label: 'Verified', count: 45 },
-        { key: 'top_rated', label: 'Top Rated', count: 32 },
+        // { key: 'top_rated', label: 'Top Rated', count: 32 },
         { key: 'nearby', label: 'Nearby', count: 28 },
-        { key: 'available', label: 'Available Now', count: 18 },
+        // { key: 'available', label: 'Available Now', count: 18 },
         { key: 'new', label: 'New (This Week)', count: 8 },
-        { key: 'favorite', label: 'Favorites', count: 12 }
+        // { key: 'favorite', label: 'Favorites', count: 12 
       ];
     }
   };
@@ -396,7 +492,7 @@ const FollowersScreen: React.FC<IFollowersManagementScreenProps> = () => {
           handleItemSelect(item.id);
         } else {
           navigation.navigate(
-            item.type === 'user' ? 'ProfileScreen' : 'AgentsProfileScreen', 
+            item.type === 'user' ? 'UserProfile' : 'AgentsProfileScreen', 
             { [item.type === 'user' ? 'userId' : 'agentId']: item.id }
           );
         }
@@ -410,7 +506,7 @@ const FollowersScreen: React.FC<IFollowersManagementScreenProps> = () => {
   );
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-background">
       <FollowersHeader
         activeTab={activeTab}
         searchQuery={searchQuery}
@@ -425,12 +521,7 @@ const FollowersScreen: React.FC<IFollowersManagementScreenProps> = () => {
         headerScaleAnim={headerScaleAnim}
       />
       
-      <FilterChips
-        selectedFilter={selectedFilter}
-        filterOptions={filterOptions}
-        onFilterSelect={setSelectedFilter}
-      />
-      
+ 
       <BulkActions
         isVisible={isSelectionMode && selectedItems.length > 0}
         selectedCount={selectedItems.length}
@@ -448,8 +539,8 @@ const FollowersScreen: React.FC<IFollowersManagementScreenProps> = () => {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}
-            colors={['#FFCC00']}
-            tintColor="#FFCC00"
+            colors={[colors.primary]}
+            tintColor={colors.primary}
           />
         }
         ListEmptyComponent={() => (

@@ -17,13 +17,14 @@ export interface IAgent {
   distance: number;
   status: AgentStatus;
   services: AgentService[];
-  provider: AgentProvider;
+  provider: AgentProvider[];
   rating: number;
   cashAvailable: boolean;
   phone: string;
   workingHours: string;
   transactions: number;
   joinedDate: string;
+  verified: boolean;
 }
 
 export interface ISortOption {
