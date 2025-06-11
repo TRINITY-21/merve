@@ -1,7 +1,8 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { Animated, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IBookingRequest } from '../../../../../types/agentBookingTypes';
 
@@ -31,64 +32,114 @@ export const BookingRequestCard: React.FC<BookingRequestCardProps> = ({
   getTimeAgo,
 }) => (
   <Animated.View
-    className="mb-4 rounded-3xl overflow-hidden shadow-xl shadow-black/15 elevation-8"
-    style={{ opacity: fadeAnim }}
+    style={{
+      marginBottom: 10,
+      borderRadius: 16,
+      overflow: 'hidden',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.15,
+      shadowRadius: 12,
+      elevation: 8,
+      opacity: fadeAnim,
+      margin:0,
+    }}
   >
     <LinearGradient
-      colors={[colors.gradient.light[0], colors.gradient.light[1] + 'D0']} // Slightly more opaque gradient
+      colors={[colors.gradient.light[0], colors.gradient.light[1] + 'D0']}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      className="p-6" // Increased padding
+      style={{ padding: 16 }}
     >
       {/* Card Header */}
-      <View className="flex-row justify-between items-start mb-5">
-        <View className="flex-row items-center flex-1 mr-4">
-          <View
-            className="w-14 h-14 rounded-full items-center justify-center mr-4 shadow-sm shadow-black/10"
-            style={{ backgroundColor: getServiceColor(request.serviceType) + '20' }} // Lighter, tinted background
-          >
+      <View style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        marginBottom: 20,
+      }}>
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          flex: 1,
+          marginRight: 16,
+        }}>
+          <View style={{
+            width: 40,
+            height: 40,
+            borderRadius: 28,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginRight: 10,
+            backgroundColor: getServiceColor(request.serviceType) + '20',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 2,
+          }}>
             <MaterialIcons
               name={getServiceIcon(request.serviceType) as any}
-              size={28} // Larger icon
+              size={28}
               color={getServiceColor(request.serviceType)}
             />
           </View>
-          <View className="flex-1">
-            <View className="flex-row items-center mb-1 gap-2">
-              <Text className="text-lg font-extrabold" style={{ color: colors.text.primary }}>
+          <View style={{ flex: 1 }}>
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginBottom: 4,
+              gap: 2,
+            }}>
+              <Typography size={18} variant='semibold' style={{
+              }}>
                 {request.customerName}
-              </Text>
-              <View className="flex-row items-center gap-1 bg-white/20 px-2 py-0.5 rounded-full">
-                <MaterialIcons name="star" size={14} color={colors.primary} />
-                <Text className="text-xs font-bold" style={{ color: colors.primary }}>
-                  {request.customerRating}
-                </Text>
-              </View>
+              </Typography>
+              <MaterialIcons name="verified" size={16} color={colors.primary} />
             </View>
-            <Text className="text-sm font-semibold" style={{ color: colors.text.secondary }}>
+            <Typography size={12} variant='regular' style={{
+              marginTop: 2,
+              color: colors.text.secondary,
+            }}>
               {request.serviceType.replace('_', ' ').toUpperCase()} •{' '}
-              <Text className="font-bold">GH₵{request.amount}</Text>
-            </Text>
+              <Typography size={12} variant='semibold' style={{ fontWeight: 'bold' }}>GH₵{request.amount}</Typography>
+            </Typography>
           </View>
         </View>
 
-        <View className="items-end">
-          <View
-            className="px-3 py-1.5 rounded-full mb-1 shadow-sm"
-            style={{ backgroundColor: getUrgencyColor(request.urgency) }}
-          >
-            <Text className="text-xs font-bold text-white uppercase tracking-wider">
+        <View style={{ alignItems: 'flex-end' }}>
+          <View style={{
+            paddingHorizontal: 12,
+            paddingVertical: 6,
+            borderRadius: 6,
+            marginBottom: 4,
+            backgroundColor: getUrgencyColor(request.urgency),
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.1,
+            shadowRadius: 2,
+            elevation: 1,
+          }}>
+            <Typography variant='bold' size={10} style={{
+              color: 'white',
+              textTransform: 'uppercase',
+              letterSpacing: -0.5,
+            }}>
               {request.urgency.toUpperCase()}
-            </Text>
+            </Typography>
           </View>
-          <Text className="text-xs font-medium" style={{ color: colors.text.primary }}>
+          <Typography style={{
+            fontSize: 12,
+            fontWeight: '500',
+            color: colors.text.primary,
+          }}>
             {getTimeAgo(request.createdAt)}
-          </Text>
+          </Typography>
         </View>
       </View>
 
       {/* Card Body */}
-      <View className="mb-5">
+      <View style={{ marginBottom: 10 }}>
         <InfoRow
           icon="event"
           text={`${formatDate(request.requestedDate)} at ${formatTime(
@@ -108,25 +159,37 @@ export const BookingRequestCard: React.FC<BookingRequestCardProps> = ({
         />
 
         {request.notes && (
-          <View
-            className="flex-row items-start p-4 rounded-2xl mt-3 gap-3"
-            style={{ backgroundColor: colors.accent + '15' }} // Slightly richer background for notes
-          >
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            padding: 16,
+            borderRadius: 16,
+            marginTop: 1,
+            gap: 12,
+            backgroundColor: colors.primary + '15',
+          }}>
             <MaterialIcons name="note" size={18} color={colors.accent} />
-            <Text
-              className="text-sm font-medium flex-1 leading-5"
-              style={{ color: colors.accent }}
-              numberOfLines={3} // Allow more lines for notes
-            >
+            <Typography variant="regular" size={12} style={{
+              fontWeight: '500',
+              flex: 1,
+              lineHeight: 20,
+              color: colors.accent,
+            }} numberOfLines={3}>
               {request.notes}
-            </Text>
+            </Typography>
           </View>
         )}
       </View>
 
       {/* Card Actions */}
       {request.status === 'pending' && (
-        <View className="flex-row gap-4 pt-5 border-t border-black/10">
+        <View style={{
+          flexDirection: 'row',
+          gap: 16,
+          paddingTop: 10,
+          borderTopWidth: 1,
+          borderTopColor: 'rgba(0,0,0,0.1)',
+        }}>
           <ActionButton
             icon="close"
             label="Decline"
@@ -138,7 +201,7 @@ export const BookingRequestCard: React.FC<BookingRequestCardProps> = ({
           <ActionButton
             icon="check"
             label="Accept"
-            color={colors.success}
+            color={colors.primary}
             onPress={() => onAction(request.id, 'accept')}
             variant="solid"
           />
@@ -146,7 +209,13 @@ export const BookingRequestCard: React.FC<BookingRequestCardProps> = ({
       )}
 
       {request.status === 'accepted' && (
-        <View className="flex-row gap-4 pt-5 border-t border-black/10">
+        <View style={{
+          flexDirection: 'row',
+          gap: 16,
+          paddingTop: 20,
+          borderTopWidth: 1,
+          borderTopColor: 'rgba(0,0,0,0.1)',
+        }}>
           <ActionButton
             icon="message"
             label="Message"
@@ -168,7 +237,7 @@ export const BookingRequestCard: React.FC<BookingRequestCardProps> = ({
   </Animated.View>
 );
 
-// --- Helper Components for better readability and reusability ---
+// --- Helper Components ---
 
 interface InfoRowProps {
   icon: keyof typeof MaterialIcons.glyphMap;
@@ -177,15 +246,19 @@ interface InfoRowProps {
 }
 
 const InfoRow: React.FC<InfoRowProps> = ({ icon, text, numberOfLines }) => (
-  <View className="flex-row items-center mb-3 gap-3">
+  <View style={{
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    gap: 8,
+  }}>
     <MaterialIcons name={icon} size={18} color={colors.text.secondary} />
-    <Text
-      className="text-base flex-1"
-      style={{ color: colors.text.secondary }}
-      numberOfLines={numberOfLines}
-    >
+    <Typography variant="regular" size={14} style={{
+      flex: 1,
+      color: colors.text.secondary,
+    }} numberOfLines={numberOfLines}>
       {text}
-    </Text>
+    </Typography>
   </View>
 );
 
@@ -199,22 +272,32 @@ interface ActionButtonProps {
 
 const ActionButton: React.FC<ActionButtonProps> = ({ icon, label, color, onPress, variant }) => (
   <TouchableOpacity
-    className={`flex-1 flex-row items-center justify-center py-3.5 rounded-xl gap-2 shadow-sm ${
-      variant === 'solid' ? '' : 'border'
-    }`}
     style={{
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 8,
+      borderRadius: 12,
+      gap: 8,
       backgroundColor: variant === 'solid' ? color : 'transparent',
-      borderColor: variant === 'outline' ? color + '80' : undefined, // Slightly transparent border
+      borderWidth: variant === 'outline' ? 1 : 0,
+      borderColor: variant === 'outline' ? color + '80' : undefined,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
+      elevation: 1,
     }}
     onPress={onPress}
     activeOpacity={0.7}
   >
     <MaterialIcons name={icon} size={20} color={variant === 'solid' ? colors.white : color} />
-    <Text
-      className="text-sm font-bold tracking-wide"
-      style={{ color: variant === 'solid' ? colors.white : color }}
-    >
+    <Typography variant='semibold' size={14} style={{
+      letterSpacing: 0.5,
+      color: variant === 'solid' ? colors.white : color,
+    }}>
       {label}
-    </Text>
+    </Typography>
   </TouchableOpacity>
 );

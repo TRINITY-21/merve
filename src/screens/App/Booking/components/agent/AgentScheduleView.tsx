@@ -3,6 +3,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IBookingRequest } from '../../../../../types/agentBookingTypes';
 
@@ -23,54 +24,54 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
   return (
     <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
       <View className="mb-5">
-        <Text className="text-2xl font-extrabold mb-1" style={{ color: colors.text.primary }}>
+        <Typography variant="semibold" size={16} className="text-2xl font-extrabold mb-1" style={{ color: colors.text.primary }}>
           Today's Schedule
-        </Text>
-        <Text className="text-sm font-medium" style={{ color: colors.text.secondary }}>
+        </Typography>
+        <Typography variant="regular" size={12} className="text-sm font-medium" style={{ color: colors.text.secondary }}>
           {new Date().toLocaleDateString('en-US', { 
             weekday: 'long', 
             month: 'long', 
             day: 'numeric' 
           })}
-        </Text>
+        </Typography>
       </View>
 
       <View className="flex-row gap-3 mb-6">
         <View className="flex-1 bg-white rounded-2xl p-4 items-center shadow-sm shadow-black/10 elevation-2">
-          <Text className="text-xl font-extrabold" style={{ color: colors.accent }}>
+          <Typography variant="semibold" size={16} className="text-xl font-extrabold" style={{ color: colors.accent }}>
             {todayBookings.length}
-          </Text>
-          <Text className="text-xs font-semibold text-center" style={{ color: colors.text.secondary }}>
+          </Typography>
+          <Typography variant="regular" size={12} className="text-xs font-semibold text-center" style={{ color: colors.text.secondary }}>
             Appointments
-          </Text>
+          </Typography>
         </View>
         <View className="flex-1 bg-white rounded-2xl p-4 items-center shadow-sm shadow-black/10 elevation-2">
-          <Text className="text-xl font-extrabold" style={{ color: colors.accent }}>
+          <Typography variant="semibold" size={16} className="text-xl font-extrabold" style={{ color: colors.accent }}>
             {todayBookings.reduce((sum, b) => sum + b.estimatedDuration, 0)}m
-          </Text>
-          <Text className="text-xs font-semibold text-center" style={{ color: colors.text.secondary }}>
+          </Typography>
+          <Typography variant="regular" size={12} className="text-xs font-semibold text-center" style={{ color: colors.text.secondary }}>
             Total Duration
-          </Text>
+          </Typography>
         </View>
         <View className="flex-1 bg-white rounded-2xl p-4 items-center shadow-sm shadow-black/10 elevation-2">
-          <Text className="text-xl font-extrabold" style={{ color: colors.accent }}>
+          <Typography variant="semibold" size={16} className="text-xl font-extrabold" style={{ color: colors.accent }}>
             GH₵{todayBookings.reduce((sum, b) => sum + b.amount, 0)}
-          </Text>
-          <Text className="text-xs font-semibold text-center" style={{ color: colors.text.secondary }}>
+          </Typography>
+          <Typography variant="regular" size={12} className="text-xs font-semibold text-center" style={{ color: colors.text.secondary }}>
             Expected Revenue
-          </Text>
+          </Typography>
         </View>
       </View>
 
       {todayBookings.length === 0 ? (
         <View className="items-center justify-center py-15">
           <MaterialIcons name="event-available" size={64} color={colors.gray.medium} />
-          <Text className="text-xl font-bold mt-4 mb-2" style={{ color: colors.text.primary }}>
+          <Typography variant="semibold" size={16} className="text-xl font-bold mt-4 mb-2" style={{ color: colors.text.primary }}>
             No appointments today
-          </Text>
-          <Text className="text-sm text-center px-10 leading-5" style={{ color: colors.text.secondary }}>
+          </Typography>
+          <Typography variant='regular' size={13} className="text-sm text-center px-10 leading-5" style={{ color: colors.text.secondary }}>
             You have a free day! New requests will appear in the Requests tab.
-          </Text>
+          </Typography>
         </View>
       ) : (
         <View className="gap-3">

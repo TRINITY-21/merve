@@ -9,10 +9,12 @@ import {
     Animated,
     Dimensions,
     FlatList,
+    Platform,
     RefreshControl,
-    Text,
+    TouchableOpacity,
     View
 } from 'react-native';
+import { Typography } from '../../../../components/common';
 import { colors } from '../../../../constants/theme/colors';
 import {
     IBookingRequest,
@@ -23,6 +25,7 @@ import {
     IWorkingHours
 } from '../../../../types/agentBookingTypes';
 import { dummyBookingRequests } from '../../../../utils/agentBookingDummyData';
+import { CompletedView } from '../components/agent/AgentBookingCompletedView';
 import { FilterChips } from '../components/agent/AgentBookingFilterChips';
 import { AgentBookingManagementHeader } from '../components/agent/AgentBookingManagementHeader';
 import { BookingRequestCard } from '../components/agent/AgentBookingRequestCard';
@@ -50,6 +53,8 @@ const AgentBookingManagementScreen: React.FC = () => {
     const [refreshing, setRefreshing] = useState<boolean>(false);
     const [selectedUrgency, setSelectedUrgency] = useState<string>('all');
     const [selectedService, setSelectedService] = useState<string>('all');
+    const [showHistory, setShowHistory] = useState<boolean>(false);
+const [showHistoryOverlay, setShowHistoryOverlay] = useState<boolean>(false);
 
     // Agent settings
     const [isAvailable, setIsAvailable] = useState<boolean>(true);
@@ -284,123 +289,166 @@ const AgentBookingManagementScreen: React.FC = () => {
         />
     );
 
-    return (
-        <View className="flex-1" style={{ backgroundColor: colors.background }}>
-            <AgentBookingManagementHeader
-                navigation={navigation}
-                activeTab={activeTab}
-                tabs={tabs}
-                isAvailable={isAvailable}
-                onTabChange={handleTabChange}
-                tabSlideAnim={tabSlideAnim}
-            />
-
-            <View className="flex-1 pt-2.5">
-                {(activeTab === 'requests' || activeTab === 'accepted') && (
-                    <FilterChips
-                        serviceTypes={serviceTypes}
-                        urgencyFilters={urgencyFilters}
-                        selectedService={selectedService}
-                        selectedUrgency={selectedUrgency}
-                        onServiceChange={setSelectedService}
-                        onUrgencyChange={setSelectedUrgency}
-                    />
-                )}
-
-                {activeTab === 'schedule' ? (
-                    <ScheduleView
-                        bookingRequests={bookingRequests}
-                        navigation={navigation}
-                    />
-                ) : activeTab === 'settings' ? (
-                    <SettingsView
-                        isAvailable={isAvailable}
-                        workingHours={workingHours}
-                        availableDays={availableDays}
-                        autoAccept={autoAccept}
-                        maxDailyBookings={maxDailyBookings}
-                        notificationSettings={notificationSettings}
-                        onAvailabilityToggle={setIsAvailable}
-                        onStartTimePress={() => setShowTimePickerStart(true)}
-                        onEndTimePress={() => setShowTimePickerEnd(true)}
-                        onDayToggle={handleDayToggle}
-                        onAutoAcceptToggle={setAutoAccept}
-                        onMaxBookingsChange={setMaxDailyBookings}
-                        onNotificationToggle={handleNotificationToggle}
-                    />
-                ) : (
-                    <FlatList
-                        data={filteredRequests}
-                        renderItem={renderBookingRequestCard}
-                        keyExtractor={(item) => item.id}
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 20 }}
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={refreshing}
-                                onRefresh={handleRefresh}
-                                colors={[colors.primary]}
-                                tintColor={colors.primary}
-                            />
-                        }
-                        ListEmptyComponent={
-                            <View className="items-center justify-center py-15">
-                                <MaterialIcons
-                                    name={activeTab === 'requests' ? 'event-busy' : 'event-available'}
-                                    size={64}
-                                    color={colors.gray.medium}
-                                />
-                                <Text className="text-lg font-bold mt-4 mb-2" style={{ color: colors.text.primary }}>
-                                    {activeTab === 'requests' ? 'No pending requests' : 'No accepted bookings'}
-                                </Text>
-                                <Text className="text-sm text-center px-10" style={{ color: colors.text.secondary }}>
-                                    {activeTab === 'requests'
-                                        ? 'New booking requests will appear here'
-                                        : 'Your accepted appointments will show here'
-                                    }
-                                </Text>
-                            </View>
-                        }
-                    />
-                )}
-            </View>
-
-            {/* Time Pickers */}
-            {showTimePickerStart && (
-                <DateTimePicker
-                    value={new Date(`2000-01-01T${workingHours.start}:00`)}
-                    mode="time"
-                    display="default"
-                    onChange={(event, time) => {
-                        setShowTimePickerStart(false);
-                        if (time) {
-                            setWorkingHours(prev => ({
-                                ...prev,
-                                start: time.toTimeString().slice(0, 5)
-                            }));
-                        }
-                    }}
-                />
-            )}
-
-            {showTimePickerEnd && (
-                <DateTimePicker
-                    value={new Date(`2000-01-01T${workingHours.end}:00`)}
-                    mode="time"
-                    display="default"
-                    onChange={(event, time) => {
-                        setShowTimePickerEnd(false);
-                        if (time) {
-                            setWorkingHours(prev => ({
-                                ...prev,
-                                end: time.toTimeString().slice(0, 5)
-                            }));
-                        }
-                    }}
-                />
-            )}
+ return (
+  <View className="flex-1" style={{ backgroundColor: colors.background }}>
+    {showHistoryOverlay ? (
+      <View style={{ flex: 1 }}>
+        {/* Simple header with back button */}
+        <View style={{
+          paddingTop: Platform.OS === 'ios' ? 60 : 20,
+          paddingBottom: 10,
+          paddingHorizontal: 16,
+          backgroundColor: colors.primary,
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 12,
+        }}>
+          <TouchableOpacity
+            onPress={() => setShowHistoryOverlay(false)}
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 20,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <MaterialIcons name="chevron-left" size={24} color={colors.secondary} />
+          </TouchableOpacity>
+          <Typography style={{
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: colors.secondary,
+          }}>
+            Transaction History
+          </Typography>
         </View>
-    );
+        
+        <CompletedView
+          bookingRequests={bookingRequests}
+          navigation={navigation}
+        />
+      </View>
+    ) : (
+      <>
+        <AgentBookingManagementHeader
+          navigation={navigation}
+          activeTab={activeTab}
+          tabs={tabs}
+          isAvailable={isAvailable}
+          onTabChange={handleTabChange}
+          onHistoryPress={() => setShowHistoryOverlay(true)}
+          tabSlideAnim={tabSlideAnim}
+        />
+
+        <View className="flex-1 pt-2.5">
+          {(activeTab === 'requests' || activeTab === 'accepted') && (
+            <FilterChips
+              serviceTypes={serviceTypes}
+              urgencyFilters={urgencyFilters}
+              selectedService={selectedService}
+              selectedUrgency={selectedUrgency}
+              onServiceChange={setSelectedService}
+              onUrgencyChange={setSelectedUrgency}
+            />
+          )}
+
+          {activeTab === 'schedule' ? (
+            <ScheduleView
+              bookingRequests={bookingRequests}
+              navigation={navigation}
+            />
+          ) : activeTab === 'settings' ? (
+            <SettingsView
+              isAvailable={isAvailable}
+              workingHours={workingHours}
+              availableDays={availableDays}
+              autoAccept={autoAccept}
+              maxDailyBookings={maxDailyBookings}
+              notificationSettings={notificationSettings}
+              onAvailabilityToggle={setIsAvailable}
+              onStartTimePress={() => setShowTimePickerStart(true)}
+              onEndTimePress={() => setShowTimePickerEnd(true)}
+              onDayToggle={handleDayToggle}
+              onAutoAcceptToggle={setAutoAccept}
+              onMaxBookingsChange={setMaxDailyBookings}
+              onNotificationToggle={handleNotificationToggle}
+            />
+          ) : (
+            <FlatList
+              data={filteredRequests}
+              renderItem={renderBookingRequestCard}
+              keyExtractor={(item) => item.id}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: 100 }}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={handleRefresh}
+                  colors={[colors.primary]}
+                  tintColor={colors.primary}
+                />
+              }
+              ListEmptyComponent={
+                <View className="items-center justify-center py-40">
+                  <MaterialIcons
+                    name={activeTab === 'requests' ? 'event-busy' : 'event-available'}
+                    size={64}
+                    color={colors.gray.medium}
+                  />
+                  <Typography className="text-lg font-bold mt-4 mb-2" style={{ color: colors.text.primary }}>
+                    {activeTab === 'requests' ? 'No pending requests' : 'No accepted bookings'}
+                  </Typography>
+                  <Typography variant='regular' size={14} className="text-sm text-center px-10" style={{ color: colors.text.secondary }}>
+                    {activeTab === 'requests'
+                      ? 'New booking requests will appear here'
+                      : 'Your accepted appointments will show here'
+                    }
+                  </Typography>
+                </View>
+              }
+            />
+          )}
+        </View>
+
+        {/* Time Pickers */}
+        {showTimePickerStart && (
+          <DateTimePicker
+            value={new Date(`2000-01-01T${workingHours.start}:00`)}
+            mode="time"
+            display="default"
+            onChange={(event, time) => {
+              setShowTimePickerStart(false);
+              if (time) {
+                setWorkingHours(prev => ({
+                  ...prev,
+                  start: time.toTimeString().slice(0, 5)
+                }));
+              }
+            }}
+          />
+        )}
+
+        {showTimePickerEnd && (
+          <DateTimePicker
+            value={new Date(`2000-01-01T${workingHours.end}:00`)}
+            mode="time"
+            display="default"
+            onChange={(event, time) => {
+              setShowTimePickerEnd(false);
+              if (time) {
+                setWorkingHours(prev => ({
+                  ...prev,
+                  end: time.toTimeString().slice(0, 5)
+                }));
+              }
+            }}
+          />
+        )}
+      </>
+    )}
+  </View>
+);
 };
 
 export default AgentBookingManagementScreen;

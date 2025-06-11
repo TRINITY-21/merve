@@ -3,6 +3,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Animated, Dimensions, Platform, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { ITab } from '../../../../../types/agentBookingTypes';
 
@@ -16,6 +17,7 @@ interface AgentBookingManagementHeaderProps {
   isAvailable: boolean;
   onTabChange: (tabKey: string) => void;
   tabSlideAnim: Animated.Value;
+  onHistoryPress: () => void; 
 }
 
 export const AgentBookingManagementHeader: React.FC<AgentBookingManagementHeaderProps> = ({
@@ -24,29 +26,40 @@ export const AgentBookingManagementHeader: React.FC<AgentBookingManagementHeader
   tabs,
   isAvailable,
   onTabChange,
-  tabSlideAnim
+  tabSlideAnim,
+  onHistoryPress
+
 }) => (
-  <View className="shadow-lg shadow-black/30 elevation-8">
-    <LinearGradient colors={colors.gradient.primary} className="rounded-b-0">
+  <View className="">
+    <LinearGradient colors={[colors.primary, colors.primary]} className="rounded-b-0">
       <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
       
       <View 
-        className="px-5"
+        className="px-2"
         style={{ paddingTop: Platform.OS === 'ios' ? 60 : 10, paddingBottom: 20 }}
       >
-       <View className="flex-row items-center justify-between mb-5">
+       <View className="flex-row items-center justify-between mb-0">
           <TouchableOpacity 
             className="w-10 h-10 rounded-full items-center justify-center"
-            style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)' }}
+            // style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)' }}
             onPress={() => navigation.goBack()}
             activeOpacity={0.7}
           >
             <MaterialIcons name="chevron-left" size={24} color={colors.secondary} />
           </TouchableOpacity>
           
-          <Text className="text-xl font-extrabold text-center flex-1 mx-2.5" style={{ color: colors.secondary }}>
+          <Typography variant="semibold" size={18} className="text-lg font-extrabold" style={{ color: colors.secondary }}>
             Booking Management
-          </Text>
+          </Typography>
+
+            <TouchableOpacity 
+            className="w-10 h-10 rounded-full items-center justify-center"
+            onPress={onHistoryPress}
+            // style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)' }}
+            activeOpacity={0.7}
+          >
+            <MaterialIcons name="history" size={24} color={colors.secondary} />
+          </TouchableOpacity>
           
           <View 
             className="flex-row items-center px-3 py-1.5 rounded-2xl gap-1.5"
@@ -54,17 +67,18 @@ export const AgentBookingManagementHeader: React.FC<AgentBookingManagementHeader
           >
             <View 
               className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: isAvailable ? colors.accent : colors.error }}
+              style={{ backgroundColor: isAvailable ? colors.success : colors.error }}
             />
             <Text className="text-xs font-semibold" style={{ color: colors.secondary }}>
               {isAvailable ? 'Available' : 'Offline'}
             </Text>
           </View>
         </View> 
+      </View>
+    </LinearGradient>
 
-
-        {/* Tab Navigation */}
-        <View className="flex-row rounded-3xl p-1 relative" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
+         {/* Tab Navigation */}
+        <View className="m-2 ml-3 mr-3 px-2 flex-row bg-warning rounded-3xl relative" style={{ backgroundColor: colors.accent }}>
           <View className="absolute top-1 bottom-1 left-5 right-5">
             <Animated.View 
               className="absolute top-0 bottom-0 rounded-2xl"
@@ -107,7 +121,5 @@ export const AgentBookingManagementHeader: React.FC<AgentBookingManagementHeader
             </TouchableOpacity>
           ))}
         </View>
-      </View>
-    </LinearGradient>
   </View>
 );

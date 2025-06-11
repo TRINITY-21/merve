@@ -24,7 +24,7 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
   onServiceChange,
   onUrgencyChange
 }) => (
-  <View className="px-5 mb-2.5">
+  <View className="px-3.5 mb-2.5">
     <ScrollView 
       horizontal 
       showsHorizontalScrollIndicator={false}
