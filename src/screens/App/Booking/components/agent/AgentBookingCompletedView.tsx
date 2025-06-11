@@ -1,7 +1,8 @@
 // components/agent/CompletedView.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Dimensions, FlatList, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Modal, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IBookingRequest } from '../../../../../types/agentBookingTypes';
 
@@ -48,7 +49,7 @@ const DateFilterModal: React.FC<DateFilterModalProps> = ({
 
   // Generate months and years for picker
   const generateDateOptions = () => {
-    const options = [];
+    const options:any[] = [];
     const currentYear = new Date().getFullYear();
     const months = [
       'January', 'February', 'March', 'April', 'May', 'June',
@@ -122,13 +123,12 @@ const DateFilterModal: React.FC<DateFilterModalProps> = ({
             borderBottomWidth: 1,
             borderBottomColor: '#E5E7EB',
           }}>
-            <Text style={{
+            <Typography variant="bold" style={{
               fontSize: 20,
-              fontWeight: 'bold',
-              color: '#1F2937',
+    
             }}>
               Select Period
-            </Text>
+            </Typography>
             <TouchableOpacity onPress={onClose}>
               <MaterialIcons name="close" size={24} color="#6B7280" />
             </TouchableOpacity>
@@ -137,14 +137,14 @@ const DateFilterModal: React.FC<DateFilterModalProps> = ({
           <ScrollView style={{ maxHeight: 400 }}>
             {/* Start Date Field */}
             <View style={{ padding: 20, paddingBottom: 10 }}>
-              <Text style={{
+              <Typography style={{
                 fontSize: 16,
                 fontWeight: '600',
                 color: colors.text.primary,
                 marginBottom: 8,
               }}>
                 Start date
-              </Text>
+              </Typography>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
@@ -158,26 +158,26 @@ const DateFilterModal: React.FC<DateFilterModalProps> = ({
                 }}
                 onPress={() => setActiveField(activeField === 'start' ? null : 'start')}
               >
-                <Text style={{
+                <Typography style={{
                   fontSize: 16,
                   color: startDate ? colors.text.primary : colors.text.secondary,
                 }}>
                   {formatDisplayDate(startDate)}
-                </Text>
+                </Typography>
                 <MaterialIcons name="calendar-today" size={20} color="#6B7280" />
               </TouchableOpacity>
             </View>
 
             {/* End Date Field */}
             <View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
-              <Text style={{
+              <Typography style={{
                 fontSize: 16,
                 fontWeight: '600',
                 color: colors.text.primary,
                 marginBottom: 8,
               }}>
                 End date
-              </Text>
+              </Typography>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
@@ -191,12 +191,12 @@ const DateFilterModal: React.FC<DateFilterModalProps> = ({
                 }}
                 onPress={() => setActiveField(activeField === 'end' ? null : 'end')}
               >
-                <Text style={{
+                <Typography style={{
                   fontSize: 16,
                   color: endDate ? colors.text.primary : colors.text.secondary,
                 }}>
                   {formatDisplayDate(endDate)}
-                </Text>
+                </Typography>
                 <MaterialIcons name="calendar-today" size={20} color="#6B7280" />
               </TouchableOpacity>
             </View>
@@ -207,7 +207,7 @@ const DateFilterModal: React.FC<DateFilterModalProps> = ({
                 paddingHorizontal: 20,
                 paddingBottom: 20,
               }}>
-                <Text style={{
+                <Typography style={{
                   fontSize: 14,
                   fontWeight: '600',
                   color: colors.text.secondary,
@@ -215,7 +215,7 @@ const DateFilterModal: React.FC<DateFilterModalProps> = ({
                   textAlign: 'center',
                 }}>
                   Select {activeField === 'start' ? 'start' : 'end'} month
-                </Text>
+                </Typography>
                 <ScrollView 
                   style={{ maxHeight: 200 }}
                   showsVerticalScrollIndicator={false}
@@ -240,20 +240,20 @@ const DateFilterModal: React.FC<DateFilterModalProps> = ({
                         alignItems: 'center',
                         flex: 1,
                       }}>
-                        <Text style={{
+                        <Typography style={{
                           fontSize: 16,
                           color: colors.text.primary,
                           flex: 1,
                         }}>
                           {option.month}
-                        </Text>
-                        <Text style={{
+                        </Typography>
+                        <Typography style={{
                           fontSize: 16,
                           color: colors.text.secondary,
                           fontWeight: '500',
                         }}>
                           {option.year}
-                        </Text>
+                        </Typography>
                       </View>
                     </TouchableOpacity>
                   ))}
@@ -270,7 +270,7 @@ const DateFilterModal: React.FC<DateFilterModalProps> = ({
             }}>
               <TouchableOpacity
                 style={{
-                  backgroundColor: startDate && endDate ? colors.error : colors.gray.medium,
+                  backgroundColor: startDate && endDate ? colors.primary : colors.gray.medium,
                   paddingVertical: 16,
                   borderRadius: 12,
                   alignItems: 'center',
@@ -279,7 +279,7 @@ const DateFilterModal: React.FC<DateFilterModalProps> = ({
                 onPress={onApplyFilter}
                 disabled={!startDate || !endDate}
               >
-                <Text style={{
+                <Typography style={{
                   fontSize: 16,
                   fontWeight: 'bold',
                   color: 'white',
@@ -287,7 +287,7 @@ const DateFilterModal: React.FC<DateFilterModalProps> = ({
                   letterSpacing: 1,
                 }}>
                   Confirm
-                </Text>
+                </Typography>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -298,13 +298,13 @@ const DateFilterModal: React.FC<DateFilterModalProps> = ({
                 }}
                 onPress={onClearFilter}
               >
-                <Text style={{
+                <Typography style={{
                   fontSize: 14,
                   fontWeight: '600',
                   color: colors.text.secondary,
                 }}>
                   Clear Filter
-                </Text>
+                </Typography>
               </TouchableOpacity>
             </View>
           )}
@@ -330,18 +330,18 @@ const CompletedBookingCard: React.FC<CompletedBookingCardProps> = ({
       borderRadius: 16,
       marginBottom: 12,
       padding: 20,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 4,
+      // shadowColor: '#000',
+      // shadowOffset: { width: 0, height: 2 },
+      // shadowOpacity: 0.1,
+      // shadowRadius: 8,
+      // elevation: 4,
     }}>
       {/* Header */}
       <View style={{
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        marginBottom: 16,
+        marginBottom: 6,
       }}>
         <View style={{
           flexDirection: 'row',
@@ -365,72 +365,48 @@ const CompletedBookingCard: React.FC<CompletedBookingCardProps> = ({
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={{
-              fontSize: 18,
-              fontWeight: '700',
-              color: colors.text.primary,
+            <Typography variant="semibold" size={18} style={{
               marginBottom: 4,
             }}>
               {booking.customerName}
-            </Text>
-            <Text style={{
-              fontSize: 13,
+            </Typography>
+            <Typography variant='regular' size={12}  style={{
               color: colors.text.secondary,
-              fontWeight: '500',
             }}>
               {booking.serviceType.replace('_', ' ').toUpperCase()}
-            </Text>
-            <View style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: 4,
-              gap: 4,
-            }}>
-              <MaterialIcons name="star" size={14} color={colors.warning} />
-              <Text style={{
-                fontSize: 12,
-                fontWeight: '600',
-                color: colors.warning,
-              }}>
-                {booking.customerRating}
-              </Text>
-            </View>
+            </Typography>
+        
           </View>
         </View>
 
         <View style={{ alignItems: 'flex-end' }}>
-          <Text style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: colors.success,
+          <Typography variant="semibold" size={16} style={{
+            color: colors.text.primary,
             marginBottom: 4,
           }}>
             GH₵{booking.amount}
-          </Text>
+          </Typography>
           <View style={{
             backgroundColor: colors.success + '20',
             paddingHorizontal: 10,
             paddingVertical: 4,
             borderRadius: 12,
             marginBottom: 4,
+            
           }}>
-            <Text style={{
-              fontSize: 10,
-              fontWeight: 'bold',
+            <Typography variant="regular" size={10} style={{
               color: colors.success,
               textTransform: 'uppercase',
-              letterSpacing: 0.5,
+              letterSpacing: 0,
             }}>
               COMPLETED
-            </Text>
+            </Typography>
           </View>
-          <Text style={{
-            fontSize: 11,
+          <Typography variant="regular" size={12} style={{
             color: colors.text.secondary,
-            fontWeight: '500',
           }}>
             {getTimeAgo(booking.createdAt)}
-          </Text>
+          </Typography>
         </View>
       </View>
 
@@ -448,14 +424,12 @@ const CompletedBookingCard: React.FC<CompletedBookingCardProps> = ({
           }}>
             <MaterialIcons name="event" size={16} color={colors.accent} />
           </View>
-          <Text style={{
-            fontSize: 14,
+          <Typography variant="regular" size={14} style={{
             color: colors.text.primary,
-            fontWeight: '600',
             flex: 1,
           }}>
             {formatDate(booking.requestedDate)} at {formatTime(booking.requestedTime)}
-          </Text>
+          </Typography>
         </View>
 
         <View style={{
@@ -470,14 +444,12 @@ const CompletedBookingCard: React.FC<CompletedBookingCardProps> = ({
           }}>
             <MaterialIcons name="location-on" size={16} color={colors.success} />
           </View>
-          <Text style={{
-            fontSize: 14,
+          <Typography variant="regular" size={14} style={{
             color: colors.text.primary,
-            fontWeight: '500',
             flex: 1,
           }} numberOfLines={expanded ? undefined : 1}>
             {booking.customLocation || booking.location}
-          </Text>
+          </Typography>
         </View>
 
         <View style={{
@@ -492,13 +464,12 @@ const CompletedBookingCard: React.FC<CompletedBookingCardProps> = ({
           }}>
             <MaterialIcons name="schedule" size={16} color={colors.warning} />
           </View>
-          <Text style={{
-            fontSize: 14,
+          <Typography variant="regular" size={14} style={{
             color: colors.text.primary,
             fontWeight: '500',
           }}>
             Duration: {booking.estimatedDuration} minutes
-          </Text>
+          </Typography>
         </View>
 
         <View style={{
@@ -513,13 +484,11 @@ const CompletedBookingCard: React.FC<CompletedBookingCardProps> = ({
           }}>
             <MaterialIcons name="phone" size={16} color={colors.error} />
           </View>
-          <Text style={{
-            fontSize: 14,
+          <Typography variant="regular" size={14} style={{
             color: colors.text.primary,
-            fontWeight: '500',
           }}>
             {booking.customerPhone}
-          </Text>
+          </Typography>
         </View>
       </View>
 
@@ -531,47 +500,45 @@ const CompletedBookingCard: React.FC<CompletedBookingCardProps> = ({
           borderRadius: 12,
           marginBottom: 12,
         }}>
-          <Text style={{
-            fontSize: 13,
-            fontWeight: '600',
+          <Typography variant="semibold" size={12} style={{
             color: colors.text.primary,
             marginBottom: 8,
             textTransform: 'uppercase',
-            letterSpacing: 0.5,
+            letterSpacing: 0,
           }}>
             Transaction Details
-          </Text>
+          </Typography>
           
           <View style={{ gap: 8 }}>
             <View style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-              <Text style={{
+              <Typography style={{
                 fontSize: 13,
                 color: colors.text.secondary,
               }}>
-                Transaction ID:
-              </Text>
-              <Text style={{
+                Booking ID:
+              </Typography>
+              <Typography style={{
                 fontSize: 13,
                 fontWeight: '600',
                 color: colors.text.primary,
               }}>
-                {booking.id.toUpperCase()}
-              </Text>
+                {booking.id.toUpperCase()}023u29u392u
+              </Typography>
             </View>
 
             <View style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-              <Text style={{
+              <Typography style={{
                 fontSize: 13,
                 color: colors.text.secondary,
               }}>
                 Urgency Level:
-              </Text>
+              </Typography>
               <View style={{
                 backgroundColor: booking.urgency === 'high' ? colors.error + '20' : 
                                booking.urgency === 'normal' ? colors.success + '20' : 
@@ -580,7 +547,7 @@ const CompletedBookingCard: React.FC<CompletedBookingCardProps> = ({
                 paddingVertical: 2,
                 borderRadius: 8,
               }}>
-                <Text style={{
+                <Typography style={{
                   fontSize: 11,
                   fontWeight: 'bold',
                   color: booking.urgency === 'high' ? colors.error : 
@@ -589,7 +556,7 @@ const CompletedBookingCard: React.FC<CompletedBookingCardProps> = ({
                   textTransform: 'uppercase',
                 }}>
                   {booking.urgency}
-                </Text>
+                </Typography>
               </View>
             </View>
 
@@ -597,19 +564,19 @@ const CompletedBookingCard: React.FC<CompletedBookingCardProps> = ({
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-              <Text style={{
+              <Typography style={{
                 fontSize: 13,
                 color: colors.text.secondary,
               }}>
                 Request Date:
-              </Text>
-              <Text style={{
+              </Typography>
+              <Typography style={{
                 fontSize: 13,
                 fontWeight: '600',
                 color: colors.text.primary,
               }}>
                 {formatDate(booking.createdAt)}
-              </Text>
+              </Typography>
             </View>
           </View>
 
@@ -622,23 +589,23 @@ const CompletedBookingCard: React.FC<CompletedBookingCardProps> = ({
               borderLeftWidth: 3,
               borderLeftColor: colors.accent,
             }}>
-              <Text style={{
+              <Typography style={{
                 fontSize: 12,
                 fontWeight: '600',
                 color: colors.text.primary,
                 marginBottom: 4,
                 textTransform: 'uppercase',
-                letterSpacing: 0.5,
+                letterSpacing: 0,
               }}>
                 Customer Notes
-              </Text>
-              <Text style={{
+              </Typography>
+              <Typography style={{
                 fontSize: 13,
                 color: colors.text.secondary,
                 lineHeight: 18,
               }}>
                 {booking.notes}
-              </Text>
+              </Typography>
             </View>
           )}
         </View>
@@ -657,14 +624,14 @@ const CompletedBookingCard: React.FC<CompletedBookingCardProps> = ({
         onPress={() => setExpanded(!expanded)}
         activeOpacity={0.7}
       >
-        <Text style={{
+        <Typography style={{
           fontSize: 12,
           fontWeight: '600',
           color: colors.accent,
           marginRight: 4,
         }}>
           {expanded ? 'Show Less' : 'Show More'}
-        </Text>
+        </Typography>
         <MaterialIcons 
           name={expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} 
           size={16} 
@@ -804,37 +771,37 @@ export const CompletedView: React.FC<CompletedViewProps> = ({
             alignItems: 'center',
           }}>
             <View>
-              <Text style={{
+              <Typography style={{
                 fontSize: 20,
                 fontWeight: 'bold',
                 color: colors.success,
               }}>
                 {displayBookings.length}
-              </Text>
-              <Text style={{
+              </Typography>
+              <Typography style={{
                 fontSize: 11,
                 color: colors.text.secondary,
                 fontWeight: '500',
               }}>
                 {startDate && endDate ? 'Filtered Transactions' : 'Total Completed'}
-              </Text>
+              </Typography>
             </View>
             
             <View style={{ alignItems: 'flex-end' }}>
-              <Text style={{
+              <Typography style={{
                 fontSize: 18,
                 fontWeight: 'bold',
                 color: colors.text.primary,
               }}>
                 GH₵{totalEarnings}
-              </Text>
-              <Text style={{
+              </Typography>
+              <Typography style={{
                 fontSize: 11,
                 color: colors.text.secondary,
                 fontWeight: '500',
               }}>
                 Total Earnings
-              </Text>
+              </Typography>
             </View>
           </View>
 
@@ -850,13 +817,13 @@ export const CompletedView: React.FC<CompletedViewProps> = ({
               }}
               onPress={clearDateFilter}
             >
-              <Text style={{
+              <Typography style={{
                 fontSize: 12,
                 fontWeight: '600',
                 color: colors.error,
               }}>
                 Clear Date Filter
-              </Text>
+              </Typography>
             </TouchableOpacity>
           )}
         </View>
@@ -883,7 +850,7 @@ export const CompletedView: React.FC<CompletedViewProps> = ({
               size={64}
               color={colors.gray.medium}
             />
-            <Text style={{
+            <Typography style={{
               fontSize: 18,
               fontWeight: 'bold',
               color: colors.text.primary,
@@ -891,8 +858,8 @@ export const CompletedView: React.FC<CompletedViewProps> = ({
               marginBottom: 8,
             }}>
               {startDate && endDate ? 'No transactions found' : 'No completed bookings'}
-            </Text>
-            <Text style={{
+            </Typography>
+            <Typography style={{
               fontSize: 14,
               color: colors.text.secondary,
               textAlign: 'center',
@@ -902,7 +869,7 @@ export const CompletedView: React.FC<CompletedViewProps> = ({
                 ? 'No transactions found for the selected date range'
                 : 'Your completed transactions will appear here'
               }
-            </Text>
+            </Typography>
           </View>
         }
       />

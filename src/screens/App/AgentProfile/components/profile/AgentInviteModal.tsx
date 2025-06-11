@@ -1,7 +1,8 @@
 // InviteModal.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Modal, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Modal, TextInput, TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 
 interface InviteModalProps {
@@ -35,9 +36,9 @@ export const InviteModal: React.FC<InviteModalProps> = ({
         style={{ minHeight: 280 }}
       >
         <View className="flex-row justify-between items-center mb-5">
-          <Text className="text-lg font-extrabold" style={{ color: colors.text.primary }}>
+          <Typography variant='semibold' size={18} className="text-lg font-extrabold" style={{ color: colors.text.primary }}>
             Send Invite
-          </Text>
+          </Typography>
           <TouchableOpacity
             onPress={onClose}
             className="p-1.5 rounded-xl bg-gray-100"
@@ -70,9 +71,9 @@ export const InviteModal: React.FC<InviteModalProps> = ({
           onPress={onSend}
           activeOpacity={0.8}
         >
-          <Text className="text-base font-extrabold" style={{ color: colors.white }}>
+          <Typography variant='semibold' className="text-base font-extrabold" style={{ color: colors.white }}>
             Send Invite
-          </Text>
+          </Typography>
         </TouchableOpacity>
       </View>
     </View>

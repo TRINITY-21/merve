@@ -472,6 +472,7 @@ const NotificationsScreen: React.FC = () => {
                                 })
                             }
                         ],
+                       
                     },
                     {
                         marginBottom: 12,
@@ -519,7 +520,7 @@ const NotificationsScreen: React.FC = () => {
                     )}
 
                     {/* Notification Content */}
-                    <View className="flex-row" style={{ gap: 12 }}>
+                    <View className="flex-row" style={{ gap: 12, }}>
                         {/* Icon/Avatar */}
                         <View className="relative">
                             {'avatar' in item ? (
@@ -594,7 +595,7 @@ const NotificationsScreen: React.FC = () => {
                                 className="flex-row justify-between items-start"
                                 style={{ marginBottom: 6 }}
                             >
-                                <Text
+                                <Typography
                                     className={`
                                     text-base flex-1 
                                     ${!item.isRead ? 'font-semibold text-gray-900' : 'font-medium text-gray-800'}
@@ -606,18 +607,18 @@ const NotificationsScreen: React.FC = () => {
                                     numberOfLines={2}
                                 >
                                     {item.title}
-                                </Text>
+                                </Typography>
 
-                                <Text
+                                <Typography size={12}
                                     className="text-xs text-gray-500 font-medium"
                                     style={{ lineHeight: 16 }}
                                 >
                                     {formatTimestamp(item.timestamp)}
-                                </Text>
+                                </Typography>
                             </View>
 
                             {/* Message */}
-                            <Text
+                            <Typography size={14}
                                 className="text-sm text-gray-600"
                                 style={{
                                     lineHeight: 20,
@@ -626,7 +627,7 @@ const NotificationsScreen: React.FC = () => {
                                 numberOfLines={2}
                             >
                                 {item.message}
-                            </Text>
+                            </Typography>
 
                             {/* Transaction Info */}
                             {isTransaction && (
@@ -642,7 +643,7 @@ const NotificationsScreen: React.FC = () => {
                                         elevation: 1
                                     }}
                                 >
-                                    <Text
+                                    <Typography size={12}
                                         className={`
                                         text-base font-semibold
                                         ${item.transactionType === 'credit' ? 'text-green-600' : 'text-red-600'}
@@ -650,13 +651,13 @@ const NotificationsScreen: React.FC = () => {
                                         style={{ lineHeight: 22 }}
                                     >
                                         {item.transactionType === 'credit' ? '+' : '-'}GH₵ {item.amount.toFixed(2)}
-                                    </Text>
-                                    <Text
+                                    </Typography>
+                                    <Typography size={12}
                                         className="text-xs text-gray-500 font-medium"
                                         style={{ lineHeight: 16 }}
                                     >
                                         ID: {item.transactionId}
-                                    </Text>
+                                    </Typography>
                                 </View>
                             )}
 
@@ -681,19 +682,19 @@ const NotificationsScreen: React.FC = () => {
                                             elevation: 2
                                         }}
                                     >
-                                        <Text
+                                        <Typography size={12}
                                             className="text-xs text-white font-bold"
                                             style={{ lineHeight: 16 }}
                                         >
                                             {item.discount} OFF
-                                        </Text>
+                                        </Typography>
                                     </View>
-                                    <Text
+                                    <Typography size={12}
                                         className="text-xs text-gray-500 flex-1"
                                         style={{ lineHeight: 16 }}
                                     >
                                         Valid until {item.validUntil}
-                                    </Text>
+                                    </Typography>
                                 </View>
                             )}
 
@@ -711,7 +712,7 @@ const NotificationsScreen: React.FC = () => {
                                         elevation: 1
                                     }}
                                 >
-                                    <Text
+                                    <Typography size={12}
                                         className="text-sm font-semibold text-gray-900"
                                         style={{
                                             lineHeight: 20,
@@ -719,13 +720,13 @@ const NotificationsScreen: React.FC = () => {
                                         }}
                                     >
                                         {item.achievementName}
-                                    </Text>
-                                    <Text
+                                    </Typography>
+                                    <Typography size={10}
                                         className="text-xs text-primary font-medium"
                                         style={{ lineHeight: 16 }}
                                     >
                                         +{item.rewardPoints} points earned
-                                    </Text>
+                                    </Typography>
                                 </View>
                             )}
 
@@ -754,13 +755,13 @@ const NotificationsScreen: React.FC = () => {
                                         }}
                                     />
                                     {item.postTitle && (
-                                        <Text
+                                        <Typography size={12}
                                             className="text-xs text-gray-600 flex-1"
                                             style={{ lineHeight: 16 }}
                                             numberOfLines={1}
                                         >
                                             {item.postTitle}
-                                        </Text>
+                                        </Typography>
                                     )}
                                 </View>
                             )}
@@ -806,16 +807,16 @@ const NotificationsScreen: React.FC = () => {
             return (
                 <View className="flex-1 items-center justify-center px-6 py-16">
                     <LinearGradient
-                        colors={colors.gradient.light}
+                        colors={["transparent","transparent"]}
                         className="rounded-3xl p-12 items-center w-full"
                     >
                         <MaterialIcons name="notifications-none" size={80} color={colors.gray.medium} />
-                        <Text className="text-2xl font-bold text-gray-900 mt-6 mb-2">No notifications</Text>
-                        <Text className="text-base text-gray-500 text-center leading-6">
+                        <Typography className="text-2xl font-bold text-gray-900 mt-6 mb-2">No notifications</Typography>
+                        <Typography className="text-base text-gray-500 text-center leading-6">
                             {selectedFilter === 'all'
                                 ? "You're all caught up! New notifications will appear here."
                                 : `No ${selectedFilter} notifications found.`}
-                        </Text>
+                        </Typography>
                     </LinearGradient>
                 </View>
             );
@@ -841,12 +842,12 @@ const NotificationsScreen: React.FC = () => {
                         className="rounded-3xl p-12 items-center w-full"
                     >
                         <MaterialIcons name="notifications-none" size={80} color={colors.gray.medium} />
-                        <Text className="text-2xl font-bold text-gray-900 mt-6 mb-2">No notifications</Text>
-                        <Text className="text-base text-gray-500 text-center leading-6">
+                        <Typography className="text-2xl font-bold text-gray-900 mt-6 mb-2">No notifications</Typography>
+                        <Typography className="text-base text-gray-500 text-center leading-6">
                             {selectedFilter === 'all'
                                 ? "You're all caught up! New notifications will appear here."
                                 : `No ${selectedFilter} notifications found.`}
-                        </Text>
+                        </Typography>
                     </LinearGradient>
                 </View>
             );
@@ -858,14 +859,14 @@ const NotificationsScreen: React.FC = () => {
                 renderItem={({ item: section }) => (
                     <View className="mb-6">
                         <View className="flex-row items-center justify-between mb-3 px-6">
-                            <Text className="text-lg font-bold text-gray-900">{section.title}</Text>
+                            <Typography className="text-lg font-bold text-gray-900">{section.title}</Typography>
                             <View className="bg-accent/10 rounded-full px-3 py-1.5">
-                                <Text className="text-xs text-accent font-bold">{section.data.length}</Text>
+                                <Typography size={12} className="text-xs text-accent font-bold">{section.data.length}</Typography>
                             </View>
                         </View>
                         <View className="px-6">
                             {section.data.map((item) => (
-                                <View key={item.id} style={{ marginBottom: 12 }}>
+                                <View key={item.id} style={{ marginBottom: 0 }}>
                                     {renderNotificationCard({ item, index: 0 })}
                                 </View>
                             ))}
@@ -1049,7 +1050,7 @@ const NotificationsScreen: React.FC = () => {
     );
 
     return (
-        <View className="flex-1 bg-gray-50">
+        <View className="flex-1 bg-background">
             {renderHeader()}
 
             <View className="flex-1">

@@ -4,10 +4,10 @@ import React from 'react';
 import {
   Animated,
   Image,
-  Text,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
+import { Typography } from '../../../../components/common';
 import { colors } from '../../../../constants/theme/colors';
 import { IAgent, IFollower, IUserCardProps } from '../../../../types/followersTypes';
 import { UserActions } from './EngagementIndicator';
@@ -33,7 +33,7 @@ export const UserCard: React.FC<IUserCardProps> = ({
       style={{
         backgroundColor: 'white',
         borderRadius: 20,
-        marginBottom: 6,
+        marginBottom: 10,
         marginHorizontal: 0,
         // shadowColor: '#000',
         // shadowOffset: { width: 0, height: 4 },
@@ -134,7 +134,7 @@ export const UserCard: React.FC<IUserCardProps> = ({
         <View style={{ flex: 1, marginRight: 12 }}>
           {/* Name and Status */}
           <View style={{ marginBottom: 8 }}>
-            <Text style={{
+            <Typography style={{
               fontSize: 18,
               fontWeight: '700',
               // color: '#111827',
@@ -142,7 +142,7 @@ export const UserCard: React.FC<IUserCardProps> = ({
               letterSpacing: -0.3,
             }}>
               {item.name}
-            </Text>
+            </Typography>
 
           </View>
 
@@ -151,7 +151,7 @@ export const UserCard: React.FC<IUserCardProps> = ({
             flexDirection: 'row',
             alignItems: 'center',
             marginBottom: 8,
-            gap: 6,
+            gap: 2,
           }}>
             <View style={{
               // backgroundColor: '#ECFDF5',
@@ -160,21 +160,21 @@ export const UserCard: React.FC<IUserCardProps> = ({
             }}>
               <MaterialIcons name="location-on" size={12} color="#059669" />
             </View>
-            <Text style={{
+            <Typography style={{
               fontSize: 13,
               // color: '#6B7280',
               fontWeight: '500',
               flex: 1,
             }} numberOfLines={1}>
               {item.location}
-            </Text>
+            </Typography>
           </View>
 
           {/* Member Since */}
           <View style={{
             flexDirection: 'row',
             alignItems: 'center',
-            gap: 6,
+            gap: 2,
           }}>
             <View style={{
               // backgroundColor: '#FEF3C7',
@@ -183,13 +183,13 @@ export const UserCard: React.FC<IUserCardProps> = ({
             }}>
               <MaterialIcons name="schedule" size={12} color="#D97706" />
             </View>
-            <Text style={{
+            <Typography style={{
               fontSize: 12,
               color: '#9CA3AF',
               fontWeight: '500',
             }}>
               Member since: 10 May, 2024
-            </Text>
+            </Typography>
           </View>
         </View>
 

@@ -89,6 +89,7 @@ export const SearchBar: React.FC<ISearchBarProps> = ({
 
 // components/StatsRow.tsx
 import React from 'react';
+import { Typography } from '../../../../components/common';
 import { ISearchBarProps, IStatsRowProps, ITabSelectorProps } from '../../../../types/followersTypes';
 
 export const StatsRow: React.FC<IStatsRowProps> = ({
@@ -112,12 +113,12 @@ export const StatsRow: React.FC<IStatsRowProps> = ({
     <View className="flex-row justify-between bg-white/15 rounded-2xl p-2.5 -mb-2.5">
       {stats.map((stat, index) => (
         <View key={index} className="items-center flex-1">
-          <Text className="text-sm font-extrabold text-[#1E3A5F] mb-1">
+          <Typography className="text-sm font-extrabold text-[#1E3A5F] mb-1">
             {stat.number}
-          </Text>
-          <Text className="text-xs text-[#1E3A5F]/80">
+          </Typography>
+          <Typography className="text-xs text-[#1E3A5F]/80">
             {stat.label}
-          </Text>
+          </Typography>
         </View>
       ))}
     </View>

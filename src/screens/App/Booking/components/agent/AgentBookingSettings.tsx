@@ -40,7 +40,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   onMaxBookingsChange,
   onNotificationToggle
 }) => (
-  <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
+  <ScrollView className="flex-1 px-5 mb-20" showsVerticalScrollIndicator={false}>
     {/* Availability Status */}
     <View className="mb-6">
       <Text className="text-lg font-bold mb-3" style={{ color: colors.text.primary }}>

@@ -5,10 +5,10 @@ import {
   Dimensions,
   Modal,
   ScrollView,
-  Text,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
+import { Typography } from '../../../../components/common';
 import { IFilterModalProps } from '../../../../types/followersTypes';
 
 const { height: screenHeight } = Dimensions.get('window');
@@ -49,13 +49,12 @@ export const FilterModal: React.FC<IFilterModalProps> = ({
             borderBottomWidth: 1,
             borderBottomColor: '#E5E7EB',
           }}>
-            <Text style={{
-              fontSize: 16,
+            <Typography variant="semibold" size={18} style={{
               fontWeight: 'bold',
               color: '#1F2937',
             }}>
               Filter {activeTab === 'followers' ? 'Customers' : 'Customers'}
-            </Text>
+            </Typography>
             <TouchableOpacity 
               onPress={onClose}
               style={{ padding: 2 }}
@@ -89,20 +88,20 @@ export const FilterModal: React.FC<IFilterModalProps> = ({
                   alignItems: 'center',
                   marginRight: 16,
                 }}>
-                  <Text style={{
+                  <Typography style={{
                     fontSize: 16,
                     fontWeight: '600',
                     color: selectedFilter === option.key ? '#059669' : '#1F2937',
                   }}>
                     {option.label}
-                  </Text>
-                  <Text style={{
+                  </Typography>
+                  <Typography style={{
                     fontSize: 14,
                     color: '#6B7280',
                     fontWeight: '600',
                   }}>
                     {option.count}
-                  </Text>
+                  </Typography>
                 </View>
                 {selectedFilter === option.key && (
                   <MaterialIcons name="check" size={20} color="#10B981" />

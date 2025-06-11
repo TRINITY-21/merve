@@ -1,4 +1,5 @@
 // FollowersManagementScreen.tsx
+import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -11,10 +12,12 @@ import {
   RefreshControl,
   View
 } from 'react-native';
+import { Typography } from '../../../components/common';
 import { colors } from '../../../constants/theme/colors';
-import { IAgent, IFilterOption, IFollower, IFollowersData, IFollowersManagementScreenProps, IFollowingData, TFilterKey, TTabType } from '../../../types/followersTypes';
+import { IAgent, IFilterOption, IFollower, IFollowersManagementScreenProps, TFilterKey, TTabType } from '../../../types/followersTypes';
+import { followersData, followingData } from '../../../utils/followersData';
 import { BulkActions } from './components/BulkActions';
-import { EmptyState, FilterModal } from './components/FilterModal';
+import { FilterModal } from './components/FilterModal';
 import { FollowersHeader } from './components/FollowersHeader';
 import { UserCard } from './components/UserCard';
 
@@ -39,200 +42,6 @@ const FollowersScreen: React.FC<IFollowersManagementScreenProps> = () => {
   const headerScaleAnim = useRef(new Animated.Value(0.95)).current;
   const tabSlideAnim = useRef(new Animated.Value(0)).current;
 
-  // Mock data
-  const followersData: IFollowersData = {
-    totalFollowers: 342,
-    newThisWeek: 23,
-    activeFollowers: 298,
-    mutualConnections: 45,
-    followers: [
-      {
-        id: 'f1',
-        name: 'Emma Wilson',
-        username: '@emma_wilson',
-        avatar: 'https://i.pravatar.cc/150?img=1',
-        verified: false,
-        isFollowingBack: true,
-        followedDate: '2025-05-25',
-        lastActive: '2 hours ago',
-        transactionHistory: 15,
-        totalSpent: 'GH₵ 1,250',
-        location: 'Accra, Ghana',
-        mutualFollowers: 5,
-        engagement: 'high' as const,
-        tags: ['customer', 'active'],
-        phone: '+233 24 111 0001',
-        email: 'emma.wilson@email.com',
-        type: 'user' as const
-      },
-      
-      {
-        id: 'f2ss',
-        name: 'James Miller',
-        username: '@james_miller',
-        avatar: 'https://i.pravatar.cc/150?img=2',
-        verified: true,
-        isFollowingBack: false,
-        followedDate: '2025-05-24',
-        lastActive: '1 day ago',
-        transactionHistory: 8,
-        totalSpent: 'GH₵ 850',
-        location: 'Kumasi, Ghana',
-        mutualFollowers: 12,
-        engagement: 'medium' as const,
-        tags: ['customer', 'verified'],
-        phone: '+233 24 222 0002',
-        email: 'james.miller@email.com',
-        type: 'user' as const
-      },
-       {
-        id: 'f2ff',
-        name: 'James Miller',
-        username: '@james_miller',
-        avatar: 'https://i.pravatar.cc/150?img=2',
-        verified: true,
-        isFollowingBack: false,
-        followedDate: '2025-05-24',
-        lastActive: '1 day ago',
-        transactionHistory: 8,
-        totalSpent: 'GH₵ 850',
-        location: 'Kumasi, Ghana',
-        mutualFollowers: 12,
-        engagement: 'medium' as const,
-        tags: ['customer', 'verified'],
-        phone: '+233 24 222 0002',
-        email: 'james.miller@email.com',
-        type: 'user' as const
-      },
-       {
-        id: 'f2rw',
-        name: 'James Miller',
-        username: '@james_miller',
-        avatar: 'https://i.pravatar.cc/150?img=2',
-        verified: true,
-        isFollowingBack: false,
-        followedDate: '2025-05-24',
-        lastActive: '1 day ago',
-        transactionHistory: 8,
-        totalSpent: 'GH₵ 850',
-        location: 'Kumasi, Ghana',
-        mutualFollowers: 12,
-        engagement: 'medium' as const,
-        tags: ['customer', 'verified'],
-        phone: '+233 24 222 0002',
-        email: 'james.miller@email.com',
-        type: 'user' as const
-      },
-       {
-        id: 'wf2',
-        name: 'James Miller',
-        username: '@james_miller',
-        avatar: 'https://i.pravatar.cc/150?img=2',
-        verified: true,
-        isFollowingBack: false,
-        followedDate: '2025-05-24',
-        lastActive: '1 day ago',
-        transactionHistory: 8,
-        totalSpent: 'GH₵ 850',
-        location: 'Kumasi, Ghana',
-        mutualFollowers: 12,
-        engagement: 'medium' as const,
-        tags: ['customer', 'verified'],
-        phone: '+233 24 222 0002',
-        email: 'james.miller@email.com',
-        type: 'user' as const
-      },
-       {
-        id: 'fr2',
-        name: 'James Miller',
-        username: '@james_miller',
-        avatar: 'https://i.pravatar.cc/150?img=2',
-        verified: true,
-        isFollowingBack: false,
-        followedDate: '2025-05-24',
-        lastActive: '1 day ago',
-        transactionHistory: 8,
-        totalSpent: 'GH₵ 850',
-        location: 'Kumasi, Ghana',
-        mutualFollowers: 12,
-        engagement: 'medium' as const,
-        tags: ['customer', 'verified'],
-        phone: '+233 24 222 0002',
-        email: 'james.miller@email.com',
-        type: 'user' as const
-      },
-       {
-        id: 'fs2',
-        name: 'James Miller',
-        username: '@james_miller',
-        avatar: 'https://i.pravatar.cc/150?img=2',
-        verified: true,
-        isFollowingBack: false,
-        followedDate: '2025-05-24',
-        lastActive: '1 day ago',
-        transactionHistory: 8,
-        totalSpent: 'GH₵ 850',
-        location: 'Kumasi, Ghana',
-        mutualFollowers: 12,
-        engagement: 'medium' as const,
-        tags: ['customer', 'verified'],
-        phone: '+233 24 222 0002',
-        email: 'james.miller@email.com',
-        type: 'user' as const
-      }
-    ]
-  };
-
-  const followingData: IFollowingData = {
-    totalFollowing: 125,
-    newThisWeek: 8,
-    activeAgents: 98,
-    verifiedAgents: 45,
-    following: [
-      {
-        id: 'a1',
-        name: 'Johnson Mobile Money',
-        username: '@johnson_momo',
-        avatar: 'https://i.pravatar.cc/150?img=9',
-        verified: true,
-        isAgent: true,
-        followedDate: '2025-05-20',
-        lastActive: 'Online',
-        businessType: 'Mobile Money Agent',
-        location: 'Independence Avenue, Accra',
-        rating: 4.8,
-        totalTransactions: 2847,
-        services: ['Cash In', 'Cash Out', 'Bill Payment', 'Airtime'],
-        workingHours: '8:00 AM - 8:00 PM',
-        tags: ['top-rated', 'verified', '24/7'],
-        phone: '+233 24 123 4567',
-        email: 'johnson@momo.com',
-        type: 'agent' as const,
-        agentCode: 'MTN-ACC-12345'
-      },
-      {
-        id: 'a2',
-        name: 'Accra Money Center',
-        username: '@accra_money',
-        avatar: 'https://i.pravatar.cc/150?img=10',
-        verified: true,
-        isAgent: true,
-        followedDate: '2025-05-18',
-        lastActive: '30 minutes ago',
-        businessType: 'Financial Services',
-        location: 'Osu, Accra',
-        rating: 4.6,
-        totalTransactions: 1923,
-        services: ['Money Transfer', 'Bill Payment', 'Forex'],
-        workingHours: '9:00 AM - 6:00 PM',
-        tags: ['trusted', 'verified'],
-        phone: '+233 24 234 5678',
-        email: 'info@accramoney.com',
-        type: 'agent' as const,
-        agentCode: 'MTN-ACC-23456'
-      }
-    ]
-  };
 
   const getFilterOptions = (): IFilterOption[] => {
     if (activeTab === 'followers') {
@@ -543,9 +352,24 @@ const FollowersScreen: React.FC<IFollowersManagementScreenProps> = () => {
             tintColor={colors.primary}
           />
         }
-        ListEmptyComponent={() => (
-          <EmptyState activeTab={activeTab} searchQuery={searchQuery} />
-        )}
+        ListEmptyComponent={
+                <View className="items-center justify-center py-40">
+                  <MaterialIcons
+                    // name={activeTab === 'requests' ? 'event-busy' : 'event-available'}
+                    size={64}
+                    color={colors.gray.medium}
+                  />
+                  <Typography className="text-lg font-bold mt-4 mb-2" style={{ color: colors.text.primary }}>
+                    {activeTab ? 'No Customers' : 'No accepted bookings'}
+                  </Typography>
+                  <Typography variant='regular' size={14} className="text-sm text-center px-10" style={{ color: colors.text.secondary }}>
+                    {activeTab 
+                      ? 'New booking requests will appear here'
+                      : 'Your accepted appointments will show here'
+                    }
+                  </Typography>
+                </View>
+              }
       />
 
       <FilterModal

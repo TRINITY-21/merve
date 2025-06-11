@@ -37,7 +37,7 @@ const InvitationHeader: React.FC<IInvitationHeaderProps> = ({
 
         rightIcons={[
           {
-            name: 'add',
+            name: 'add-circle-outline',
             onPress: handleComposeInvitation,
             
           },

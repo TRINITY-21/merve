@@ -1,6 +1,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../components/common';
 import { IInvitation } from '../../../../types/invitationTypes';
 
 interface IInvitationCardProps {
@@ -54,12 +55,12 @@ const InvitationCard: React.FC<IInvitationCardProps> = ({
       <View className="bg-[#F5F5F5] rounded-lg p-3 mb-4">
         {Object.entries(item.details).map(([key, value]) => (
           <View key={key} className="flex-row mb-1.5">
-            <Text className="text-xs font-semibold text-[#212121] mr-2">
+            <Typography variant='regular' size={13} className="text-xs font-semibold text-[#212121] mr-2">
               {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:
-            </Text>
-            <Text className="flex-1 text-xs text-[#757575]">
+            </Typography>
+            <Typography variant='regular' size={11} className="flex-1 text-xs text-[#757575]">
               {Array.isArray(value) ? value.join(', ') : String(value)}
-            </Text>
+            </Typography>
           </View>
         ))}
       </View>
@@ -76,9 +77,9 @@ const InvitationCard: React.FC<IInvitationCardProps> = ({
             activeOpacity={0.8}
           >
             <MaterialIcons name="check-circle" size={20} color="#FFFFFF" />
-            <Text className="text-white text-sm font-bold ml-2">
+            <Typography className="text-white text-sm font-bold ml-2">
               {isFollowInvite ? 'Accept Follow' : 'Accept'}
-            </Text>
+            </Typography>
           </TouchableOpacity>
           
           <TouchableOpacity
@@ -87,9 +88,9 @@ const InvitationCard: React.FC<IInvitationCardProps> = ({
             activeOpacity={0.8}
           >
             <MaterialIcons name="cancel" size={20} color="#FFFFFF" />
-            <Text className="text-white text-sm font-bold ml-2">
+            <Typography className="text-white text-sm font-bold ml-2">
               {isFollowInvite ? 'Decline Follow' : 'Decline'}
-            </Text>
+            </Typography>
           </TouchableOpacity>
         </View>
       );
@@ -104,9 +105,9 @@ const InvitationCard: React.FC<IInvitationCardProps> = ({
             activeOpacity={0.8}
           >
             <MaterialIcons name="close" size={20} color="#FFFFFF" />
-            <Text className="text-white text-sm font-bold ml-2">
+            <Typography className="text-white text-sm font-bold ml-2">
               {isFollowInvite ? 'Cancel Request' : 'Cancel Invite'}
-            </Text>
+            </Typography>
           </TouchableOpacity>
         </View>
       );
@@ -126,33 +127,33 @@ const InvitationCard: React.FC<IInvitationCardProps> = ({
         />
         
         <View className="flex-1 ml-3">
-          <Text className="text-lg font-bold text-[#212121] mb-1">
+          <Typography className="text-lg font-bold text-[#212121] mb-1">
             {item.title}
-          </Text>
-          <Text className="text-xs text-[#757575]">
+          </Typography>
+          <Typography variant='regular' size={12} className="text-xs text-[#757575]">
             {isReceived 
               ? `From ${item.sender} (${item.senderType})` 
               : `To ${item.recipient} (${item.recipientType})`
             }
-          </Text>
+          </Typography>
         </View>
         
         <View className={`px-2.5 py-1.5 rounded-lg ${getStatusColor()}`}>
-          <Text className="text-white text-xs font-bold">
+          <Typography size={12} className="text-white text-xs font-bold">
             {statusText}
-          </Text>
+          </Typography>
         </View>
       </View>
 
       {/* Message */}
-      <Text className="text-sm text-[#757575] mb-3 leading-5">
+      <Typography size={13} className="text-sm text-[#757575] mb-3 leading-5">
         {item.message}
-      </Text>
+      </Typography>
 
       {/* Date */}
-      <Text className="text-xs text-[#9E9E9E] mb-4 text-right">
+      <Typography size={12} className="text-xs text-[#9E9E9E] mb-4 text-right">
         {item.date}
-      </Text>
+      </Typography>
 
       {/* Details Section */}
       {renderDetailsSection()}

@@ -304,7 +304,7 @@ const [showDateFilter, setShowDateFilter] = useState(false);
           justifyContent: 'space-between',
         }}>
           <TouchableOpacity
-            onPress={() => setShowHistoryOverlay(false)}
+            onPress={() => {setShowHistoryOverlay(false)}}
             style={{
               width: 40,
               height: 40,
@@ -313,16 +313,13 @@ const [showDateFilter, setShowDateFilter] = useState(false);
               justifyContent: 'center',
             }}
           >
-            <MaterialIcons name="arrow-back" size={24} color={colors.secondary} />
+            <MaterialIcons name="chevron-left" size={24} color={colors.secondary} />
           </TouchableOpacity>
           
           <Typography style={{
             fontSize: 18,
             fontWeight: 'bold',
             color: colors.secondary,
-            position: 'absolute',
-            left: 0,
-            right: 0,
             textAlign: 'center',
           }}>
             Transaction History
@@ -359,7 +356,7 @@ const [showDateFilter, setShowDateFilter] = useState(false);
           isAvailable={isAvailable}
           onTabChange={handleTabChange}
           onHistoryPress={() => setShowHistoryOverlay(true)}
-          tabSlideAnim={tabSlideAnim}
+        //   tabSlideAnim={tabSlideAnim}
         />
 
         <View className="flex-1 pt-2.5">
