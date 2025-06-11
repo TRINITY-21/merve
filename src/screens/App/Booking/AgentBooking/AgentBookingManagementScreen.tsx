@@ -53,8 +53,8 @@ const AgentBookingManagementScreen: React.FC = () => {
     const [refreshing, setRefreshing] = useState<boolean>(false);
     const [selectedUrgency, setSelectedUrgency] = useState<string>('all');
     const [selectedService, setSelectedService] = useState<string>('all');
-    const [showHistory, setShowHistory] = useState<boolean>(false);
 const [showHistoryOverlay, setShowHistoryOverlay] = useState<boolean>(false);
+const [showDateFilter, setShowDateFilter] = useState(false);
 
     // Agent settings
     const [isAvailable, setIsAvailable] = useState<boolean>(true);
@@ -292,43 +292,56 @@ const [showHistoryOverlay, setShowHistoryOverlay] = useState<boolean>(false);
  return (
   <View className="flex-1" style={{ backgroundColor: colors.background }}>
     {showHistoryOverlay ? (
-      <View style={{ flex: 1 }}>
-        {/* Simple header with back button */}
-        <View style={{
-          paddingTop: Platform.OS === 'ios' ? 60 : 20,
-          paddingBottom: 10,
-          paddingHorizontal: 16,
-          backgroundColor: colors.primary,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 12,
-        }}>
-          <TouchableOpacity
-            onPress={() => setShowHistoryOverlay(false)}
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 20,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <MaterialIcons name="chevron-left" size={24} color={colors.secondary} />
-          </TouchableOpacity>
-          <Typography style={{
-            fontSize: 18,
-            fontWeight: 'bold',
-            color: colors.secondary,
-          }}>
-            Transaction History
-          </Typography>
-        </View>
-        
-        <CompletedView
-          bookingRequests={bookingRequests}
-          navigation={navigation}
-        />
-      </View>
+      // In AgentBookingManagementScreen.tsx - Update the history overlay header
+
+<View style={{
+  paddingTop: Platform.OS === 'ios' ? 60 : 20,
+  paddingBottom: 10,
+  paddingHorizontal: 16,
+  backgroundColor: colors.primary,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+}}>
+  <TouchableOpacity
+    onPress={() => setShowHistoryOverlay(false)}
+    style={{
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}
+  >
+    <MaterialIcons name="chevron-left" size={24} color={colors.secondary} />
+  </TouchableOpacity>
+  
+  <Typography variant="semibold" style={{
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: colors.secondary,
+    textAlign: 'center',
+  }}>
+    Transaction History
+  </Typography>
+
+  <TouchableOpacity
+    onPress={() => setShowDateFilter(true)}
+    style={{
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}
+  >
+    <MaterialIcons name="filter-list" size={24} color={colors.secondary} />
+  </TouchableOpacity>
+
+
+</View>
+
+
     ) : (
       <>
         <AgentBookingManagementHeader
@@ -447,6 +460,13 @@ const [showHistoryOverlay, setShowHistoryOverlay] = useState<boolean>(false);
         )}
       </>
     )}
+
+      <CompletedView
+  bookingRequests={bookingRequests}
+  navigation={navigation}
+  showDateFilter={showDateFilter}
+  onShowDateFilter={setShowDateFilter}
+/>
   </View>
 );
 };

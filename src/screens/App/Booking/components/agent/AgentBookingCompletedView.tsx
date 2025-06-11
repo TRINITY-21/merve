@@ -1,13 +1,17 @@
 // components/agent/CompletedView.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../../../../constants/theme/colors';
 import { IBookingRequest } from '../../../../../types/agentBookingTypes';
+
+const { height: screenHeight } = Dimensions.get('window');
 
 interface CompletedViewProps {
   bookingRequests: IBookingRequest[];
   navigation: any;
+  showDateFilter?: boolean;
+  onShowDateFilter?: (show: boolean) => void;
 }
 
 interface CompletedBookingCardProps {
@@ -18,6 +22,297 @@ interface CompletedBookingCardProps {
   formatTime: (timeString: string) => string;
   getTimeAgo: (dateString: string) => string;
 }
+
+interface DateFilterModalProps {
+  visible: boolean;
+  startDate: string;
+  endDate: string;
+  onClose: () => void;
+  onStartDateChange: (date: string) => void;
+  onEndDateChange: (date: string) => void;
+  onApplyFilter: () => void;
+  onClearFilter: () => void;
+}
+
+const DateFilterModal: React.FC<DateFilterModalProps> = ({
+  visible,
+  startDate,
+  endDate,
+  onClose,
+  onStartDateChange,
+  onEndDateChange,
+  onApplyFilter,
+  onClearFilter,
+}) => {
+  const [activeField, setActiveField] = useState<'start' | 'end' | null>(null);
+
+  // Generate months and years for picker
+  const generateDateOptions = () => {
+    const options = [];
+    const currentYear = new Date().getFullYear();
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    for (let year = currentYear - 2; year <= currentYear + 1; year++) {
+      months.forEach((month, index) => {
+        const monthNumber = (index + 1).toString().padStart(2, '0');
+        const dateString = `${monthNumber}-${year}`;
+        options.push({
+          id: dateString,
+          month,
+          year,
+          display: `${month} ${year}`,
+          value: `${year}-${monthNumber}-01` // Default to first day of month
+        });
+      });
+    }
+    return options;
+  };
+
+  const dateOptions = generateDateOptions();
+
+  const handleDateSelect = (dateValue: string) => {
+    if (activeField === 'start') {
+      onStartDateChange(dateValue);
+    } else if (activeField === 'end') {
+      // Set to last day of selected month
+      const date = new Date(dateValue);
+      const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      const lastDayString = lastDay.toISOString().split('T')[0];
+      onEndDateChange(lastDayString);
+    }
+    setActiveField(null);
+  };
+
+  const formatDisplayDate = (dateString: string) => {
+    if (!dateString) return 'Select Date';
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  return (
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="slide"
+      onRequestClose={onClose}
+    >
+      <View style={{ 
+        flex: 1, 
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'flex-end' 
+      }}>
+        <View style={{
+          backgroundColor: 'white',
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
+          paddingBottom: 34,
+        }}>
+          {/* Header */}
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: 20,
+            borderBottomWidth: 1,
+            borderBottomColor: '#E5E7EB',
+          }}>
+            <Text style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#1F2937',
+            }}>
+              Select Period
+            </Text>
+            <TouchableOpacity onPress={onClose}>
+              <MaterialIcons name="close" size={24} color="#6B7280" />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView style={{ maxHeight: 400 }}>
+            {/* Start Date Field */}
+            <View style={{ padding: 20, paddingBottom: 10 }}>
+              <Text style={{
+                fontSize: 16,
+                fontWeight: '600',
+                color: colors.text.primary,
+                marginBottom: 8,
+              }}>
+                Start date
+              </Text>
+              <TouchableOpacity
+                style={{
+                  borderWidth: 1,
+                  borderColor: '#D1D5DB',
+                  borderRadius: 8,
+                  padding: 16,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  backgroundColor: activeField === 'start' ? colors.primary + '10' : 'white',
+                }}
+                onPress={() => setActiveField(activeField === 'start' ? null : 'start')}
+              >
+                <Text style={{
+                  fontSize: 16,
+                  color: startDate ? colors.text.primary : colors.text.secondary,
+                }}>
+                  {formatDisplayDate(startDate)}
+                </Text>
+                <MaterialIcons name="calendar-today" size={20} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
+
+            {/* End Date Field */}
+            <View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
+              <Text style={{
+                fontSize: 16,
+                fontWeight: '600',
+                color: colors.text.primary,
+                marginBottom: 8,
+              }}>
+                End date
+              </Text>
+              <TouchableOpacity
+                style={{
+                  borderWidth: 1,
+                  borderColor: '#D1D5DB',
+                  borderRadius: 8,
+                  padding: 16,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  backgroundColor: activeField === 'end' ? colors.primary + '10' : 'white',
+                }}
+                onPress={() => setActiveField(activeField === 'end' ? null : 'end')}
+              >
+                <Text style={{
+                  fontSize: 16,
+                  color: endDate ? colors.text.primary : colors.text.secondary,
+                }}>
+                  {formatDisplayDate(endDate)}
+                </Text>
+                <MaterialIcons name="calendar-today" size={20} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Date Picker */}
+            {activeField && (
+              <View style={{
+                paddingHorizontal: 20,
+                paddingBottom: 20,
+              }}>
+                <Text style={{
+                  fontSize: 14,
+                  fontWeight: '600',
+                  color: colors.text.secondary,
+                  marginBottom: 12,
+                  textAlign: 'center',
+                }}>
+                  Select {activeField === 'start' ? 'start' : 'end'} month
+                </Text>
+                <ScrollView 
+                  style={{ maxHeight: 200 }}
+                  showsVerticalScrollIndicator={false}
+                  nestedScrollEnabled={true}
+                >
+                  {dateOptions.map((option) => (
+                    <TouchableOpacity
+                      key={option.id}
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        paddingVertical: 12,
+                        paddingHorizontal: 16,
+                        borderBottomWidth: 1,
+                        borderBottomColor: '#F3F4F6',
+                      }}
+                      onPress={() => handleDateSelect(option.value)}
+                    >
+                      <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        flex: 1,
+                      }}>
+                        <Text style={{
+                          fontSize: 16,
+                          color: colors.text.primary,
+                          flex: 1,
+                        }}>
+                          {option.month}
+                        </Text>
+                        <Text style={{
+                          fontSize: 16,
+                          color: colors.text.secondary,
+                          fontWeight: '500',
+                        }}>
+                          {option.year}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+          </ScrollView>
+
+          {/* Action Buttons */}
+          {!activeField && (
+            <View style={{
+              paddingHorizontal: 20,
+              paddingTop: 10,
+            }}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: startDate && endDate ? colors.error : colors.gray.medium,
+                  paddingVertical: 16,
+                  borderRadius: 12,
+                  alignItems: 'center',
+                  marginBottom: 10,
+                }}
+                onPress={onApplyFilter}
+                disabled={!startDate || !endDate}
+              >
+                <Text style={{
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                  color: 'white',
+                  textTransform: 'uppercase',
+                  letterSpacing: 1,
+                }}>
+                  Confirm
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  backgroundColor: 'transparent',
+                  paddingVertical: 12,
+                  alignItems: 'center',
+                }}
+                onPress={onClearFilter}
+              >
+                <Text style={{
+                  fontSize: 14,
+                  fontWeight: '600',
+                  color: colors.text.secondary,
+                }}>
+                  Clear Filter
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </View>
+    </Modal>
+  );
+};
 
 const CompletedBookingCard: React.FC<CompletedBookingCardProps> = ({
   booking,
@@ -383,19 +678,51 @@ const CompletedBookingCard: React.FC<CompletedBookingCardProps> = ({
 export const CompletedView: React.FC<CompletedViewProps> = ({
   bookingRequests,
   navigation,
+  showDateFilter = false,
+  onShowDateFilter,
 }) => {
-  const completedBookings = bookingRequests.filter(booking => booking.status === 'completed');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [filteredBookings, setFilteredBookings] = useState<IBookingRequest[]>([]);
+
+  const allCompletedBookings = bookingRequests.filter(booking => booking.status === 'completed');
+  const displayBookings = startDate && endDate ? filteredBookings : allCompletedBookings;
   
-  // Calculate stats
-  const totalEarnings = completedBookings.reduce((sum, booking) => sum + booking.amount, 0);
-  const thisWeekEarnings = completedBookings
-    .filter(booking => {
-      const bookingDate = new Date(booking.createdAt);
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      return bookingDate >= weekAgo;
-    })
-    .reduce((sum, booking) => sum + booking.amount, 0);
+  const totalEarnings = displayBookings.reduce((sum, booking) => sum + booking.amount, 0);
+
+  // Helper function to normalize date format
+  const normalizeDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD format
+  };
+
+  // Helper function to check if a date is in range
+  const isDateInRange = (dateToCheck: string, startDate: string, endDate: string): boolean => {
+    const checkDate = new Date(dateToCheck);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    return checkDate >= start && checkDate <= end;
+  };
+
+  const applyDateFilter = () => {
+    if (!startDate || !endDate) return;
+    
+    const filtered = allCompletedBookings.filter(booking => {
+      const bookingDate = normalizeDate(booking.createdAt);
+      return isDateInRange(bookingDate, startDate, endDate);
+    });
+    
+    setFilteredBookings(filtered);
+    onShowDateFilter?.(false);
+  };
+
+  const clearDateFilter = () => {
+    setStartDate('');
+    setEndDate('');
+    setFilteredBookings([]);
+    onShowDateFilter?.(false);
+  };
 
   const getServiceIcon = (service: string): string => {
     switch (service) {
@@ -460,71 +787,49 @@ export const CompletedView: React.FC<CompletedViewProps> = ({
     <View style={{ flex: 1 }}>
       {/* Stats Header */}
       <View style={{
-        marginHorizontal: 16,
+        // marginHorizontal: 16,
+        // paddingHorizontal: 16,
         marginBottom: 16,
-        gap: 12,
       }}>
         <View style={{
-          backgroundColor: colors.success + '10',
-          borderRadius: 16,
-          padding: 20,
+          backgroundColor: colors.accent + '10',
+        //   borderRadius: 16,
+          padding: 16,
+          paddingLeft: 26,
+          paddingRight: 26,
         }}>
           <View style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: 12,
-          }}>
-            <Text style={{
-              fontSize: 18,
-              fontWeight: 'bold',
-              color: colors.text.primary,
-            }}>
-              Transaction History
-            </Text>
-            <View style={{
-              backgroundColor: colors.success,
-              width: 40,
-              height: 40,
-              borderRadius: 20,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              <MaterialIcons name="history" size={20} color="white" />
-            </View>
-          </View>
-          
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
           }}>
             <View>
               <Text style={{
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: 'bold',
                 color: colors.success,
               }}>
-                {completedBookings.length}
+                {displayBookings.length}
               </Text>
               <Text style={{
-                fontSize: 12,
+                fontSize: 11,
                 color: colors.text.secondary,
                 fontWeight: '500',
               }}>
-                Total Completed
+                {startDate && endDate ? 'Filtered Transactions' : 'Total Completed'}
               </Text>
             </View>
             
             <View style={{ alignItems: 'flex-end' }}>
               <Text style={{
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: 'bold',
                 color: colors.text.primary,
               }}>
                 GH₵{totalEarnings}
               </Text>
               <Text style={{
-                fontSize: 12,
+                fontSize: 11,
                 color: colors.text.secondary,
                 fontWeight: '500',
               }}>
@@ -532,38 +837,34 @@ export const CompletedView: React.FC<CompletedViewProps> = ({
               </Text>
             </View>
           </View>
-        </View>
 
-        <View style={{
-          backgroundColor: colors.accent + '10',
-          borderRadius: 12,
-          padding: 16,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 12,
-        }}>
-          <MaterialIcons name="trending-up" size={24} color={colors.accent} />
-          <View>
-            <Text style={{
-              fontSize: 16,
-              fontWeight: 'bold',
-              color: colors.text.primary,
-            }}>
-              GH₵{thisWeekEarnings} this week
-            </Text>
-            <Text style={{
-              fontSize: 12,
-              color: colors.text.secondary,
-            }}>
-              Weekly earnings summary
-            </Text>
-          </View>
+          {(startDate && endDate) && (
+            <TouchableOpacity
+              style={{
+                marginTop: 12,
+                backgroundColor: colors.error + '20',
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+                borderRadius: 8,
+                alignSelf: 'flex-start',
+              }}
+              onPress={clearDateFilter}
+            >
+              <Text style={{
+                fontSize: 12,
+                fontWeight: '600',
+                color: colors.error,
+              }}>
+                Clear Date Filter
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 
       {/* List */}
       <FlatList
-        data={completedBookings.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())}
+        data={displayBookings.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())}
         renderItem={renderCompletedBooking}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
@@ -589,7 +890,7 @@ export const CompletedView: React.FC<CompletedViewProps> = ({
               marginTop: 16,
               marginBottom: 8,
             }}>
-              No completed bookings
+              {startDate && endDate ? 'No transactions found' : 'No completed bookings'}
             </Text>
             <Text style={{
               fontSize: 14,
@@ -597,10 +898,24 @@ export const CompletedView: React.FC<CompletedViewProps> = ({
               textAlign: 'center',
               paddingHorizontal: 40,
             }}>
-              Your completed transactions will appear here for easy reference
+              {startDate && endDate
+                ? 'No transactions found for the selected date range'
+                : 'Your completed transactions will appear here'
+              }
             </Text>
           </View>
         }
+      />
+
+      <DateFilterModal
+        visible={showDateFilter}
+        startDate={startDate}
+        endDate={endDate}
+        onClose={() => onShowDateFilter?.(false)}
+        onStartDateChange={setStartDate}
+        onEndDateChange={setEndDate}
+        onApplyFilter={applyDateFilter}
+        onClearFilter={clearDateFilter}
       />
     </View>
   );
