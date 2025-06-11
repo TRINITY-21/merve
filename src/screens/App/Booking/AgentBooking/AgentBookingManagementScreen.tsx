@@ -292,56 +292,64 @@ const [showDateFilter, setShowDateFilter] = useState(false);
  return (
   <View className="flex-1" style={{ backgroundColor: colors.background }}>
     {showHistoryOverlay ? (
-      // In AgentBookingManagementScreen.tsx - Update the history overlay header
+      <View style={{ flex: 1 }}>
+        {/* Simple header with back button and filter */}
+        <View style={{
+          paddingTop: Platform.OS === 'ios' ? 60 : 20,
+          paddingBottom: 10,
+          paddingHorizontal: 16,
+          backgroundColor: colors.primary,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <TouchableOpacity
+            onPress={() => setShowHistoryOverlay(false)}
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 20,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <MaterialIcons name="arrow-back" size={24} color={colors.secondary} />
+          </TouchableOpacity>
+          
+          <Typography style={{
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: colors.secondary,
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            textAlign: 'center',
+          }}>
+            Transaction History
+          </Typography>
 
-<View style={{
-  paddingTop: Platform.OS === 'ios' ? 60 : 20,
-  paddingBottom: 10,
-  paddingHorizontal: 16,
-  backgroundColor: colors.primary,
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-}}>
-  <TouchableOpacity
-    onPress={() => setShowHistoryOverlay(false)}
-    style={{
-      width: 40,
-      height: 40,
-      borderRadius: 20,
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
-  >
-    <MaterialIcons name="chevron-left" size={24} color={colors.secondary} />
-  </TouchableOpacity>
-  
-  <Typography variant="semibold" style={{
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: colors.secondary,
-    textAlign: 'center',
-  }}>
-    Transaction History
-  </Typography>
-
-  <TouchableOpacity
-    onPress={() => setShowDateFilter(true)}
-    style={{
-      width: 40,
-      height: 40,
-      borderRadius: 20,
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
-  >
-    <MaterialIcons name="filter-list" size={24} color={colors.secondary} />
-  </TouchableOpacity>
-
-
-</View>
-
-
+          <TouchableOpacity
+            onPress={() => setShowDateFilter(true)}
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 20,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <MaterialIcons name="filter-list" size={24} color={colors.secondary} />
+          </TouchableOpacity>
+        </View>
+        
+        {/* CompletedView goes here */}
+        <CompletedView
+          bookingRequests={bookingRequests}
+          navigation={navigation}
+          showDateFilter={showDateFilter}
+          onShowDateFilter={setShowDateFilter}
+        />
+      </View>
     ) : (
       <>
         <AgentBookingManagementHeader
@@ -461,12 +469,7 @@ const [showDateFilter, setShowDateFilter] = useState(false);
       </>
     )}
 
-      <CompletedView
-  bookingRequests={bookingRequests}
-  navigation={navigation}
-  showDateFilter={showDateFilter}
-  onShowDateFilter={setShowDateFilter}
-/>
+
   </View>
 );
 };
