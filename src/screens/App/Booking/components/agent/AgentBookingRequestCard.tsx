@@ -36,11 +36,11 @@ export const BookingRequestCard: React.FC<BookingRequestCardProps> = ({
       marginBottom: 10,
       borderRadius: 16,
       overflow: 'hidden',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.15,
-      shadowRadius: 12,
-      elevation: 8,
+      // shadowColor: '#000',
+      // shadowOffset: { width: 0, height: 4 },
+      // shadowOpacity: 0.15,
+      // shadowRadius: 12,
+      // elevation: 8,
       opacity: fadeAnim,
       margin:0,
     }}
@@ -72,11 +72,11 @@ export const BookingRequestCard: React.FC<BookingRequestCardProps> = ({
             justifyContent: 'center',
             marginRight: 10,
             backgroundColor: getServiceColor(request.serviceType) + '20',
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.1,
-            shadowRadius: 4,
-            elevation: 2,
+            // shadowColor: '#000',
+            // shadowOffset: { width: 0, height: 1 },
+            // shadowOpacity: 0.1,
+            // shadowRadius: 4,
+            // elevation: 2,
           }}>
             <MaterialIcons
               name={getServiceIcon(request.serviceType) as any}
@@ -114,11 +114,11 @@ export const BookingRequestCard: React.FC<BookingRequestCardProps> = ({
             borderRadius: 6,
             marginBottom: 4,
             backgroundColor: getUrgencyColor(request.urgency),
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.1,
-            shadowRadius: 2,
-            elevation: 1,
+            // shadowColor: '#000',
+            // shadowOffset: { width: 0, height: 1 },
+            // shadowOpacity: 0.1,
+            // shadowRadius: 2,
+            // elevation: 1,
           }}>
             <Typography variant='bold' size={10} style={{
               color: 'white',
@@ -283,11 +283,11 @@ const ActionButton: React.FC<ActionButtonProps> = ({ icon, label, color, onPress
       backgroundColor: variant === 'solid' ? color : 'transparent',
       borderWidth: variant === 'outline' ? 1 : 0,
       borderColor: variant === 'outline' ? color + '80' : undefined,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.1,
-      shadowRadius: 2,
-      elevation: 1,
+      // shadowColor: '#000',
+      // shadowOffset: { width: 0, height: 1 },
+      // shadowOpacity: 0.1,
+      // shadowRadius: 2,
+      // elevation: 1,
     }}
     onPress={onPress}
     activeOpacity={0.7}

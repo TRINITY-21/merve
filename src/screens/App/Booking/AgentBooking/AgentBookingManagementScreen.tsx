@@ -343,10 +343,10 @@ const [showDateFilter, setShowDateFilter] = useState(false);
         </View>
         
         {/* CompletedView goes here */}
-        <CompletedView
+        <CompletedView 
           bookingRequests={bookingRequests}
           navigation={navigation}
-          showDateFilter={showDateFilter}
+          showDateFilter={showDateFilter} 
           onShowDateFilter={setShowDateFilter}
         />
       </View>
