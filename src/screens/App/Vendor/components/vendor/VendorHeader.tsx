@@ -13,7 +13,7 @@ const VendorHeader: React.FC<IVendorHeaderProps> = ({ title, onBack }) => {
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        paddingTop: Platform.OS === 'ios' ? 60 : 40, // ~pt-12
+        paddingTop: Platform.OS === 'ios' ? 60 :10, // ~pt-12
         paddingHorizontal: 16, // px-4
         paddingBottom: 20, // pb-5
       }}

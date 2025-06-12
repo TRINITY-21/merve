@@ -20,7 +20,7 @@ const AgentRegistrationHeader: React.FC<IAgentRegistrationHeaderProps> = ({
         right: 0,
         zIndex: 1000,
         backgroundColor: colors.primary,
-        paddingTop: Platform.OS === 'ios' ? 50 : 40,
+        paddingTop: Platform.OS === 'ios' ? 50 : 10,
         paddingBottom: 16,
         paddingHorizontal: 20,
         shadowColor: '#000',

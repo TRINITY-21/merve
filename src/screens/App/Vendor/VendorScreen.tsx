@@ -74,7 +74,7 @@ const VendorScreen: React.FC<IVendorScreenProps> = ({
   const renderNonVendorView = () => (
     <ScrollView 
       showsVerticalScrollIndicator={false} 
-      contentContainerStyle={{ paddingBottom: 40 }}
+      contentContainerStyle={{ paddingBottom: 140 }}
     >
       <NonVendorHero onGetStarted={handleStartAsAgent} />
       

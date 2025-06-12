@@ -1,7 +1,8 @@
 import React from 'react';
-import { Switch, TextInput, View } from 'react-native';
+import { TextInput, TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Typography } from '../../../../../components/common';
+import { colors } from '../../../../../constants/theme/colors';
 import { IFormData } from '../../../../../types/agentRegistrationTypes';
 
 interface IOperatingDetailsStepProps {
@@ -35,16 +36,16 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
       ...formData,
       operatingHours: {
         ...formData.operatingHours,
-        [day]: { 
-          ...formData.operatingHours[day], 
-          [timeType]: value 
+        [day]: {
+          ...formData.operatingHours[day],
+          [timeType]: value
         },
       },
     });
   };
 
   return (
-    <Animated.View 
+    <Animated.View
       style={[cardStyle, { marginTop: 20 }]}
       className="bg-white/95 rounded-2xl p-5 mb-5 border border-primary/30 shadow-lg"
     >
@@ -62,12 +63,47 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
             <Typography className="flex-1 text-base text-[#212121] font-semibold capitalize">
               {day}
             </Typography>
-            <Switch
+            {/* <Switch
               value={!formData.operatingHours[day].isClosed}
               onValueChange={() => toggleDayOpen(day)}
               trackColor={{ false: '#E0E0E0', true: '#00BFA5' }}
               thumbColor="#FFFFFF"
-            />
+            /> */}
+
+
+
+            <TouchableOpacity
+              onPress={() => toggleDayOpen(day)}
+              activeOpacity={0.7}
+            >
+              <View
+                style={{
+                  width: 56,
+                  height: 32,
+                  borderRadius: 16,
+                  padding: 4,
+                  justifyContent: 'center',
+                  backgroundColor: !formData.operatingHours[day].isClosed ? colors.accent : colors.white,
+                }}
+              >
+                <View
+                  style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: 12,
+                    backgroundColor: 'white',
+                    shadowColor: 'black',
+                    shadowOpacity: 0.2,
+                    shadowRadius: 3,
+                    shadowOffset: { width: 0, height: 1 },
+                    elevation: 3,
+                    alignSelf: !formData.operatingHours[day].isClosed ? 'flex-end' : 'flex-start',
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
+
+
           </View>
 
           {!formData.operatingHours[day].isClosed && (
@@ -97,14 +133,50 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
       {/* Currently Open Switch */}
       <View className="flex-row items-center justify-between bg-[#E0E0E0] p-3 rounded-xl">
         <Typography className={`text-base ${formData.isOpen ? 'text-primary' : 'text-error'} font-semibold`}>
-         {formData.isOpen ? 'Currently Open' : 'Currently Closed'}
+          {formData.isOpen ? 'Currently Open' : 'Currently Closed'}
         </Typography>
-        <Switch
+
+
+
+        <TouchableOpacity
+          onPress={() => setFormData({ ...formData, isOpen: !formData.isOpen })}
+          activeOpacity={0.7}
+        >
+          <View
+            style={{
+              width: 56,
+              height: 32,
+              borderRadius: 16,
+              padding: 4,
+              justifyContent: 'center',
+              backgroundColor: formData.isOpen ? colors.accent : colors.white,
+            }}
+          >
+            <View
+              style={{
+                width: 24,
+                height: 24,
+                borderRadius: 12,
+                backgroundColor: 'white',
+                shadowColor: 'black',
+                shadowOpacity: 0.2,
+                shadowRadius: 3,
+                shadowOffset: { width: 0, height: 1 },
+                elevation: 3,
+                alignSelf: formData.isOpen ? 'flex-end' : 'flex-start',
+              }}
+            />
+          </View>
+        </TouchableOpacity>
+
+
+
+        {/* <Switch 
           value={formData.isOpen}
           onValueChange={() => setFormData({ ...formData, isOpen: !formData.isOpen })}
           trackColor={{ false: '#E0E0E0', true: '#00BFA5' }}
           thumbColor="#FFFFFF"
-        />
+        /> */}
       </View>
     </Animated.View>
   );
