@@ -21,7 +21,7 @@ export const ProvidersSection: React.FC<ProvidersSectionProps> = ({
     className="px-4 mb-4 mt-4"
     style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
   >
-     <Typography variant="semibold" size={18} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
+     <Typography variant="semibold" size={16} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
       Supported Providers
     </Typography>
     <View className="flex-row flex-wrap justify-between gap-2.5 mt-4">

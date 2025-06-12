@@ -260,7 +260,7 @@ const ReviewsScreen: React.FC<IReviewsScreenProps> = ({
   };
 
   return (
-    <View className="flex-1 bg-[#F5F5F5]">
+    <View className="flex-1 bg-background">
       <ReviewsHeader
         userRole={userRole}
         selectedTab={selectedTab}

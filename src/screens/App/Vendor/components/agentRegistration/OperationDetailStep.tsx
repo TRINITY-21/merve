@@ -1,6 +1,7 @@
 import React from 'react';
-import { Switch, Text, TextInput, View } from 'react-native';
+import { Switch, TextInput, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { Typography } from '../../../../../components/common';
 import { IFormData } from '../../../../../types/agentRegistrationTypes';
 
 interface IOperatingDetailsStepProps {
@@ -44,23 +45,23 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
 
   return (
     <Animated.View 
-      style={cardStyle}
-      className="bg-white/95 rounded-2xl p-5 mb-5 border border-[#FFCC00]/30 shadow-lg"
+      style={[cardStyle, { marginTop: 20 }]}
+      className="bg-white/95 rounded-2xl p-5 mb-5 border border-primary/30 shadow-lg"
     >
-      <Text className="text-xl font-bold text-[#212121] mb-2">
+      <Typography variant="semibold" size={18} className=" text-[#212121] mb-2">
         Operating Details
-      </Text>
-      <Text className="text-sm text-[#757575] mb-5">
+      </Typography>
+      <Typography variant="regular" size={14} className="text-sm text-[#757575] mb-5">
         When are you ready to serve? ⏰
-      </Text>
+      </Typography>
 
       {/* Days Operating Hours */}
       {days.map((day) => (
         <View key={day} className="mb-4">
           <View className="flex-row items-center justify-between bg-[#E0E0E0] p-3 rounded-xl mb-4 px-4">
-            <Text className="flex-1 text-base text-[#212121] font-semibold capitalize">
+            <Typography className="flex-1 text-base text-[#212121] font-semibold capitalize">
               {day}
-            </Text>
+            </Typography>
             <Switch
               value={!formData.operatingHours[day].isClosed}
               onValueChange={() => toggleDayOpen(day)}
@@ -79,7 +80,7 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
                 keyboardType="numeric"
                 placeholderTextColor="#9E9E9E"
               />
-              <Text className="text-base text-[#212121] mx-2">-</Text>
+              <Typography className="text-base text-[#212121] mx-2">-</Typography>
               <TextInput
                 className="w-20 p-2 rounded-lg bg-white text-[#212121] text-center mx-1 border border-[#9E9E9E]"
                 placeholder="Close"
@@ -95,9 +96,9 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
 
       {/* Currently Open Switch */}
       <View className="flex-row items-center justify-between bg-[#E0E0E0] p-3 rounded-xl">
-        <Text className="text-base text-[#212121] font-semibold">
-          Currently Open
-        </Text>
+        <Typography className={`text-base ${formData.isOpen ? 'text-primary' : 'text-error'} font-semibold`}>
+         {formData.isOpen ? 'Currently Open' : 'Currently Closed'}
+        </Typography>
         <Switch
           value={formData.isOpen}
           onValueChange={() => setFormData({ ...formData, isOpen: !formData.isOpen })}
@@ -109,4 +110,4 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
   );
 };
 
-export default OperatingDetailsStep;
+export default OperatingDetailsStep; 

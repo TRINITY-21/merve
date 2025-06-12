@@ -24,7 +24,7 @@ export const FollowersSection: React.FC<FollowersSectionProps> = ({
     style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
   >
     <View className="flex-row justify-between items-center py-1.5 mb-3">
-     <Typography variant="semibold" size={18} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
+     <Typography variant="semibold" size={16} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
         Recent Customers
       </Typography>
       <TouchableOpacity

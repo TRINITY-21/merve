@@ -20,12 +20,14 @@ interface ServicesSectionProps {
   agentData: IAgentData;
   fadeAnim: Animated.Value;
   slideAnim: Animated.Value;
+  navigation: any;
 }
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({
   agentData,
   fadeAnim,
   slideAnim,
+  navigation,
 }) => (
   <Animated.View
     style={[
@@ -38,14 +40,14 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   >
     {/* Header */}
     <View style={styles.header}>
-      <Typography variant="semibold" size={18} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
+      <Typography variant="semibold" size={16} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
      
         Services Offered
         </Typography>
       <TouchableOpacity
         style={styles.manageButton}
         activeOpacity={0.85}
-        onPress={() => console.log('Manage services')}
+        onPress={() => navigation.navigate('AgentSettings')}
       >
     <Typography variant="semibold" size={10} style={{ color: colors.text.light, letterSpacing: 0.5 }}>
         Manage

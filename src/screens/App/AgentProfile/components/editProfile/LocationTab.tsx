@@ -1,11 +1,11 @@
 // components/tabs/LocationTab.tsx
 import React from 'react';
 import {
-    Animated,
-    Text,
-    View,
+  Animated,
+  View
 } from 'react-native';
 import { InputField } from '.';
+import { Typography } from '../../../../../components/common';
 import { ILocationTabProps } from '../../../../../types/editProfileTypes';
 
 export const LocationTab: React.FC<ILocationTabProps> = ({
@@ -32,9 +32,9 @@ export const LocationTab: React.FC<ILocationTabProps> = ({
           elevation: 6,
         }}
       >
-        <Text className="text-lg font-bold text-gray-800 mb-4">
+        <Typography variant='semibold' className="text-lg font-bold text-gray-800 mb-4">
           Business Location
-        </Text>
+        </Typography>
         
         <InputField
           label="Business Address"
@@ -111,9 +111,9 @@ export const LocationTab: React.FC<ILocationTabProps> = ({
           elevation: 6,
         }}
       >
-        <Text className="text-lg font-bold text-gray-800 mb-4">
+        <Typography  variant='semibold' className="text-lg font-bold text-gray-800 mb-4">
           Emergency Contact
-        </Text>
+        </Typography>
         
         <InputField
           label="Emergency Contact Name"

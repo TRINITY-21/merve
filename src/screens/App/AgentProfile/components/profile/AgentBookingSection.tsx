@@ -91,13 +91,13 @@ export const BookingsSection: React.FC<BookingsSectionProps> = ({
       style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
     >
       <View className="flex-row justify-between items-center py-1.5 mb-3">
-      <Typography variant="semibold" size={18} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
+      <Typography variant="semibold" size={16} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
           Recent Bookings
         </Typography>
         <TouchableOpacity
           className="flex-row items-center px-3.5 py-2 rounded-2xl gap-1.5 shadow-sm elevation-8"
           style={{ backgroundColor: colors.primary }}
-          onPress={() => navigation.navigate('AgentBookingManagementScreen')}
+          onPress={() => navigation.navigate('AgentBookingManagement')}
           activeOpacity={0.8}
         >
           <MaterialIcons name="event" size={16} color={colors.white} />

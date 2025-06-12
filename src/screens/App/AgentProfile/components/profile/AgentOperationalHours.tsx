@@ -49,7 +49,7 @@ export const OperationalHours: React.FC<OperationalHoursProps> = ({ agentData })
       style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
     >
       <TouchableOpacity onPress={toggleHours} className="flex-row justify-between items-center py-1.5">
-      <Typography variant="semibold" size={18} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
+      <Typography variant="semibold" size={16} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
           Operating Hours
         </Typography>
         <Ionicons name={hoursExpanded ? 'chevron-up' : 'chevron-down'} size={24} color={colors.secondary} />

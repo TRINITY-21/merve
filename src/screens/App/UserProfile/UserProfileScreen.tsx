@@ -54,7 +54,7 @@ const UserProfileScreen: React.FC = () => {
     ]);
 
     // Use Reanimated's useSharedValue
-    const fadeAnim = useSharedValue(0);
+    const fadeAnim = useSharedValue(0); 
     const slideAnim = useSharedValue(50);
     const scaleAnim = useSharedValue(0.9);
 
@@ -62,7 +62,7 @@ const UserProfileScreen: React.FC = () => {
         setFormData({
             name: currentUser?.name || '',
             phone: currentUser?.phone || '',
-            email: currentUser?.email || '',
+            email: currentUser?.email || '', 
         });
 
         // Update animation sequence to use Reanimated
@@ -79,7 +79,7 @@ const UserProfileScreen: React.FC = () => {
             text2: 'See you again soon!',
             visibilityTime: 2000,
         });
-        navigation.navigate('Login' as never);
+        navigation.navigate('Login');
     };
 
     const getStatusColor = (status: string): string => {
@@ -318,7 +318,7 @@ const UserProfileScreen: React.FC = () => {
                             <MaterialIcons name="person-add-alt" size={Platform.OS === 'ios' ? 23 : 20} color={colors.secondary} />
                             <Typography className="text-md text-secondary/90 tracking-wide" variant="semibold" size={11}>Invite</Typography>
                         </TouchableOpacity>
-                        <TouchableOpacity className="items-center">
+                        <TouchableOpacity className="items-center" onPress={() => navigation.navigate('Chat')}>
                             <MaterialIcons name="chat-bubble-outline" size={Platform.OS === 'ios' ? 23 : 20} color={colors.secondary} />
                             <Typography className="text-md text-secondary/90 tracking-wide" variant="semibold" size={11}>Chat</Typography>
                         </TouchableOpacity>

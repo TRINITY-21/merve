@@ -123,6 +123,7 @@ export const InvitesTab: React.FC<InvitesTabProps> = ({
                         Recent Invites
                     </Typography>
                     <TouchableOpacity
+                    onPress={() => navigation.navigate('UserInvitations')}
                         style={{
                             backgroundColor: colors.primary,
                             paddingHorizontal: 14,

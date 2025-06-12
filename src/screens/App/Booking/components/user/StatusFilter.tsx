@@ -1,5 +1,6 @@
 import React from 'react';
-import { ScrollView, Text, TouchableOpacity, ViewStyle } from 'react-native';
+import { ScrollView, TouchableOpacity, ViewStyle } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IStatusFilter } from '../../../../../types/BookingTypes';
 
@@ -39,7 +40,7 @@ export const StatusFilters: React.FC<StatusFiltersProps> = ({
           className="px-4 rounded-xl border mb-4 mt-1"
           style={baseStyle}
         >
-          <Text
+          <Typography variant='semibold' size={12}
             className="text-sm font-medium text-center"
             style={{
               color: isSelected ? colors.white : colors.text.secondary,
@@ -47,7 +48,7 @@ export const StatusFilters: React.FC<StatusFiltersProps> = ({
             }}
           >
             {filter.label}
-          </Text>
+          </Typography>
         </TouchableOpacity>
       );
     })}

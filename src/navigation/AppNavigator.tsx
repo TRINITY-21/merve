@@ -18,6 +18,7 @@ import UserBookingScreen from '../screens/App/Booking/UserBooking/UserBookingScr
 import ChatScreen from '../screens/App/Chat/ChatScreen';
 import FollowersScreen from '../screens/App/Followers/FollowersScreen';
 import InvitationScreen from '../screens/App/Invitation/InvitationScreen';
+import UserInvitationsScreen from '../screens/App/Invitation/UserInvitationScreen';
 import MapScreen from '../screens/App/Map/MapScreen';
 import NotificationsScreen from '../screens/App/Notification/NotificationsScreen';
 import PromoteProductScreen from '../screens/App/Promote/PromoteProductScreen';
@@ -52,6 +53,7 @@ export type RootTabParamList = {
   Vendor: undefined;
   Invitations: undefined;
   AgentRegistration: undefined;
+
 };
 
 export type MapStackParamList = {
@@ -72,9 +74,11 @@ export type MapStackParamList = {
   Followers: undefined;
   PromoteProduct: undefined;
   Reviews: undefined;
-    Vendor: undefined;
+  Vendor: undefined;
   Invitations: undefined;
 AgentRegistration: undefined;
+  SearchAgents: undefined;
+UserInvitations: undefined;
 
 
 
@@ -83,7 +87,7 @@ AgentRegistration: undefined;
 
 export type SearchAgentsStackParamList = {
   SearchAgentsHome: undefined;
-AgentRegistration: undefined;
+  AgentRegistration: undefined;
   AgentProfile: undefined;
   AgentBookingManagement: undefined;  
   AgentShopDashboard: undefined;     
@@ -155,6 +159,7 @@ export type AgentProfileStackParamList = {
   Invitations: undefined;
   AgentRegistration: undefined;
   SearchAgents: undefined;
+  UserProfile: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
@@ -307,6 +312,11 @@ const MapStackNavigator: React.FC = () => (
     <MapStack.Screen name="Reviews" component={ReviewsScreen} />
     <MapStack.Screen name="Vendor" component={VendorScreen} />
     <MapStack.Screen name="AgentRegistration" component={AgentRegistrationScreen} />
+    <MapStack.Screen name="SearchAgents" component={SearchAgentsScreen} />
+    <MapStack.Screen name="Invitations" component={InvitationScreen} />
+    <MapStack.Screen name="UserInvitations" component={UserInvitationsScreen} />
+
+
 
   </MapStack.Navigator>
 );
@@ -330,6 +340,7 @@ const AgentProfileStackNavigator: React.FC = () => (
     <AgentProfileStack.Screen name="Invitations" component={InvitationScreen} />
     <AgentProfileStack.Screen name="AgentRegistration" component={AgentRegistrationScreen} />
     <AgentProfileStack.Screen name="SearchAgents" component={SearchAgentsScreen} />
+    <AgentProfileStack.Screen name="UserProfile" component={UserProfileScreen} />
 
   </AgentProfileStack.Navigator>
 );

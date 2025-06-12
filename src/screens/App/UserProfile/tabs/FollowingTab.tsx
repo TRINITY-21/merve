@@ -61,7 +61,7 @@ export const FollowingTab: React.FC<FollowingTabProps> = ({
                     <TouchableOpacity
                         className="rounded-2xl items-center justify-center bg-primary/10 px-4 py-2"
                         activeOpacity={0.7}
-                        onPress={() => navigation.navigate('ViewAllBookingsScreen' as never)}
+                        onPress={() => navigation.navigate('SearchAgents' as never)}
                     >
                         <Typography variant="semibold" size={14} style={{ color: colors.primary }}>
                             View All
@@ -87,7 +87,7 @@ export const FollowingTab: React.FC<FollowingTabProps> = ({
                             borderColor: colors.primary + '30',
                         }}
                         activeOpacity={0.7}
-                        onPress={() => navigation.navigate('FindAgents' as never)}
+                        onPress={() => navigation.navigate('SearchAgents' as never)}
                     >
                         <View style={{
                             width: 40,
@@ -116,7 +116,7 @@ export const FollowingTab: React.FC<FollowingTabProps> = ({
                             borderColor: colors.success + '30',
                         }}
                         activeOpacity={0.7}
-                        onPress={() => navigation.navigate('RecommendedAgents' as never)}
+                        onPress={() => navigation.navigate('SearchAgents' as never)}
                     >
                         <View style={{
                             width: 40,
@@ -255,8 +255,15 @@ export const FollowingTab: React.FC<FollowingTabProps> = ({
                                         marginRight: 16,
                                     }}
                                 />
+                                
                                 <View style={{ flex: 1 }}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                         <TouchableOpacity
+                                         onPress={() => navigation.navigate('AgentsProfile' as never)}
+                                            activeOpacity={0.8}
+                                            className="flex-row items-center mt-1"
+                                            style={{ flexDirection: 'row', alignItems: 'center' }}
+                                        >
                                         <Typography variant="bold" size={16} style={{ color: colors.text.primary }}>
                                             {person.name}
                                         </Typography>
@@ -268,8 +275,10 @@ export const FollowingTab: React.FC<FollowingTabProps> = ({
                                                 style={{ marginLeft: 4 }}
                                             />
                                         )}
+                                        </TouchableOpacity>
                                     </View>
-                                    <Typography variant="regular" size={14} style={{ color: colors.text.secondary, marginTop: 4 }}>
+                                    
+                                          <Typography variant="regular" size={14} style={{ color: colors.text.secondary, marginTop: 4 }}>
                                         {person.username}
                                     </Typography>
                                     <View className="flex-row items-center mt-1">

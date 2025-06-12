@@ -1,11 +1,11 @@
 // components/tabs/BankingTab.tsx
 import React from 'react';
 import {
-    Animated,
-    Text,
-    View,
+  Animated,
+  View
 } from 'react-native';
 import { InfoCard } from '.';
+import { Typography } from '../../../../../components/common';
 import { IBankingTabProps } from '../../../../../types/editProfileTypes';
 import { InputField } from './InputField';
 
@@ -34,9 +34,9 @@ export const BankingTab: React.FC<IBankingTabProps> = ({
           elevation: 6,
         }}
       >
-        <Text className="text-lg font-bold text-gray-800 mb-4">
+        <Typography variant="semibold" className="text-lg font-bold text-gray-800 mb-4">
           Banking Information
-        </Text>
+        </Typography>
         
         <InputField
           label="Bank Name"

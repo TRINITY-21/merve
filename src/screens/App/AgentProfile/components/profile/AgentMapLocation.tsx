@@ -49,7 +49,7 @@ export const AgentMapView: React.FC<AgentMapViewProps> = ({
   return (
     <>
       <View className="pl-4 pt-3">
-     <Typography variant="semibold" size={18} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
+     <Typography variant="semibold" size={16} style={{ color: colors.text.primary, letterSpacing: 0.5 }}>
           Agent Location
         </Typography>
       </View>

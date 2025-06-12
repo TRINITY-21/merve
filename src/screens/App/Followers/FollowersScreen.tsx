@@ -297,14 +297,7 @@ const FollowersScreen: React.FC<IFollowersManagementScreenProps> = () => {
       isSelected={selectedItems.includes(item.id)}
       activeTab={activeTab}
       onPress={() => {
-        if (isSelectionMode) {
-          handleItemSelect(item.id);
-        } else {
-          navigation.navigate(
-            item.type === 'user' ? 'UserProfile' : 'AgentsProfileScreen', 
-            { [item.type === 'user' ? 'userId' : 'agentId']: item.id }
-          );
-        }
+      navigation.navigate('UserProfile', { userId: item.id });
       }}
       onSelect={() => handleItemSelect(item.id)}
       onAction={(action) => handleUserAction(action, item)}

@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Animated, RefreshControl, ScrollView, View } from 'react-native';
 
+import { colors } from '../../../constants/theme/colors';
 import { IAgentSettingsScreenProps, IBusinessSettings, ICustomerSettings, INotificationSettings, IOperationalSettings, ISecuritySettings, IServiceSettings, ISettingsSection, SettingsSectionId } from '../../../types/agentSettingsTypes';
 import AgentSettingsHeader from './components/settings/AgentSettingsHeader';
 import BusinessSettings from './components/settings/BusinessSettings';
@@ -275,7 +276,7 @@ const AgentSettingsScreen: React.FC<IAgentSettingsScreenProps> = () => {
         return (
           <ServiceSettings
             settings={serviceSettings}
-            onServiceChange={handleServiceChange}
+            onServiceChange={handleServiceChange as any}
           />
         );
       case 'notifications':
@@ -321,20 +322,20 @@ const AgentSettingsScreen: React.FC<IAgentSettingsScreenProps> = () => {
       />
       
       <ScrollView
-        className="flex-1 p-0 m-0"
-        contentContainerStyle={{ paddingBottom: 40 }}
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 150 }}
         showsVerticalScrollIndicator={false}
         refreshControl={ 
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}
-            colors={['#FFCC00']}
-            tintColor="#FFCC00"
+            colors={[colors.primary]}
+            tintColor={colors.primary}
           />
         }
       >
         <Animated.View 
-          className="px-5 pt-5"
+          className="px-5 mt-4"
           style={{ 
             opacity: fadeAnim,
             transform: [{ translateY: slideAnim }]

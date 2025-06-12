@@ -1,7 +1,9 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Platform, TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { Typography } from '../../../../../components/common';
+import { colors } from '../../../../../constants/theme/colors';
 import { IAgentRegistrationHeaderProps } from '../../../../../types/agentRegistrationTypes';
 
 const AgentRegistrationHeader: React.FC<IAgentRegistrationHeaderProps> = ({
@@ -10,33 +12,64 @@ const AgentRegistrationHeader: React.FC<IAgentRegistrationHeaderProps> = ({
   totalSteps,
 }) => {
   return (
-    <>
+    <View 
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        backgroundColor: colors.primary,
+        paddingTop: Platform.OS === 'ios' ? 50 : 20,
+        paddingBottom: 16,
+        paddingHorizontal: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 8,
+      }}
+    >
       {/* Header */}
-      <View className="flex-row items-center mb-5">
+      <View className="flex-row items-center mb-4">
         <TouchableOpacity 
           onPress={onGoBack} 
           className="mr-4"
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
         >
-          <MaterialIcons name="chevron-left" size={28} color="#FFFFFF" />
+          <MaterialIcons name="chevron-left" size={24} color={colors.white} />
         </TouchableOpacity>
-        <Text className="text-lg font-bold text-white">
+        <Typography variant="semibold" size={18} className="text-lg font-bold" style={{ color: colors.white }}>
           Become an Agent
-        </Text>
+        </Typography>
       </View>
 
       {/* Progress Container */}
-      <View className="mb-5">
-        <View className="h-2 bg-[#E0E0E0] rounded-sm overflow-hidden">
+      <View>
+        <View 
+          className="h-2 rounded-sm overflow-hidden mb-2"
+          style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
+        >
           <Animated.View
-            className="h-full bg-[#00BFA5] rounded-sm"
-            style={{ width: `${(step / totalSteps) * 100}%` }}
+            className="h-full rounded-sm"
+            style={{ 
+              width: `${(step / totalSteps) * 100}%`,
+              backgroundColor: colors.white
+            }}
           />
         </View>
-        <Text className="text-sm text-white mt-2 text-center">
+        <Typography variant="regular" size={12} className="text-center" style={{ color: colors.white }}>
           Step {step} of {totalSteps}
-        </Text>
+        </Typography>
       </View>
-    </>
+    </View>
   );
 };
 

@@ -1,7 +1,8 @@
 // AgentSelector.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IAgent } from '../../../../../types/BookingTypes';
 
@@ -17,10 +18,10 @@ export const AgentSelector: React.FC<AgentSelectorProps> = ({
     selectedAgent,
     onAgentSelect
 }) => (
-    <View className="mb-6">
-        <Text className="text-base font-bold mb-3" style={{ color: colors.text.primary }}>
+    <View className="mb-4">
+        <Typography variant="semibold" size={14} className="text-base font-bold mb-0" style={{ color: colors.text.primary }}>
             Select Agent
-        </Text>
+        </Typography>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View className="flex-row gap-3 p-1">
                 {agents.map((agent) => (
@@ -33,22 +34,22 @@ export const AgentSelector: React.FC<AgentSelectorProps> = ({
                         onPress={() => onAgentSelect(agent)}
                         activeOpacity={0.7}
                     >
-                        <Text
+                        <Typography variant='bold' size={12}
                             className="text-xs font-bold mb-1"
                             style={{
                                 color: selectedAgent?.id === agent.id ? colors.white : colors.text.primary
                             }}
                         >
                             {agent.name}
-                        </Text>
-                        <Text className="text-xs mb-1.5" style={{ color: colors.text.secondary }}>
+                        </Typography>
+                        <Typography variant="regular" size={10} className="text-xs mb-1.5" style={{ color: colors.text.secondary }}>
                             {agent.location as any}
-                        </Text>
+                        </Typography>
                         <View className="flex-row items-center gap-1">
                             <MaterialIcons name="star" size={14} color={colors.primary} />
-                            <Text className="text-xs font-semibold" style={{ color: colors.text.secondary }}>
+                            <Typography variant="regular" size={10} className="text-xs font-semibold" style={{ color: colors.text.secondary }}>
                                 {agent.rating}
-                            </Text>
+                            </Typography>
                         </View>
                     </TouchableOpacity>
                 ))}

@@ -83,7 +83,7 @@ export const ProfileInfoTab: React.FC<ProfileInfoTabProps> = ({
                 className="rounded-2xl overflow-hidden mb-6 shadow-lg"
             >
                 <PremiumUpgradeCard
-                    onUpgradePress={() => navigation.navigate('UpgradeScreen')}
+                    onUpgradePress={() => navigation.navigate('AgentRegistration' as never)}
                     fadeAnim={fadeAnim}
                 />
             </Animated.View>

@@ -61,7 +61,7 @@ export const BookingsTab: React.FC<BookingsTabProps> = ({
                     <TouchableOpacity
                         className="rounded-2xl items-center justify-center bg-primary/10 px-4 py-2"
                         activeOpacity={0.7}
-                        onPress={() => navigation.navigate('ViewAllBookingsScreen' as never)}
+                        onPress={() => navigation.navigate('UserBookings' as never)}
                     >
                         <Typography variant="semibold" size={14} style={{ color: colors.primary }}>
                             View All
@@ -87,7 +87,7 @@ export const BookingsTab: React.FC<BookingsTabProps> = ({
                             borderColor: colors.primary + '30',
                         }}
                         activeOpacity={0.7}
-                        onPress={() => navigation.navigate('BookAppointments' as never)}
+                        onPress={() => navigation.navigate('UserBookings' as never)}
                     >
                         <View style={{
                             width: 40,
@@ -116,7 +116,7 @@ export const BookingsTab: React.FC<BookingsTabProps> = ({
                             borderColor: colors.success + '30',
                         }}
                         activeOpacity={0.7}
-                        onPress={() => navigation.navigate('UpcomingBookings' as never)}
+                        onPress={() => navigation.navigate('UserBookings' as never)}
                     >
                         <View style={{
                             width: 40,

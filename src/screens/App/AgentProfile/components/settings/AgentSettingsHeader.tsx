@@ -1,8 +1,7 @@
 // components/AgentSettingsHeader.tsx
 import { MaterialIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { Platform, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { Header } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IAgentSettingsHeaderProps } from '../../../../../types/agentSettingsTypes';
@@ -15,13 +14,9 @@ const AgentSettingsHeader: React.FC<IAgentSettingsHeaderProps> = ({
 }) => {
   return (
     <View className="shadow-lg">
-      <LinearGradient 
-        colors={[colors.background, colors.background]}  
-        className={`${Platform.OS === 'ios' ? 'pt-20' : 'pt-2'} pb-2`}
-      >
+
         <StatusBar barStyle="dark-content" backgroundColor="#FFCC00" />
         
-        <View className="px-5 mr-4">
           <Header title="Agent Settings" 
             leftIcon={{
               name: 'chevron-left',
@@ -55,8 +50,6 @@ const AgentSettingsHeader: React.FC<IAgentSettingsHeaderProps> = ({
               </TouchableOpacity>
             </View>
           )}
-        </View>
-      </LinearGradient>
     </View>
   );
 };

@@ -18,6 +18,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 import { Button } from '../../../../../components/common';
+import { colors } from '../../../../../constants/theme/colors';
 import useStore from '../../../../../store/useStore';
 import { IFormData } from '../../../../../types/agentRegistrationTypes';
 import AgentRegistrationHeader from './AgentRegistrationHeader';
@@ -73,6 +74,9 @@ const AgentRegistrationScreen: React.FC = () => {
   const cardOpacity = useSharedValue(0);
   const cardSlide = useSharedValue(50);
   const buttonPulse = useSharedValue(1);
+
+  // Calculate header height for proper content padding
+  const headerHeight = Platform.OS === 'ios' ? 120 : 100;
 
   useEffect(() => {
     cardOpacity.value = withTiming(1, { duration: 600 });
@@ -288,7 +292,7 @@ const AgentRegistrationScreen: React.FC = () => {
         
         setTimeout(() => {
           setShowConfetti(false);
-          navigation.navigate('AgentProfile', { agent: newAgent });
+          navigation.navigate('AgentsProfile', { agent: newAgent });
         }, 3000);
       }, 1500);
     } catch (error) {
@@ -328,66 +332,91 @@ const AgentRegistrationScreen: React.FC = () => {
   };
 
   return (
-    <LinearGradient 
-      colors={['#FFCC00', '#FFB300']} 
-      className="flex-1"
-    >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        // className="flex-1"
+    <View style={{ flex: 1 }}>
+      {/* Sticky Header */}
+      <AgentRegistrationHeader
+        onGoBack={() => navigation.goBack()}
+        step={step}
+        totalSteps={5}
+      />
+
+      {/* Background Gradient with Scrollable Content */}
+      <LinearGradient 
+        colors={colors.gradient.primary} 
+        style={{ flex: 1 }}
       >
-        <ScrollView
-          contentContainerStyle={{ 
-            flexGrow: 1, 
-            paddingVertical: 40, 
-            paddingHorizontal: 20, 
-            marginTop: 20 
-          }}
-          showsVerticalScrollIndicator={false}
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-          <AgentRegistrationHeader
-            onGoBack={() => navigation.goBack()}
-            step={step}
-            totalSteps={5}
-          />
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{ 
+              paddingTop: headerHeight + 20, // Account for sticky header
+              paddingHorizontal: 20,
+              paddingBottom: 140, // Extra space for buttons
+              flexGrow: 1
+            }}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            bounces={true}
+          >
+            {/* Render Current Step */}
+            {renderStep()}
 
-          {renderStep()}
-
-          {/* Action Buttons */}
-          <View className="flex-row gap-2 mt-5 justify-between">
-            {step > 1 && (
-              <Animated.View style={buttonStyle} className="flex-1">
+            {/* Action Buttons */}
+            <View 
+              style={{
+                flexDirection: 'row',
+                gap: 12,
+                marginTop: 20,
+                justifyContent: 'space-between'
+              }}
+            >
+              {step > 1 && (
+                <Animated.View style={[buttonStyle, { flex: 1 }]}>
+                  <Button
+                    title="Back"
+                    variant="outline"
+                    size="medium"
+                    onPress={handleBack}
+                    style={{
+                      borderColor: colors.white,
+                      backgroundColor: 'transparent'
+                    }}
+                    textStyle={{ color: colors.white }}
+                  />
+                </Animated.View>
+              )}
+              <Animated.View style={[buttonStyle, { flex: step > 1 ? 1 : 2 }]}>
                 <Button
-                  title="Back"
-                  variant="outline"
+                  title={step === 5 ? 'Submit' : 'Next'}
                   size="medium"
-                  onPress={handleBack}
-                  className="border-[#00BFA5]"
-                  // textClassName="text-[#00BFA5]"
+                  onPress={step === 5 ? handleSubmit : handleNext}
+                  disabled={loading}
+                  loading={loading}
+                  style={{
+                    // backgroundColor: colors.white,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 4 },
+                    shadowOpacity: 0.2,
+                    shadowRadius: 8,
+                    elevation: 6
+                  }}
+                  textStyle={{ color: colors.white }}
+                  icon={step === 5 ? 'check' : 'chevron-right'}
+                  iconPosition="right"
                 />
               </Animated.View>
-            )}
-            <Animated.View style={buttonStyle} className="flex-1">
-              <Button
-                title={step === 5 ? 'Submit' : 'Next'}
-                gradient
-                size="medium"
-                onPress={step === 5 ? handleSubmit : handleNext}
-                disabled={loading}
-                loading={loading}
-                className="border border-[#FFCC00]"
-                icon={step === 5 ? 'check' : 'arrow-forward'}
-                iconPosition="right"
-              />
-            </Animated.View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </LinearGradient>
       
       {showConfetti && (
         <ConfettiCannon count={150} origin={{ x: -10, y: 0 }} autoStart fadeOut />
       )}
-    </LinearGradient>
+    </View>
   );
 };
 

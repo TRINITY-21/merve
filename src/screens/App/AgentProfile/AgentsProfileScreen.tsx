@@ -11,7 +11,6 @@ import {
   Platform,
   RefreshControl,
   ScrollView,
-  Switch,
   TouchableOpacity,
   View
 } from 'react-native';
@@ -167,7 +166,7 @@ const AgentsProfileScreen: React.FC = () => {
   };
 
   return (
-    <View className="flex-1 bg-slate-100" style={{ backgroundColor: colors.background }}>
+    <View className="flex-1 bg-background" style={{ backgroundColor: colors.background }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
@@ -337,24 +336,37 @@ const AgentsProfileScreen: React.FC = () => {
                   className="semibold tracking-wide"
                   style={{ color: colors.secondary }}
                   size={12}
+                  onPress={() => setIsOnline(!isOnline)}
                 >
                   {isOnline ? 'ONLINE' : 'OFFLINE'}
                 </Typography>
-                <Switch
-                  value={isOnline}
-                  style={{ marginRight: 8 }}
-                  thumbColor={colors.white}
-                  onValueChange={setIsOnline}
-                  trackColor={{ false: colors.gray.light, true: colors.accent }}
-                />
+                <TouchableOpacity
+                  onPress={() => setIsOnline(!isOnline)}
+                  activeOpacity={0.7}
+                >
+                  
+                  <View
+                  className="w-14 h-8 rounded-2xl p-1 justify-center"
+                  style={{ backgroundColor: isOnline ? colors.accent : colors.gray.light }}
+
+                >
+                    <View
+                      className={`w-6 h-6 rounded-xl bg-white shadow-md shadow-black/20 elevation-3 ${isOnline ? 'self-end' : 'self-start'
+                        }`}
+                    />
+                  </View>
+                  
+                  </TouchableOpacity>
               </View>
+
+
 
               <View className="flex-row gap-2.5">
                 {['push-pin', 'phone', 'chat-bubble-outline'].map((icon, index) => (
                   <TouchableOpacity
                     key={icon}
                     className="w-11 h-11 rounded-full items-center justify-center bg-white/10 backdrop-blur-sm"
-                    onPress={() => console.log(`${icon} pressed`)}
+                    onPress={() => navigation.navigate('Chat')}
                     activeOpacity={0.8}
                   >
                     <MaterialIcons
@@ -417,6 +429,7 @@ const AgentsProfileScreen: React.FC = () => {
             agentData={agentData}
             fadeAnim={fadeAnim}
             slideAnim={slideAnim}
+            navigation={navigation}
           />
 
           <ProvidersSection

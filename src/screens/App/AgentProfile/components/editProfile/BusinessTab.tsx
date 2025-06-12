@@ -1,11 +1,11 @@
 // components/tabs/BusinessTab.tsx
 import React from 'react';
 import {
-    Animated,
-    Text,
-    View,
+  Animated,
+  View
 } from 'react-native';
 import { InputField } from '.';
+import { Typography } from '../../../../../components/common';
 import { IBusinessTabProps, IServiceToggle } from '../../../../../types/editProfileTypes';
 import { ToggleItem } from './ToggleItem';
 
@@ -69,9 +69,9 @@ export const BusinessTab: React.FC<IBusinessTabProps> = ({
           elevation: 6,
         }}
       >
-        <Text className="text-lg font-bold text-gray-800 mb-4">
+        <Typography variant='semibold' className="text-lg font-bold text-gray-800 mb-4">
           Business Information
-        </Text>
+        </Typography>
         
         <InputField
           label="Business Name"
@@ -214,9 +214,9 @@ export const BusinessTab: React.FC<IBusinessTabProps> = ({
           elevation: 6,
         }}
       >
-        <Text className="text-lg font-bold text-gray-800 mb-4">
+        <Typography variant='semibold' className="text-lg font-bold text-gray-800 mb-4">
           Services Offered
-        </Text>
+        </Typography>
         
         <View className="gap-4">
           {serviceToggles.map((toggle) => (

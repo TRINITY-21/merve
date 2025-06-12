@@ -253,7 +253,7 @@ const AgentEditScreen: React.FC = () => {
   };
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-background">
       <EditProfileHeader
         loading={loading}
         hasChanges={hasChanges}

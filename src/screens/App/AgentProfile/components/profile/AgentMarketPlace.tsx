@@ -25,7 +25,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({
     style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
   >
     <View className="flex-row justify-between items-center py-2 mb-4">
-              <Typography variant='semibold' size={18} className="semibold text-center mt-1" style={{ color: colors.text.primary }}>
+              <Typography variant='semibold' size={16} className="semibold text-center mt-1" style={{ color: colors.text.primary }}>
         Marketplace Analytics
       </Typography>
       <TouchableOpacity

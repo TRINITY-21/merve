@@ -2,12 +2,12 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import {
-    Animated,
-    Image,
-    Text,
-    TouchableOpacity,
-    View,
+  Animated,
+  Image,
+  TouchableOpacity,
+  View
 } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { IProfileTabProps } from '../../../../../types/editProfileTypes';
 import { InputField } from './InputField';
 
@@ -32,9 +32,9 @@ export const ProfileTab: React.FC<IProfileTabProps> = ({
     >
       {/* Profile Photo Section */}
       <View className="items-center mb-6">
-        <Text className="text-lg font-bold text-gray-800 mb-4">
+        <Typography className="text-lg font-bold text-gray-800 mb-4">
           Profile Photo
-        </Text>
+        </Typography>
         <TouchableOpacity 
           className="relative"
           onPress={onImagePicker}
@@ -59,9 +59,9 @@ export const ProfileTab: React.FC<IProfileTabProps> = ({
           elevation: 6,
         }}
       >
-        <Text className="text-lg font-bold text-gray-800 mb-4">
+        <Typography variant='semibold' className=" text-gray-800 mb-4">
           Personal Information
-        </Text>
+        </Typography>
         
         <InputField
           label="First Name"

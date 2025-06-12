@@ -131,14 +131,13 @@ const UserSettingsScreen: React.FC = () => {
             style={{
                 opacity: fadeAnim,
                 transform: [{ translateY: slideAnim }],
+                marginTop: 24
             }}
         >
             <View style={{ paddingHorizontal: 16, marginBottom: 24 }}>
                 {/* Title */}
-                <Typography
+                <Typography variant="semibold" size={18}
                     style={{
-                        fontSize: 18,
-                        fontWeight: '800',
                         color: colors.text.primary,
                         marginBottom: 16,
                         letterSpacing: 0.5,
@@ -356,12 +355,41 @@ const UserSettingsScreen: React.FC = () => {
             }}
             className="mt-2"
         >
-            <TouchableOpacity className="rounded-2xl overflow-hidden shadow-lg elevation-6" activeOpacity={0.8}>
-                <LinearGradient colors={colors.gradient.dark} className="flex-row items-center justify-center p-5 gap-3">
-                    <MaterialIcons name="logout" size={20} color={colors.white} />
-                    <Typography className="text-lg font-bold text-white">Sign Out</Typography>
-                </LinearGradient>
-            </TouchableOpacity>
+<TouchableOpacity
+  activeOpacity={0.8}
+  style={{
+    borderRadius: 16,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 6,
+  }}
+>
+  <LinearGradient
+    colors={colors.gradient.primary}
+    style={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 20,
+      gap: 12, // For React Native 0.71+ or use marginRight manually
+    }}
+  >
+    <MaterialIcons name="logout" size={20} color={colors.white} />
+    <Typography
+    variant='bold' size={16}
+      style={{
+
+        color: colors.white,
+      }}
+    >
+      Sign Out
+    </Typography>
+  </LinearGradient>
+</TouchableOpacity>
+
         </Animated.View>
     );
 
@@ -376,7 +404,7 @@ const UserSettingsScreen: React.FC = () => {
             />
             <ScrollView
                 className="flex-1"
-                contentContainerStyle={{ paddingBottom: 40 }}
+                contentContainerStyle={{ paddingBottom: 120 }}
                 showsVerticalScrollIndicator={false}
                 refreshControl={
                     <RefreshControl

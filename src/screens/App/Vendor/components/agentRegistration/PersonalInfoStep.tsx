@@ -1,11 +1,11 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Platform, Text, TextInput, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
-import { Button } from '../../../../../components/common';
+import { Button, Typography } from '../../../../../components/common';
+import { colors } from '../../../../../constants/theme/colors';
 import { IStepProps } from '../../../../../types/agentRegistrationTypes';
-
 
 const PersonalInfoStep: React.FC<IStepProps & { cardStyle: any }> = ({
   formData,
@@ -35,54 +35,104 @@ const PersonalInfoStep: React.FC<IStepProps & { cardStyle: any }> = ({
     });
   };
 
+  const inputStyle = {
+    flex: 1,
+    fontSize: 16,
+    color: colors.text.primary,
+    paddingVertical: 0,
+    lineHeight: Platform.OS === 'ios' ? 20 : 18,
+    includeFontPadding: false,
+    textAlignVertical: 'center' as const,
+    marginTop: Platform.OS === 'ios' ? -5 : -1,
+    marginLeft: 8,
+    fontFamily: 'JosefinSans_400Regular',
+  };
+
+  const iconStyle = {
+    marginTop: Platform.OS === 'ios' ? 0 : -1
+  };
+
+  const containerStyle = {
+    paddingVertical: Platform.OS === 'ios' ? 6 : 2,
+    minHeight: Platform.OS === 'ios' ? 52 : 48
+  };
+
   return (
     <Animated.View 
-      style={cardStyle}
-      className="bg-white/95 rounded-2xl p-5 mb-5 border border-[#FFCC00]/30 shadow-lg"
+      style={[cardStyle, {
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderRadius: 16,
+        padding: 20,
+        marginBottom: 20,
+        borderWidth: 1,
+        borderColor: colors.primary + '30',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        elevation: 6,
+        marginTop: 20
+      }]}
     >
-      <Text className="text-xl font-bold text-[#212121] mb-2">
+      <Typography variant="semibold" className="text-xl font-bold mb-2" style={{ color: colors.text.primary }}>
         Personal Information
-      </Text>
-      <Text className="text-sm text-[#757575] mb-5">
-        Let's start your agent journey! ✨
+      </Typography>
+      <Text className="text-sm mb-5" style={{ color: colors.text.secondary }}>
+        Let's start your agent journey!
       </Text>
 
       {/* Name Input */}
-      <View className="flex-row items-center bg-[#E0E0E0] rounded-xl px-4 py-3 mb-4 border border-[#9E9E9E]">
-        <MaterialIcons name="person" size={24} color="#00BFA5" />
+      <View className="flex-row items-center rounded-xl px-4 mb-4 border"
+        style={[containerStyle, {
+          backgroundColor: colors.background || '#F8F9FA',
+          borderColor: colors.primary + '30'
+        }]}
+      >
+        <MaterialIcons name="person" size={24} color={colors.primary} style={iconStyle} />
         <TextInput
-          className="flex-1 ml-2 text-base text-[#212121]"
+          style={inputStyle}
           placeholder="Full Name"
           value={formData.name}
           onChangeText={(text) => setFormData({ ...formData, name: text })}
-          placeholderTextColor="#9E9E9E"
+          placeholderTextColor={colors.text.secondary}
+          onFocus={() => setFormData({ ...formData, name: '' })}
         />
       </View>
 
       {/* Phone Input */}
-      <View className="flex-row items-center bg-[#E0E0E0] rounded-xl px-4 py-3 mb-4 border border-[#9E9E9E]">
-        <MaterialIcons name="phone" size={24} color="#00BFA5" />
+      <View className="flex-row items-center rounded-xl px-4 mb-4 border"
+        style={[containerStyle, {
+          backgroundColor: colors.background || '#F8F9FA',
+          borderColor: colors.primary + '30'
+        }]}
+      >
+        <MaterialIcons name="phone" size={24} color={colors.primary} style={iconStyle} />
         <TextInput
-          className="flex-1 ml-2 text-base text-[#212121]"
+          style={inputStyle}
           placeholder="Phone Number"
           value={formData.phone}
           onChangeText={(text) => setFormData({ ...formData, phone: text })}
           keyboardType="phone-pad"
           maxLength={10}
-          placeholderTextColor="#9E9E9E"
+          placeholderTextColor={colors.text.secondary}
         />
       </View>
 
       {/* Email Input */}
-      <View className="flex-row items-center bg-[#E0E0E0] rounded-xl px-4 py-3 mb-4 border border-[#9E9E9E]">
-        <MaterialIcons name="email" size={24} color="#00BFA5" />
+      <View className="flex-row items-center rounded-xl px-4 mb-4 border"
+        style={[containerStyle, {
+          backgroundColor: colors.background || '#F8F9FA',
+          borderColor: colors.primary + '30'
+        }]}
+      >
+        <MaterialIcons name="email" size={24} color={colors.primary} style={iconStyle} />
         <TextInput
-          className="flex-1 ml-2 text-base text-[#212121]"
+          style={inputStyle}
           placeholder="Email Address"
           value={formData.email}
           onChangeText={(text) => setFormData({ ...formData, email: text })}
           keyboardType="email-address"
-          placeholderTextColor="#9E9E9E"
+          placeholderTextColor={colors.text.secondary}
         />
       </View>
 
@@ -92,53 +142,72 @@ const PersonalInfoStep: React.FC<IStepProps & { cardStyle: any }> = ({
         variant="outline"
         size="medium"
         onPress={handleSendOTP}
-        className="border-[#00BFA5] mb-4"
-        // textClassName="text-[#00BFA5]"
+        style={{
+          borderColor: colors.primary,
+          backgroundColor: 'transparent',
+          marginBottom: 16
+        }}
+        textStyle={{ color: colors.primary }}
       />
 
       {/* OTP Input */}
       {otpSent && (
-        <View className="flex-row items-center bg-[#E0E0E0] rounded-xl px-4 py-3 mb-4 border border-[#9E9E9E]">
-          <MaterialIcons name="lock" size={24} color="#00BFA5" />
+        <View className="flex-row items-center rounded-xl px-4 mb-4 border"
+          style={[containerStyle, {
+            backgroundColor: colors.background || '#F8F9FA',
+            borderColor: colors.primary + '30'
+          }]}
+        >
+          <MaterialIcons name="lock" size={24} color={colors.primary} style={iconStyle} />
           <TextInput
-            className="flex-1 ml-2 text-base text-[#212121]"
+            style={inputStyle}
             placeholder="Enter OTP"
             value={formData.otp}
             onChangeText={(text) => setFormData({ ...formData, otp: text })}
             keyboardType="numeric"
             maxLength={6}
-            placeholderTextColor="#9E9E9E"
+            placeholderTextColor={colors.text.secondary}
           />
         </View>
       )}
 
       {/* PIN Input */}
-      <View className="flex-row items-center bg-[#E0E0E0] rounded-xl px-4 py-3 mb-4 border border-[#9E9E9E]">
-        <MaterialIcons name="lock" size={24} color="#00BFA5" />
+      <View className="flex-row items-center rounded-xl px-4 mb-4 border"
+        style={[containerStyle, {
+          backgroundColor: colors.background || '#F8F9FA',
+          borderColor: colors.primary + '30'
+        }]}
+      >
+        <MaterialIcons name="lock" size={24} color={colors.primary} style={iconStyle} />
         <TextInput
-          className="flex-1 ml-2 text-base text-[#212121]"
+          style={inputStyle}
           placeholder="Create 4-digit PIN"
           value={formData.pin}
           onChangeText={(text) => setFormData({ ...formData, pin: text })}
           keyboardType="numeric"
           maxLength={4}
           secureTextEntry
-          placeholderTextColor="#9E9E9E"
+          placeholderTextColor={colors.text.secondary}
         />
       </View>
 
       {/* Confirm PIN Input */}
-      <View className="flex-row items-center bg-[#E0E0E0] rounded-xl px-4 py-3 mb-4 border border-[#9E9E9E]">
-        <MaterialIcons name="lock-outline" size={24} color="#00BFA5" />
+      <View className="flex-row items-center rounded-xl px-4 mb-4 border"
+        style={[containerStyle, {
+          backgroundColor: colors.background || '#F8F9FA',
+          borderColor: colors.primary + '30'
+        }]}
+      >
+        <MaterialIcons name="lock-outline" size={24} color={colors.primary} style={iconStyle} />
         <TextInput
-          className="flex-1 ml-2 text-base text-[#212121]"
+          style={inputStyle}
           placeholder="Confirm PIN"
           value={formData.confirmPin}
           onChangeText={(text) => setFormData({ ...formData, confirmPin: text })}
           keyboardType="numeric"
           maxLength={4}
           secureTextEntry
-          placeholderTextColor="#9E9E9E"
+          placeholderTextColor={colors.text.secondary}
         />
       </View>
     </Animated.View>

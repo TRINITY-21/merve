@@ -17,7 +17,7 @@ const SecuritySettings: React.FC<ISecuritySettingsProps> = ({
       case 'autoLogout': return 'logout';
       case 'suspiciousActivityAlerts': return 'warning';
       case 'requirePinForTransactions': return 'pin';
-      case 'allowRemoteAccess': return 'remote-desktop';
+      case 'allowRemoteAccess': return 'laptop';
       case 'encryptTransactionData': return 'lock';
       default: return 'security';
     }

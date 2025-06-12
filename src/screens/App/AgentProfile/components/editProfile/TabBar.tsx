@@ -2,11 +2,12 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import {
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  ScrollView,
+  TouchableOpacity,
+  View
 } from 'react-native';
+import { Typography } from '../../../../../components/common';
+import { colors } from '../../../../../constants/theme/colors';
 import { ITabBarProps } from '../../../../../types/editProfileTypes';
 
 
@@ -30,7 +31,7 @@ export const TabBar: React.FC<ITabBarProps> = ({
             <TouchableOpacity
               key={tab.key}
               className={`flex-row items-center px-4 py-3 mr-2 rounded-2xl gap-1.5 ${
-                activeTab === tab.key ? 'bg-[#FFCC00]/20' : ''
+                activeTab === tab.key ? '' : ''
               }`}
               onPress={() => onTabPress(tab.key)}
               activeOpacity={0.7}
@@ -38,13 +39,13 @@ export const TabBar: React.FC<ITabBarProps> = ({
               <MaterialIcons 
                 name={tab.icon as any} 
                 size={20} 
-                color={activeTab === tab.key ? '#FFCC00' : '#757575'} 
+                color={activeTab === tab.key ? colors.primary : '#757575'} 
               />
-              <Text className={`text-sm font-semibold ${
-                activeTab === tab.key ? 'text-[#FFCC00]' : 'text-gray-600'
+              <Typography variant='regular' size={14} className={`mt-1.5 ${
+                activeTab === tab.key ? 'text-primary' : 'text-gray-600'
               }`}>
                 {tab.title}
-              </Text>
+              </Typography>
             </TouchableOpacity>
           ))}
         </View>

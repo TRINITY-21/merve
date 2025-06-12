@@ -135,7 +135,6 @@ export const UserCard: React.FC<IUserCardProps> = ({
           {/* Name and Status */}
           <View style={{ marginBottom: 8 }}>
             <Typography style={{
-              fontSize: 18,
               fontWeight: '700',
               // color: '#111827',
               marginBottom: 4,

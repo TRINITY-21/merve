@@ -1,11 +1,11 @@
 // components/tabs/HoursTab.tsx
 import React from 'react';
 import {
-    Animated,
-    Text,
-    View,
+  Animated,
+  View
 } from 'react-native';
 import { HoursItem, ToggleItem } from '.';
+import { Typography } from '../../../../../components/common';
 import { IHoursTabProps, IServiceToggle } from '../../../../../types/editProfileTypes';
 
 
@@ -52,9 +52,9 @@ export const HoursTab: React.FC<IHoursTabProps> = ({
           elevation: 6,
         }}
       >
-        <Text className="text-lg font-bold text-gray-800 mb-4">
+        <Typography variant='semibold' className="text-lg font-bold text-gray-800 mb-4">
           Operating Hours
-        </Text>
+        </Typography>
         
         {Object.entries(workingHours).map(([day, hours]) => (
           <HoursItem
@@ -74,9 +74,9 @@ export const HoursTab: React.FC<IHoursTabProps> = ({
           elevation: 6,
         }}
       >
-        <Text className="text-lg font-bold text-gray-800 mb-4">
+        <Typography variant='semibold' className="text-lg font-bold text-gray-800 mb-4">
           Additional Settings
-        </Text>
+        </Typography>
         
         <View className="gap-4">
           {additionalSettings.map((toggle) => (
