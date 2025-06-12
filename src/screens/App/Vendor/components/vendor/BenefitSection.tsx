@@ -1,6 +1,7 @@
 // components/BenefitsSection.tsx
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+import { Typography } from '../../../../../components/common';
 import { IBenefitsSectionProps } from '../../../../../types/vendorTypes';
 import BenefitCard from './BenefitCard';
 
@@ -8,9 +9,9 @@ import BenefitCard from './BenefitCard';
 const BenefitsSection: React.FC<IBenefitsSectionProps> = ({ benefits }) => {
   return (
     <View className="px-4 py-4">
-      <Text className="text-xl font-semibold text-[#212121] mb-4">
+      <Typography className="text-xl font-semibold text-[#212121] mb-4">
         Why Join Peyba?
-      </Text>
+      </Typography>
       
       {benefits.map((benefit, index) => (
         <BenefitCard

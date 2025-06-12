@@ -1,32 +1,60 @@
-// components/CTASection.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
+import { Typography } from '../../../../../components/common';
+import { colors } from '../../../../../constants/theme/colors';
 import { ICTASectionProps } from '../../../../../types/vendorTypes';
 
 const CTASection: React.FC<ICTASectionProps> = ({ onStartAsAgent }) => {
   return (
-    <View className="p-5 items-center">
+    <View
+      style={{
+        padding: 20,
+        alignItems: 'center',
+      }}
+    >
       <TouchableOpacity
-        className="rounded-2xl overflow-hidden w-full"
         onPress={onStartAsAgent}
         activeOpacity={0.8}
+        style={{
+          borderRadius: 16,
+          overflow: 'hidden',
+          width: '100%',
+        }}
       >
         <LinearGradient
-          colors={['#FFCC00', '#FFB300']}
-          className="flex-row items-center justify-center py-4 px-6 gap-2"
+          colors={colors.gradient.primary} // Assuming this is your primary gradient
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingVertical: 16,
+            paddingHorizontal: 24,
+            gap: 8,
+          }}
         >
-          <MaterialIcons name="rocket-launch" size={20} color="white" />
-          <Text className="text-lg font-bold text-white">
+          <MaterialIcons name="rocket-launch" size={20} color={colors.white} />
+          <Typography variant='bold'
+            style={{
+              fontSize: 18,
+              color: colors.white,
+            }}
+          >
             Start as an Agent
-          </Text>
+          </Typography>
         </LinearGradient>
       </TouchableOpacity>
-      
-      <Text className="text-sm text-[#757575] mt-3">
+
+      <Typography
+        style={{
+          fontSize: 14,
+          color: colors.text.secondary,
+          marginTop: 12,
+        }}
+      >
         Free for the first month!
-      </Text>
+      </Typography>
     </View>
   );
 };

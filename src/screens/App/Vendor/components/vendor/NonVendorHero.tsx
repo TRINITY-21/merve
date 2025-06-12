@@ -1,23 +1,45 @@
-// components/NonVendorHero.tsx
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { Text } from 'react-native';
+import { Typography } from '../../../../../components/common';
+import { colors } from '../../../../../constants/theme/colors';
 import { INonVendorHeroProps } from '../../../../../types/vendorTypes';
 
 const NonVendorHero: React.FC<INonVendorHeroProps> = ({ onGetStarted }) => {
   return (
     <LinearGradient
-      colors={['#FFCC00', '#FFB300']}
-      className="m-2 p-5 rounded-2xl items-center"
+      colors={colors.gradient.primary}
+      style={{
+        margin: 8,
+        padding: 20,
+        borderRadius: 16,
+        alignItems: 'center',
+      }}
     >
-      <MaterialIcons name="store" size={64} color="white" />
-      <Text className="text-2xl font-bold text-white mt-4">
+      <MaterialIcons name="store" size={64} color={colors.white} />
+      
+      <Typography variant='bold'
+        style={{
+          fontSize: 24,
+          fontWeight: 'bold',
+          color: colors.white,
+          marginTop: 16,
+        }}
+      >
         Become a MoMo Agent
-      </Text>
-      <Text className="text-base text-white opacity-90 text-center mt-2">
+      </Typography>
+      
+      <Typography
+        style={{
+          fontSize: 16,
+          color: colors.white,
+          opacity: 0.9,
+          textAlign: 'center',
+          marginTop: 8,
+        }}
+      >
         Join thousands of agents and grow your business with Peyba
-      </Text>
+      </Typography>
     </LinearGradient>
   );
 };

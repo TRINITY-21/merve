@@ -2,16 +2,13 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Alert, ScrollView, View } from 'react-native';
-import { DEFAULT_CHART_CONFIG, MOCK_VENDOR_STATS, VENDOR_BENEFITS, VENDOR_SCREEN_TITLES } from '../../../constants/vendorConstant';
+import { MOCK_VENDOR_STATS, VENDOR_BENEFITS, VENDOR_SCREEN_TITLES } from '../../../constants/vendorConstant';
 import { IUser, IVendorScreenProps, IVendorStatus } from '../../../types/vendorTypes';
 import BenefitsSection from './components/vendor/BenefitSection';
 import CTASection from './components/vendor/CTASection';
 import NonVendorHero from './components/vendor/NonVendorHero';
-import VendorChartCard from './components/vendor/VendorChartCard';
 import VendorHeader from './components/vendor/VendorHeader';
-import VendorStatsCard from './components/vendor/VendorStatsCard';
-import VendorStatusCard from './components/vendor/VendorStatusCard';
-import VendorUpgradeCard from './components/vendor/VendorUpgradeCard';
+
 
 // Components
 
@@ -74,24 +71,6 @@ const VendorScreen: React.FC<IVendorScreenProps> = ({
     navigation.navigate('AgentRegistration' as never);
   };
 
-  const renderVendorDashboard = () => (
-    <ScrollView showsVerticalScrollIndicator={false} className="pb-10">
-      <VendorStatusCard
-        status={vendorStatus}
-        onStatusChange={handleStatusChange}
-      />
-      
-      <VendorStatsCard stats={vendorStats} />
-      
-      <VendorChartCard
-        weeklyData={vendorStats.weeklyData}
-        chartConfig={DEFAULT_CHART_CONFIG}
-      />
-      
-      <VendorUpgradeCard onLearnMore={handleUpgrade} />
-    </ScrollView>
-  );
-
   const renderNonVendorView = () => (
     <ScrollView 
       showsVerticalScrollIndicator={false} 
@@ -116,7 +95,7 @@ const VendorScreen: React.FC<IVendorScreenProps> = ({
         onBack={() => navigation.goBack()}
       />
       
-      {user.isVendor ? renderVendorDashboard() : renderNonVendorView()}
+      {user && renderNonVendorView()}
     </View>
   );
 };
