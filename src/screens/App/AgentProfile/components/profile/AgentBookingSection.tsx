@@ -29,7 +29,7 @@ export const BookingsSection: React.FC<BookingsSectionProps> = ({
   formatDate
 }) => {
   const renderBookingItem = ({ item }: { item: IBooking }) => (
-    <View className="p-4 border-b border-black/6">
+    <View className="p-4 border-b border-gray-200">
       <View className="flex-row justify-between items-start mb-3">
         <View className="flex-row items-center flex-1 mr-3">
           <View className="w-9 h-9 rounded-2xl bg-black/5 items-center justify-center mr-3">

@@ -624,13 +624,14 @@ export const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
             },
             contentStyle,
           ]}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator
           resetScrollToCoords={{ x: 0, y: 0 }}
           enableAutomaticScroll={true}
           extraHeight={Platform.OS === 'ios' ? 0 : 20}
           extraScrollHeight={Platform.OS === 'ios' ? 20 : 0}
           enableResetScrollToCoords={true}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
+          enableOnAndroid={true}
           bounces={true}
           {...scrollViewProps}
         >

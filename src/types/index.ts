@@ -34,7 +34,7 @@ export interface IAgent {
   distance: number;
   status: 'open' | 'closed';
   services: ('cash_in' | 'cash_out' | 'airtime' | 'bill_payment')[];
-  provider: 'mtn' | 'vodafone' | 'airteltigo';
+  provider: ('mtn' | 'vodafone' | 'airteltigo')[];
   rating: number;
   cashAvailable: boolean;
   networks?: string[];

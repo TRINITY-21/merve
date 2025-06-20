@@ -43,7 +43,7 @@ export const Card: React.FC<CardProps> = ({
   const cardClasses = clsx(
     'bg-card', // Use the 'card' color from your palette
     'my-2', // Equivalent to marginVertical: 8
-    'mx-4', // Equivalent to marginHorizontal: 16
+    'mx-0', // Equivalent to marginHorizontal: 16
     elevated && 'shadow-md', // Tailwind's shadow-md for elevation
     className // Allow for additional custom classes
   );

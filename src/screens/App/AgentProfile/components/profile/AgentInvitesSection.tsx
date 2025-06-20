@@ -45,9 +45,9 @@ export const InvitesSection: React.FC<InvitesSectionProps> = ({
       </TouchableOpacity>
     </View>
 
-    <View className="bg-white rounded-2xl overflow-hidden shadow-sm shadow-black/8 elevation-8 mb-3">
+    <View className="bg-white rounded-2xl overflow-hidden mb-3">
       {agentData.pendingInvites.map((invite) => (
-        <View key={invite.id} className="flex-row justify-between items-center p-4 border-b border-black/6">
+        <View key={invite.id} className="flex-row justify-between items-center p-4 border-b border-gray-200">
           <View className="flex-1">
             <Typography className="text-base font-bold mb-1" style={{ color: colors.text.primary }}>
               {invite.name}

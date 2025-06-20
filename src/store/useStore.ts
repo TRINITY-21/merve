@@ -279,7 +279,7 @@ const useStore = create<IStore>((set, get) => ({
       id: `agent-${Date.now()}`,
       name: agentData.name,
       address: agentData.address,
-      provider,
+      provider: [provider],
       status: agentData.isOpen ? 'open' : 'closed',
       rating: 0,
       createdAt: new Date().toISOString(),

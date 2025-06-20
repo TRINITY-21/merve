@@ -177,10 +177,11 @@ const MapScreen: React.FC = () => {
             if (!agent.name || !agent.address) return false;
             const matchesSearch = agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 agent.address.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchesFilter = selectedFilter === 'all' || agent.provider === selectedFilter;
+            const matchesFilter = selectedFilter === 'all' || agent.provider[0] === selectedFilter;
             return matchesSearch && matchesFilter;
         });
     }, [agents, searchQuery, selectedFilter]);
+
 
     const renderAgentItem = ({ item }: { item: IAgent }) => (
         <AgentListItem
@@ -217,14 +218,14 @@ const MapScreen: React.FC = () => {
     };
 
 
-    return ( 
+    return (
         <View className="flex-1">
 
-             <StatusBar
-          barStyle="dark-content"
-          backgroundColor="transparent"
-          translucent={false}
-        />
+            <StatusBar
+                barStyle="dark-content"
+                backgroundColor="transparent"
+                translucent={false}
+            />
             <MapView
                 ref={mapRef}
                 style={styles.map}
@@ -261,7 +262,7 @@ const MapScreen: React.FC = () => {
                         <View className="items-center justify-center">
                             <View
                                 className={`w-9 h-9 rounded-full items-center justify-center shadow-lg border-2 border-white ${selectedAgent?.id === agent.id ? 'w-11 h-11 border-3' : ''}`}
-                                style={{ backgroundColor: getMarkerColor(agent.provider) }}
+                                style={{ backgroundColor: getMarkerColor(agent.provider[0]) }}
                             >
                                 <MaterialIcons name="attach-money" size={20} color={colors.white} />
                             </View>
@@ -332,20 +333,20 @@ const MapScreen: React.FC = () => {
                 ))}
             </MapView>
 
- 
+
             <MapHeader
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            onSearchSubmit={searchQuery => console.log('Search submitted:', searchQuery)}
-            selectedFilter={selectedFilter}
-            onFilterChange={setSelectedFilter}
-            onProfilePress={() => navigation.navigate('UserProfile')}
-            searchPlaceholder="Search locations near you"
-            
-            // Profile props for Google Maps style
-            userAvatarUrl="https://picsum.photos/200/200"
-            userName="John Doe"
-            showAvatar={true}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                onSearchSubmit={searchQuery => console.log('Search submitted:', searchQuery)}
+                selectedFilter={selectedFilter}
+                onFilterChange={setSelectedFilter}
+                onProfilePress={() => navigation.navigate('UserProfile')}
+                searchPlaceholder="Search locations near you"
+
+                // Profile props for Google Maps style
+                userAvatarUrl="https://picsum.photos/100/100?random=10"
+                userName="John Doe"
+                showAvatar={true}
             />
 
 
@@ -356,7 +357,7 @@ const MapScreen: React.FC = () => {
                 onResetZoom={handleResetZoom}
             />
 
-               <EmergencyButton quickCash={quickCash} setShowUrgentSheet={setShowUrgentSheet} />
+            <EmergencyButton quickCash={quickCash} setShowUrgentSheet={setShowUrgentSheet} />
 
 
             <ListToggleButton toggleList={toggleList} />
@@ -401,14 +402,16 @@ const MapScreen: React.FC = () => {
                 showCloseButton={true}
                 closeIcon="close"
                 statusBarStyle="dark-content"
-                swipeToClose={true}
+                swipeToClose={false}
                 onBackdropPress={() => setShowList(false)}
                 contentStyle={{
                     padding: 0,
                     margin: 0,
-                    paddingTop: 0
+                    paddingTop: 0,
+                    width: '100%',
+                    flex: 1 // ensure content can expand
                 }}
-                scrollEnabled={false}
+                scrollEnabled={true} // ✅ Enable scroll inside the sheet
                 keyboardAware={false}
                 animationDuration={200}
                 animationType="spring"
@@ -422,17 +425,13 @@ const MapScreen: React.FC = () => {
                     renderItem={renderAgentItem}
                     keyExtractor={(item) => item.id}
                     contentContainerStyle={{
-                        paddingHorizontal: 0,
                         paddingBottom: Platform.OS === 'ios' ? 120 : 100,
-                        paddingTop: 8,
-                        paddingLeft: 0,
-                        paddingRight: 0
+                        paddingTop: 8
                     }}
                     showsVerticalScrollIndicator={false}
                     bounces={true}
                     overScrollMode="always"
-                    scrollEnabled={true}
-                    removeClippedSubviews={Platform.OS === 'android'}
+                    scrollEnabled={true} // ✅ double-confirm it's scrollable
                     ListEmptyComponent={
                         <View className="flex-1 items-center justify-center py-8 px-4">
                             <MaterialIcons name="search-off" size={48} color={colors.gray.light} />
@@ -447,6 +446,7 @@ const MapScreen: React.FC = () => {
                 />
             </BottomSheet>
 
+
             <AgentNotificationCard
                 visible={showAgentNotification}
                 requestData={requestData}
@@ -454,71 +454,71 @@ const MapScreen: React.FC = () => {
                 onDecline={handleAgentDecline}
             />
 
-    <BottomSheet  
-      isVisible={showUrgentSheet} 
-      onClose={handleUrgetSheetClose} 
-      title = 'Quick Cash Help'
-      subtitle = 'Get instant assistance from verified agents nearby'
-      animationDuration={300}
-      keyboardAware={true}
-      height={Platform.OS === 'ios' ? '85%' : '90%'}
-      maxHeight={Platform.OS === 'ios' ? '90%' : '95%'}
-      minHeight={Platform.OS === 'ios' ? '70%' : '75%'}
-      showCloseButton={true}
-      closeIcon="close" 
-      statusBarStyle="dark-content"  
-      swipeToClose={true}
-      onBackdropPress={() => setShowUrgentSheet(false)}
-      contentStyle={{
-        paddingTop: 8,
-        paddingBottom: Platform.OS === 'ios' ? 24 : 32
-      }}
-    >
-         
-       <QuickCashBottomSheet
-                visible={true} 
-                onClose={() => {
-                    quickCash.hide();
-                    setShowUrgentSheet(false);
-                   handleUrgetSheetClose();
-                     console.log(' agent');
+            <BottomSheet
+                isVisible={showUrgentSheet}
+                onClose={handleUrgetSheetClose}
+                title='Quick Cash Help'
+                subtitle='Get instant assistance from verified agents nearby'
+                animationDuration={300}
+                keyboardAware={true}
+                height={Platform.OS === 'ios' ? '85%' : '90%'}
+                maxHeight={Platform.OS === 'ios' ? '90%' : '95%'}
+                minHeight={Platform.OS === 'ios' ? '70%' : '75%'}
+                showCloseButton={true}
+                closeIcon="close"
+                statusBarStyle="dark-content"
+                swipeToClose={true}
+                onBackdropPress={() => setShowUrgentSheet(false)}
+                contentStyle={{
+                    paddingTop: 8,
+                    paddingBottom: Platform.OS === 'ios' ? 24 : 32
                 }}
-                onRequestAgent={handleQuickCashRequest}
-                onCallAgent={() => {
-                    console.log('Call agent');
-                }}
-                onMessageAgent={() => {
-                    if (quickCash.acceptedAgent) {
-                        // Add messaging logic
-                    } 
-                }}
-                onGetDirections={() => {
-                    if (quickCash.acceptedAgent && mapRef.current) {
-                        // quickCash.show();
-                        setTimeout(() => {
-                            mapRef.current?.animateToRegion({
-                                latitude: quickCash.acceptedAgent.latitude,
-                                longitude: quickCash.acceptedAgent.longitude,
-                                latitudeDelta: 0.01,
-                                longitudeDelta: 0.01,
-                            });
-                        }, 500);
-                    }
-                }}
-                isLoading={quickCash.isLoading}
-                agentAccepted={quickCash.agentAccepted}
-                acceptedAgent={quickCash.acceptedAgent}
-                services={defaultServiceTypes}
-                nearbyAgents={[
-                    { id: '1', name: 'Sarah J.', avatar: 'person', color: '#4CAF50' },
-                    { id: '2', name: 'Michael K.', avatar: 'person-outline', color: '#2196F3' },
-                    { id: '3', name: 'Emma L.', avatar: 'person', color: '#FF9800' },
-                    { id: '4', name: 'Kofi K.', avatar: 'person', color: '#FF9800' },
-                    { id: '5', name: 'Amanah Lira.', avatar: 'person', color: '#FF1800' },
-                    { id: '6', name: 'Daniel Amo.', avatar: 'person', color: '#FF4800' },
+            >
 
-                ]}
-            /> 
+                <QuickCashBottomSheet
+                    visible={true}
+                    onClose={() => {
+                        quickCash.hide();
+                        setShowUrgentSheet(false);
+                        handleUrgetSheetClose();
+                        console.log(' agent');
+                    }}
+                    onRequestAgent={handleQuickCashRequest}
+                    onCallAgent={() => {
+                        console.log('Call agent');
+                    }}
+                    onMessageAgent={() => {
+                        if (quickCash.acceptedAgent) {
+                            // Add messaging logic
+                        }
+                    }}
+                    onGetDirections={() => {
+                        if (quickCash.acceptedAgent && mapRef.current) {
+                            // quickCash.show();
+                            setTimeout(() => {
+                                mapRef.current?.animateToRegion({
+                                    latitude: quickCash.acceptedAgent.latitude,
+                                    longitude: quickCash.acceptedAgent.longitude,
+                                    latitudeDelta: 0.01,
+                                    longitudeDelta: 0.01,
+                                });
+                            }, 500);
+                        }
+                    }}
+                    isLoading={quickCash.isLoading}
+                    agentAccepted={quickCash.agentAccepted}
+                    acceptedAgent={quickCash.acceptedAgent}
+                    services={defaultServiceTypes}
+                    nearbyAgents={[
+                        { id: '1', name: 'Sarah J.', avatar: 'person', color: '#4CAF50' },
+                        { id: '2', name: 'Michael K.', avatar: 'person-outline', color: '#2196F3' },
+                        { id: '3', name: 'Emma L.', avatar: 'person', color: '#FF9800' },
+                        { id: '4', name: 'Kofi K.', avatar: 'person', color: '#FF9800' },
+                        { id: '5', name: 'Amanah Lira.', avatar: 'person', color: '#FF1800' },
+                        { id: '6', name: 'Daniel Amo.', avatar: 'person', color: '#FF4800' },
+
+                    ]}
+                />
             </BottomSheet>
         </View>
     );

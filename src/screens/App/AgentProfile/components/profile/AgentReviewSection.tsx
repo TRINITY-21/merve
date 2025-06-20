@@ -42,9 +42,9 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({
       </TouchableOpacity>
     </View>
 
-    <View className="bg-white rounded-2xl overflow-hidden shadow-sm shadow-black/8 elevation-8">
+    <View className="bg-white rounded-2xl overflow-hidden">
       {agentData.reviews.map((review) => (
-        <View key={review.id} className="p-4 border-b border-black/6">
+        <View key={review.id} className="p-4 border-b border-gray-200">
           <View className="flex-row items-center mb-2 gap-3">
             <Image
               source={{ uri: review.avatar }}

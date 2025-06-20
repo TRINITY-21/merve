@@ -16,13 +16,12 @@ import {
 } from 'react-native';
 import { Header, Typography } from '../../../components/common';
 import { colors } from '../../../constants/theme/colors';
-import { agentData, agentMarketplaceData, agentRecentBookings } from '../../../utils/agentProfileDummyData';
+import { agentData, agentRecentBookings } from '../../../utils/agentProfileDummyData';
 import { BookingsSection } from './components/profile/AgentBookingSection';
 import { FollowersSection } from './components/profile/AgentFollowerSection';
 import { InviteModal } from './components/profile/AgentInviteModal';
 import { InvitesSection } from './components/profile/AgentInvitesSection';
 import { AgentMapView } from './components/profile/AgentMapLocation';
-import { MarketplaceSection } from './components/profile/AgentMarketPlace';
 import { OperationalHours } from './components/profile/AgentOperationalHours';
 import { ProvidersSection } from './components/profile/AgentProviderSection';
 import { ReviewsSection } from './components/profile/AgentReviewSection';
@@ -178,7 +177,6 @@ const AgentsProfileScreen: React.FC = () => {
             onPress: () => navigation.goBack(),
           }}
           rightIcons={[
-            { name: 'shop-2', onPress: () => navigation.navigate('AgentShopDashboard') },
             { name: 'event', onPress: () => navigation.navigate('AgentBookingManagement') },
             { name: 'settings', onPress: () => navigation.navigate('AgentSettings') },
           ]}
@@ -230,9 +228,7 @@ const AgentsProfileScreen: React.FC = () => {
 
               {/* Right Icons */}
               <View className="flex-row gap-1">
-                <TouchableOpacity onPress={() => navigation.navigate('AgentShopDashboard')} className="w-8 h-8 items-center justify-center">
-                  <MaterialIcons name="shop-2" size={18} color={colors.secondary} />
-                </TouchableOpacity>
+             
                 <TouchableOpacity onPress={() => navigation.navigate('AgentBookingManagement')} className="w-8 h-8 items-center justify-center">
                   <MaterialIcons name="event" size={18} color={colors.secondary} />
                 </TouchableOpacity>
@@ -452,15 +448,8 @@ const AgentsProfileScreen: React.FC = () => {
             formatDate={formatDate}
           />
 
-          <MarketplaceSection
-            marketplaceData={agentMarketplaceData}
-            fadeAnim={fadeAnim}
-            slideAnim={slideAnim}
-            navigation={navigation}
-          />
-
           <InvitesSection
-            agentData={agentData}
+            agentData={agentData} 
             fadeAnim={fadeAnim}
             slideAnim={slideAnim}
             navigation={navigation}

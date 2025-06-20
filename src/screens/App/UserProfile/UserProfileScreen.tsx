@@ -19,12 +19,11 @@ import { Header, Typography } from '../../../components/common';
 import { colors } from '../../../constants/theme/colors';
 import useStore from '../../../store/useStore';
 import { IRoute, IUser } from '../../../types/userProfileTypes';
-import { dummyActivities, dummyFollowing, dummyInvites, dummyMarketplaceData, dummyRecentBookings } from '../../../utils/userProfileDummyData';
+import { dummyActivities, dummyFollowing, dummyInvites, dummyRecentBookings } from '../../../utils/userProfileDummyData';
 import { ActivityTab } from './tabs/ActivityTab';
 import { BookingsTab } from './tabs/BookingsTab';
 import { FollowingTab } from './tabs/FollowingTab';
 import { InvitesTab } from './tabs/InvitesTab';
-import { MarketplaceTab } from './tabs/MarketplaceTab';
 import { ProfileInfoTab } from './tabs/ProfileInfoTab';
 
 // Get screen dimensions
@@ -49,7 +48,6 @@ const UserProfileScreen: React.FC = () => {
         { key: 'profileInfo', title: 'Profile' },
         { key: 'bookings', title: 'Bookings' },
         { key: 'following', title: 'Pinned Agents' },
-        { key: 'marketplace', title: 'Marketplace' },
         { key: 'invites', title: 'Invites' },
     ]);
 
@@ -150,16 +148,7 @@ const UserProfileScreen: React.FC = () => {
                             scaleAnim={scaleAnim}
                         />
                     );
-                case 'marketplace':
-                    return (
-                        <MarketplaceTab
-                            dummyMarketplaceData={dummyMarketplaceData}
-                            navigation={navigation}
-                            fadeAnim={fadeAnim}
-                            slideAnim={slideAnim}
-                            getStatusColor={getStatusColor}
-                        />
-                    );
+            
                 case 'following':
                     return (
                         <FollowingTab

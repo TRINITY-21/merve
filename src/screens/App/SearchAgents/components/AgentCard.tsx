@@ -41,12 +41,6 @@ const AgentCard: React.FC<IAgentCardProps> = ({
       style={{
         marginBottom: 12,
         marginHorizontal: 0,
-        borderRadius: 0,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.08,
-        shadowRadius: 10,
-        elevation: 8,
         opacity: fadeAnim,
         transform: [
           { 
@@ -66,7 +60,7 @@ const AgentCard: React.FC<IAgentCardProps> = ({
           backgroundColor: '#FFFFFF',
         }}
         onPress={() => onPress(agent)}
-        activeOpacity={0.95}
+        activeOpacity={0.5}
       >
         {/* Header Section */}
         <View style={{
