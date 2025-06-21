@@ -1,9 +1,9 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import React from 'react';
-import { Platform, Text, TextInput, View } from 'react-native';
+import React, { useState } from 'react';
+import { Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
-import { Button, Typography } from '../../../../../components/common';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IStepProps } from '../../../../../types/agentRegistrationTypes';
 
@@ -15,6 +15,8 @@ const PersonalInfoStep: React.FC<IStepProps & { cardStyle: any }> = ({
   sendOTP,
   cardStyle,
 }) => {
+  const [focusedInput, setFocusedInput] = useState<string | null>(null);
+
   const handleSendOTP = () => {
     if (formData.phone.length !== 10) {
       Toast.show({ 
@@ -57,56 +59,66 @@ const PersonalInfoStep: React.FC<IStepProps & { cardStyle: any }> = ({
     minHeight: Platform.OS === 'ios' ? 52 : 48
   };
 
+  const getInputContainerStyle = (inputName: string) => ({
+    ...containerStyle,
+    backgroundColor: colors.white,
+    borderColor: focusedInput === inputName ? colors.primary : colors.gray.light,
+    borderWidth: focusedInput === inputName ? 2 : 1,
+    // shadowColor: focusedInput === inputName ? colors.primary : colors.shadowColor,
+    // shadowOffset: colors.shadowOffset,
+    // shadowOpacity: focusedInput === inputName ? 0.1 : 0.05,
+    // shadowRadius: focusedInput === inputName ? 8 : 4,
+    // elevation: focusedInput === inputName ? 4 : 2,
+  });
+
   return (
     <Animated.View 
       style={[cardStyle, {
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        borderRadius: 16,
+        backgroundColor: colors.white,
+        borderRadius: 20,
         padding: 20,
-        marginBottom: 20,
+        // marginBottom: 20,
+        // shadowColor: colors.shadowColor,
+        // shadowOffset: colors.shadowOffset,
+        // shadowOpacity: 0.1,
+        // shadowRadius: 16,
+        // elevation: 8,
         borderWidth: 1,
-        borderColor: colors.primary + '30',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 12,
-        elevation: 6,
-        marginTop: 20
+        borderColor: colors.gray.light,
+        marginTop: 10,
       }]}
     >
-      <Typography variant="semibold" className="text-xl font-bold mb-2" style={{ color: colors.text.primary }}>
-        Personal Information
-      </Typography>
-      <Text className="text-sm mb-5" style={{ color: colors.text.secondary }}>
-        Let's start your agent journey!
-      </Text>
+      <View style={{ marginBottom: 24 }}>
+        <Typography variant="semibold" className="text-xl font-bold mb-2" style={{ color: colors.text.primary }}>
+          Personal Information
+        </Typography>
+        <Text className="text-sm" style={{ color: colors.text.secondary, lineHeight: 20 }}>
+          Please provide your basic information to get started.
+        </Text>
+      </View>
 
       {/* Name Input */}
       <View className="flex-row items-center rounded-xl px-4 mb-4 border"
-        style={[containerStyle, {
-          backgroundColor: colors.background || '#F8F9FA',
-          borderColor: colors.primary + '30'
-        }]}
+        style={getInputContainerStyle('name')}
       >
-        <MaterialIcons name="person" size={24} color={colors.primary} style={iconStyle} />
+        <MaterialIcons name="person" size={24} color={focusedInput === 'name' ? colors.primary : colors.text.secondary} style={iconStyle} />
         <TextInput
           style={inputStyle}
           placeholder="Full Name"
           value={formData.name}
           onChangeText={(text) => setFormData({ ...formData, name: text })}
           placeholderTextColor={colors.text.secondary}
-          onFocus={() => setFormData({ ...formData, name: '' })}
+          onFocus={() => setFocusedInput('name')}
+          onBlur={() => setFocusedInput(null)}
+          autoCapitalize="words"
         />
       </View>
 
       {/* Phone Input */}
       <View className="flex-row items-center rounded-xl px-4 mb-4 border"
-        style={[containerStyle, {
-          backgroundColor: colors.background || '#F8F9FA',
-          borderColor: colors.primary + '30'
-        }]}
+        style={getInputContainerStyle('phone')}
       >
-        <MaterialIcons name="phone" size={24} color={colors.primary} style={iconStyle} />
+        <MaterialIcons name="phone" size={24} color={focusedInput === 'phone' ? colors.primary : colors.text.secondary} style={iconStyle} />
         <TextInput
           style={inputStyle}
           placeholder="Phone Number"
@@ -115,17 +127,16 @@ const PersonalInfoStep: React.FC<IStepProps & { cardStyle: any }> = ({
           keyboardType="phone-pad"
           maxLength={10}
           placeholderTextColor={colors.text.secondary}
+          onFocus={() => setFocusedInput('phone')}
+          onBlur={() => setFocusedInput(null)}
         />
       </View>
 
       {/* Email Input */}
       <View className="flex-row items-center rounded-xl px-4 mb-4 border"
-        style={[containerStyle, {
-          backgroundColor: colors.background || '#F8F9FA',
-          borderColor: colors.primary + '30'
-        }]}
+        style={getInputContainerStyle('email')}
       >
-        <MaterialIcons name="email" size={24} color={colors.primary} style={iconStyle} />
+        <MaterialIcons name="email" size={24} color={focusedInput === 'email' ? colors.primary : colors.text.secondary} style={iconStyle} />
         <TextInput
           style={inputStyle}
           placeholder="Email Address"
@@ -133,52 +144,60 @@ const PersonalInfoStep: React.FC<IStepProps & { cardStyle: any }> = ({
           onChangeText={(text) => setFormData({ ...formData, email: text })}
           keyboardType="email-address"
           placeholderTextColor={colors.text.secondary}
+          onFocus={() => setFocusedInput('email')}
+          onBlur={() => setFocusedInput(null)}
+          autoCapitalize="none"
+          autoCorrect={false}
         />
       </View>
 
       {/* Send OTP Button */}
-      <Button
-        title={otpSent ? "Resend OTP" : "Send OTP"}
-        variant="outline"
-        size="medium"
+      <TouchableOpacity
         onPress={handleSendOTP}
         style={{
-          borderColor: colors.primary,
-          backgroundColor: 'transparent',
-          marginBottom: 16
+          backgroundColor: colors.primary,
+          borderRadius: 12,
+          paddingVertical: 14,
+          paddingHorizontal: 20,
+          marginBottom: 16,
+          alignItems: 'center',
+          shadowColor: colors.primary,
+          shadowOffset: colors.shadowOffset,
+          shadowOpacity: 0.2,
+          shadowRadius: 8,
+          elevation: 4,
         }}
-        textStyle={{ color: colors.primary }}
-      />
+      >
+        <Typography variant="medium" style={{ color: colors.white, textAlign: "center", fontSize: 16 }}>
+          {otpSent ? "Resend OTP" : "Send OTP"}
+        </Typography>
+      </TouchableOpacity>
 
       {/* OTP Input */}
       {otpSent && (
         <View className="flex-row items-center rounded-xl px-4 mb-4 border"
-          style={[containerStyle, {
-            backgroundColor: colors.background || '#F8F9FA',
-            borderColor: colors.primary + '30'
-          }]}
+          style={getInputContainerStyle('otp')}
         >
-          <MaterialIcons name="lock" size={24} color={colors.primary} style={iconStyle} />
+          <MaterialIcons name="lock" size={24} color={focusedInput === 'otp' ? colors.primary : colors.text.secondary} style={iconStyle} />
           <TextInput
             style={inputStyle}
-            placeholder="Enter OTP"
+            placeholder="Enter 6-digit OTP"
             value={formData.otp}
             onChangeText={(text) => setFormData({ ...formData, otp: text })}
             keyboardType="numeric"
             maxLength={6}
             placeholderTextColor={colors.text.secondary}
+            onFocus={() => setFocusedInput('otp')}
+            onBlur={() => setFocusedInput(null)}
           />
         </View>
       )}
 
       {/* PIN Input */}
       <View className="flex-row items-center rounded-xl px-4 mb-4 border"
-        style={[containerStyle, {
-          backgroundColor: colors.background || '#F8F9FA',
-          borderColor: colors.primary + '30'
-        }]}
+        style={getInputContainerStyle('pin')}
       >
-        <MaterialIcons name="lock" size={24} color={colors.primary} style={iconStyle} />
+        <MaterialIcons name="lock" size={24} color={focusedInput === 'pin' ? colors.primary : colors.text.secondary} style={iconStyle} />
         <TextInput
           style={inputStyle}
           placeholder="Create 4-digit PIN"
@@ -188,28 +207,30 @@ const PersonalInfoStep: React.FC<IStepProps & { cardStyle: any }> = ({
           maxLength={4}
           secureTextEntry
           placeholderTextColor={colors.text.secondary}
+          onFocus={() => setFocusedInput('pin')}
+          onBlur={() => setFocusedInput(null)}
         />
       </View>
 
       {/* Confirm PIN Input */}
       <View className="flex-row items-center rounded-xl px-4 mb-4 border"
-        style={[containerStyle, {
-          backgroundColor: colors.background || '#F8F9FA',
-          borderColor: colors.primary + '30'
-        }]}
+        style={getInputContainerStyle('confirmPin')}
       >
-        <MaterialIcons name="lock-outline" size={24} color={colors.primary} style={iconStyle} />
+        <MaterialIcons name="lock" size={24} color={focusedInput === 'confirmPin' ? colors.primary : colors.text.secondary} style={iconStyle} />
         <TextInput
           style={inputStyle}
-          placeholder="Confirm PIN"
+          placeholder="Confirm 4-digit PIN"
           value={formData.confirmPin}
           onChangeText={(text) => setFormData({ ...formData, confirmPin: text })}
           keyboardType="numeric"
           maxLength={4}
           secureTextEntry
           placeholderTextColor={colors.text.secondary}
+          onFocus={() => setFocusedInput('confirmPin')}
+          onBlur={() => setFocusedInput(null)}
         />
       </View>
+
     </Animated.View>
   );
 };

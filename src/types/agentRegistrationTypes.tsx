@@ -20,7 +20,6 @@ export interface IFormData {
   otp: string;
   businessName: string;
   businessDescription: string;
-  agentType: 'Retail' | 'Mobile' | 'Corporate';
   services: string[];
   networks: string[];
   address: string;
@@ -60,6 +59,7 @@ export interface IAgentRegistrationHeaderProps {
   onGoBack: () => void;
   step: number;
   totalSteps: number;
+  onLayout?: (event: any) => void;
 }
 
 export interface IProgressBarProps {

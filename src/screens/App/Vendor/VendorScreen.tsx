@@ -1,7 +1,8 @@
 // screens/VendorScreen.tsx
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { Alert, ScrollView, View } from 'react-native';
+import { Alert, ScrollView, StatusBar, View } from 'react-native';
+import { colors } from '../../../constants/theme/colors';
 import { MOCK_VENDOR_STATS, VENDOR_BENEFITS, VENDOR_SCREEN_TITLES } from '../../../constants/vendorConstant';
 import { IUser, IVendorScreenProps, IVendorStatus } from '../../../types/vendorTypes';
 import BenefitsSection from './components/vendor/BenefitSection';
@@ -74,7 +75,7 @@ const VendorScreen: React.FC<IVendorScreenProps> = ({
   const renderNonVendorView = () => (
     <ScrollView 
       showsVerticalScrollIndicator={false} 
-      contentContainerStyle={{ paddingBottom: 140 }}
+      contentContainerStyle={{ paddingBottom: 90, paddingTop: 20, backgroundColor: colors.background }}
     >
       <NonVendorHero onGetStarted={handleStartAsAgent} />
       
@@ -85,7 +86,8 @@ const VendorScreen: React.FC<IVendorScreenProps> = ({
   );
 
   return (
-    <View className="flex-1">
+    <View style={{ flex: 1, backgroundColor: colors.background}}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
       <VendorHeader
         title={
           user.isVendor 

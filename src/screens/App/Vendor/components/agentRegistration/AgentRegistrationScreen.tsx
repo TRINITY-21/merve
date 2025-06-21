@@ -1,12 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import { LinearGradient } from 'expo-linear-gradient';
 import * as Location from 'expo-location';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
   ScrollView,
+  StatusBar,
   View,
 } from 'react-native';
 import ConfettiCannon from 'react-native-confetti-cannon';
@@ -36,6 +37,17 @@ const AgentRegistrationScreen: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   const [otpSent, setOtpSent] = useState<boolean>(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  useLayoutEffect(() => {
+    navigation.getParent()?.setOptions({
+      tabBarStyle: { display: "none" },
+    });
+    return () => navigation.getParent()?.setOptions({
+      tabBarStyle: undefined
+    });
+  }, [navigation]);
 
   const [formData, setFormData] = useState<IFormData>({
     name: currentUser?.name || '',
@@ -46,7 +58,6 @@ const AgentRegistrationScreen: React.FC = () => {
     otp: '',
     businessName: '',
     businessDescription: '',
-    agentType: 'Retail',
     services: [],
     networks: [],
     address: '',
@@ -74,9 +85,6 @@ const AgentRegistrationScreen: React.FC = () => {
   const cardOpacity = useSharedValue(0);
   const cardSlide = useSharedValue(50);
   const buttonPulse = useSharedValue(1);
-
-  // Calculate header height for proper content padding
-  const headerHeight = Platform.OS === 'ios' ? 120 : 100;
 
   useEffect(() => {
     cardOpacity.value = withTiming(1, { duration: 600 });
@@ -112,6 +120,10 @@ const AgentRegistrationScreen: React.FC = () => {
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     })();
   }, []);
+
+  useEffect(() => {
+    scrollViewRef.current?.scrollTo({ y: 0, animated: false });
+  }, [step]);
 
   const cardStyle = useAnimatedStyle(() => ({
     opacity: cardOpacity.value,
@@ -164,7 +176,7 @@ const AgentRegistrationScreen: React.FC = () => {
         return true;
         
       case 2:
-        if (!formData.businessName || !formData.businessDescription || !formData.agentType) {
+        if (!formData.businessName || !formData.businessDescription) {
           Toast.show({ type: 'error', text1: 'Missing Information', text2: 'Fill all business details' });
           return false;
         }
@@ -213,7 +225,7 @@ const AgentRegistrationScreen: React.FC = () => {
           return false;
         }
         if (!formData.termsAccepted) {
-          Toast.show({ type: 'error', text1: 'Terms Not Accepted', text2: 'Accept the terms to proceed' });
+          Toast.show({ type: 'error', text1: 'Terms Not Accepted', text2: 'Please accept the terms and conditions' });
           return false;
         }
         return true;
@@ -292,7 +304,7 @@ const AgentRegistrationScreen: React.FC = () => {
         
         setTimeout(() => {
           setShowConfetti(false);
-          navigation.navigate('AgentsProfile', { agent: newAgent });
+          (navigation as any).navigate('AgentsProfile', { agent: newAgent });
         }, 3000);
       }, 1500);
     } catch (error) {
@@ -332,91 +344,106 @@ const AgentRegistrationScreen: React.FC = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
+      <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+      
       {/* Sticky Header */}
       <AgentRegistrationHeader
         onGoBack={() => navigation.goBack()}
         step={step}
         totalSteps={5}
+        onLayout={(event) => {
+          if (headerHeight === 0) {
+            setHeaderHeight(event.nativeEvent.layout.height);
+          }
+        }}
       />
 
-      {/* Background Gradient with Scrollable Content */}
-      <LinearGradient 
-        colors={colors.gradient.primary} 
-        style={{ flex: 1 }}
-      >
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
-          <ScrollView
+      {/* Main Content with Background Color */}
+      {headerHeight > 0 && (
+        <View style={{ flex: 1, backgroundColor: colors.background }}>
+          <KeyboardAvoidingView
             style={{ flex: 1 }}
-            contentContainerStyle={{ 
-              paddingTop: headerHeight + 20, // Account for sticky header
-              paddingHorizontal: 20,
-              paddingBottom: 140, // Extra space for buttons
-              flexGrow: 1
-            }}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-            bounces={true}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
           >
-            {/* Render Current Step */}
-            {renderStep()}
-
-            {/* Action Buttons */}
-            <View 
-              style={{
-                flexDirection: 'row',
-                gap: 12,
-                marginTop: 20,
-                justifyContent: 'space-between'
+            <ScrollView
+              ref={scrollViewRef}
+              style={{ flex: 1 }}
+              contentContainerStyle={{ 
+                paddingTop: Platform.OS === "ios"? headerHeight - 40 :headerHeight,
+                paddingHorizontal: 10,
+                paddingBottom: 40,
+                flexGrow: 1
               }}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+              bounces={true}
+              automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
             >
-              {step > 1 && (
-                <Animated.View style={[buttonStyle, { flex: 1 }]}>
+              {/* Render Current Step */}
+              {renderStep()}
+
+              {/* Action Buttons */}
+              <View 
+                style={{
+                  flexDirection: 'row',
+                  gap: 12,
+                  marginTop: 20,
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 4
+                }}
+              >
+                {step > 1 && (
+                  <Animated.View style={[buttonStyle, { flex: 1 }]}>
+                    <Button
+                      title="Back"
+                      variant="outline"
+                      size="medium"
+                      onPress={handleBack}
+                      style={{
+                        borderColor: colors.primary,
+                        backgroundColor: colors.white,
+                        shadowColor: colors.shadowColor,
+                        shadowOffset: colors.shadowOffset,
+                        shadowOpacity: 0.1,
+                        shadowRadius: 4,
+                        elevation: 3
+                      }}
+                      textStyle={{ color: colors.primary }}
+                    />
+                  </Animated.View>
+                )}
+                <Animated.View style={[buttonStyle, { flex: step > 1 ? 1 : 2 }]}>
                   <Button
-                    title="Back"
-                    variant="outline"
+                    title={step === 5 ? 'Submit Application' : 'Continue'}
                     size="medium"
-                    onPress={handleBack}
+                    onPress={step === 5 ? handleSubmit : handleNext}
+                    disabled={loading}
+                    loading={loading}
                     style={{
-                      borderColor: colors.white,
-                      backgroundColor: 'transparent'
+                      backgroundColor: colors.primary,
+                      shadowColor: colors.shadowColor,
+                      shadowOffset: colors.shadowOffset,
+                      shadowOpacity: 0.2,
+                      shadowRadius: 8,
+                      elevation: 6
                     }}
                     textStyle={{ color: colors.white }}
+                    icon={step === 5 ? 'check' : 'chevron-right'}
+                    iconPosition="right"
                   />
                 </Animated.View>
-              )}
-              <Animated.View style={[buttonStyle, { flex: step > 1 ? 1 : 2 }]}>
-                <Button
-                  title={step === 5 ? 'Submit' : 'Next'}
-                  size="medium"
-                  onPress={step === 5 ? handleSubmit : handleNext}
-                  disabled={loading}
-                  loading={loading}
-                  style={{
-                    // backgroundColor: colors.white,
-                    shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 4 },
-                    shadowOpacity: 0.2,
-                    shadowRadius: 8,
-                    elevation: 6
-                  }}
-                  textStyle={{ color: colors.white }}
-                  icon={step === 5 ? 'check' : 'chevron-right'}
-                  iconPosition="right"
-                />
-              </Animated.View>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </LinearGradient>
+              </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </View>
+      )}
       
       {showConfetti && (
         <ConfettiCannon count={150} origin={{ x: -10, y: 0 }} autoStart fadeOut />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -1,29 +1,46 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
+import { View } from 'react-native';
 import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { INonVendorHeroProps } from '../../../../../types/vendorTypes';
 
 const NonVendorHero: React.FC<INonVendorHeroProps> = ({ onGetStarted }) => {
   return (
-    <LinearGradient
-      colors={colors.gradient.primary}
+    <View
       style={{
-        margin: 8,
-        padding: 20,
-        borderRadius: 16,
+        backgroundColor: colors.white,
+        marginHorizontal: 20,
+        padding: 24,
+        borderRadius: 20,
         alignItems: 'center',
+        // shadowColor: colors.shadowColor,
+        // shadowOffset: colors.shadowOffset,
+        // shadowOpacity: 0.1,
+        // shadowRadius: 10,
+        // elevation: 5,
       }}
     >
-      <MaterialIcons name="store" size={64} color={colors.white} />
+      <View
+        style={{
+          backgroundColor: colors.primary + '20',
+          borderRadius: 30,
+          width: 60,
+          height: 60,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: 16,
+        }}
+      >
+        <MaterialIcons name="store" size={32} color={colors.primary} />
+      </View>
       
       <Typography variant='bold'
         style={{
-          fontSize: 24,
+          fontSize: 22,
           fontWeight: 'bold',
-          color: colors.white,
-          marginTop: 16,
+          color: colors.text.primary,
+          textAlign: 'center',
         }}
       >
         Become a MoMo Agent
@@ -32,15 +49,15 @@ const NonVendorHero: React.FC<INonVendorHeroProps> = ({ onGetStarted }) => {
       <Typography
         style={{
           fontSize: 16,
-          color: colors.white,
-          opacity: 0.9,
+          color: colors.text.secondary,
           textAlign: 'center',
           marginTop: 8,
+          lineHeight: 24,
         }}
       >
         Join thousands of agents and grow your business with Peyba
       </Typography>
-    </LinearGradient>
+    </View>
   );
 };
 

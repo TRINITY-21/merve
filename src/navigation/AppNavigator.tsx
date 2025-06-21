@@ -2,7 +2,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import type { CompositeScreenProps } from '@react-navigation/native';
+import { type CompositeScreenProps } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
@@ -55,6 +55,7 @@ export type MapStackParamList = {
   AgentRegistration: undefined;
   SearchAgents: undefined;
   UserInvitations: undefined;
+  Invitations: undefined;
 };
 
 export type SearchAgentsStackParamList = {

@@ -3,6 +3,7 @@ import * as ImagePicker from 'expo-image-picker';
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { IFormData } from '../../../../../types/agentRegistrationTypes';
 
@@ -60,56 +61,84 @@ const VerificationMediaStep: React.FC<IVerificationMediaStepProps> = ({
     required?: boolean;
   }) => (
     <TouchableOpacity
-      className="rounded-xl border-2 border-dashed p-4 mb-4"
       style={{
-        borderColor: uri ? colors.success : colors.primary + '50',
-        backgroundColor: uri ? colors.success + '10' : colors.primary + '10'
+        borderRadius: 16,
+        borderWidth: 2,
+        borderStyle: 'dashed',
+        padding: 20,
+        marginBottom: 16,
+        borderColor: uri ? colors.success : colors.primary,
+        backgroundColor: uri ? colors.success + '08' : colors.primary + '08',
+        // shadowColor: colors.shadowColor,
+        // shadowOffset: colors.shadowOffset,
+        // shadowOpacity: 0.05,
+        // shadowRadius: 8,
+        // elevation: 2,
       }}
       onPress={onPress}
+      activeOpacity={0.7}
     >
       {uri ? (
-        <View className="items-center">
+        <View style={{ alignItems: 'center' }}>
           <Image 
             source={{ uri }} 
-            style={{ width: 100, height: 100, borderRadius: 8 }}
+            style={{ 
+              width: 120, 
+              height: 120, 
+              borderRadius: 12,
+              // shadowColor: colors.shadowColor,
+              // shadowOffset: colors.shadowOffset,
+              // shadowOpacity: 0.1,
+              // shadowRadius: 8,
+            }}
             resizeMode="cover"
           />
-          <View className="flex-row items-center mt-2">
-            <MaterialIcons name="check-circle" size={16} color={colors.success} />
-            <Text 
-              className="ml-2 text-sm font-medium"
-              style={{ color: colors.success }}
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
+            <MaterialIcons name="check-circle" size={18} color={colors.success} />
+            <Typography 
+              variant="medium"
+              style={{ color: colors.success, marginLeft: 8, fontSize: 14 }}
             >
-              Document uploaded
-            </Text>
+              Document uploaded successfully
+            </Typography>
           </View>
-          <Text 
-            className="text-xs mt-1"
-            style={{ color: colors.text.secondary }}
+          <Typography 
+            variant="regular"
+            style={{ color: colors.text.secondary, fontSize: 12, marginTop: 4 }}
           >
             Tap to change
-          </Text>
+          </Typography>
         </View>
       ) : (
-        <View className="items-center">
-          <MaterialIcons 
-            name="cloud-upload" 
-            size={40} 
-            color={colors.primary} 
-          />
-          <Text 
-            className="text-base font-semibold mt-2"
-            style={{ color: colors.text.primary }}
+        <View style={{ alignItems: 'center' }}>
+          <View style={{
+            width: 60,
+            height: 60,
+            borderRadius: 30,
+            backgroundColor: colors.primary + '20',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 12,
+          }}>
+            <MaterialIcons 
+              name="cloud-upload" 
+              size={32} 
+              color={colors.primary} 
+            />
+          </View>
+          <Typography 
+            variant="semibold"
+            style={{ color: colors.text.primary, fontSize: 16, textAlign: 'center' }}
           >
             {title}
             {required && <Text style={{ color: colors.error }}> *</Text>}
-          </Text>
-          <Text 
-            className="text-sm text-center mt-1"
-            style={{ color: colors.text.secondary }}
+          </Typography>
+          <Typography 
+            variant="regular"
+            style={{ color: colors.text.secondary, fontSize: 14, textAlign: 'center', marginTop: 8, lineHeight: 20 }}
           >
             {subtitle}
-          </Text>
+          </Typography>
         </View>
       )}
     </TouchableOpacity>
@@ -118,147 +147,184 @@ const VerificationMediaStep: React.FC<IVerificationMediaStepProps> = ({
   return (
     <Animated.View 
       style={[cardStyle, {
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        borderRadius: 16,
-        padding: 20,
-        marginBottom: 20,
-        marginTop: 20,
+        backgroundColor: colors.white,
+        borderRadius: 20,
+        padding: 24,
+        // marginBottom: 20,
+        marginTop: 10,
+        // shadowColor: colors.shadowColor,
+        // shadowOffset: colors.shadowOffset,
+        // shadowOpacity: 0.1,
+        // shadowRadius: 16,
+        // elevation: 8,
         borderWidth: 1,
-        borderColor: colors.primary + '30',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 12,
-        elevation: 6,
+        borderColor: colors.gray.light,
       }]}
     >
-      <Text 
-        className="text-xl font-bold mb-2"
-        style={{ color: colors.text.primary }}
-      >
-        Verification & Media
-      </Text>
-      <Text 
-        className="text-sm mb-5"
-        style={{ color: colors.text.secondary }}
-      >
-        Upload documents to verify your identity 📄
-      </Text>
+      <View style={{ marginBottom: 24 }}>
+        <Typography 
+          variant="semibold"
+          style={{ color: colors.text.primary, fontSize: 20, marginBottom: 8 }}
+        >
+          Verification & Media
+        </Typography>
+        <Typography 
+          variant="regular"
+          style={{ color: colors.text.secondary, fontSize: 14, lineHeight: 20 }}
+        >
+          Upload documents to verify your identity and showcase your business setup.
+        </Typography>
+      </View>
 
-      {/* ID Document Upload */}
-      <Text 
-        className="text-lg font-semibold mb-3"
-        style={{ color: colors.text.primary }}
-      >
-        Required Documents
-      </Text>
+      {/* Required Documents */}
+      <View style={{ marginBottom: 24 }}>
+        <Typography 
+          variant="semibold"
+          style={{ color: colors.text.primary, fontSize: 16, marginBottom: 16 }}
+        >
+          Required Documents
+        </Typography>
 
-      <DocumentUpload
-        title="ID Document"
-        subtitle="Upload a clear photo of your National ID, Passport, or Driver's License"
-        uri={formData.idDocument}
-        onPress={() => pickImage('id')}
-        required
-      />
+        <DocumentUpload
+          title="ID Document"
+          subtitle="Upload a clear photo of your National ID, Passport, or Driver's License"
+          uri={formData.idDocument}
+          onPress={() => pickImage('id')}
+          required
+        />
 
-      {/* Business License Upload */}
-      <DocumentUpload
-        title="Business License"
-        subtitle="Upload your business registration certificate (Optional)"
-        uri={formData.businessLicense}
-        onPress={() => pickImage('license')}
-      />
+        <DocumentUpload
+          title="Business License"
+          subtitle="Upload your business registration certificate (Optional)"
+          uri={formData.businessLicense}
+          onPress={() => pickImage('license')}
+        />
+      </View>
 
       {/* Setup Photos */}
-      <Text 
-        className="text-lg font-semibold mb-3 mt-4"
-        style={{ color: colors.text.primary }}
-      >
-        Business Setup Photos
-      </Text>
-      <Text 
-        className="text-sm mb-3"
-        style={{ color: colors.text.secondary }}
-      >
-        Add photos of your business location (Optional)
-      </Text>
+      <View style={{ marginBottom: 24 }}>
+        <Typography 
+          variant="semibold"
+          style={{ color: colors.text.primary, fontSize: 16, marginBottom: 8 }}
+        >
+          Business Setup Photos
+        </Typography>
+        <Typography 
+          variant="regular"
+          style={{ color: colors.text.secondary, fontSize: 14, marginBottom: 16, lineHeight: 20 }}
+        >
+          Add photos of your business location to help customers recognize your setup (Optional)
+        </Typography>
 
-      {/* Setup Photos Grid */}
-      <View className="flex-row flex-wrap gap-2 mb-4">
-        {formData.setupPhotos.map((photo, index) => (
-          <View key={index} className="relative">
-            <Image 
-              source={{ uri: photo }} 
-              style={{ width: 80, height: 80, borderRadius: 8 }}
-              resizeMode="cover"
-            />
+        {/* Setup Photos Grid */}
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginBottom: 16 }}>
+          {formData.setupPhotos.map((photo, index) => (
+            <View key={index} style={{ position: 'relative' }}>
+              <Image 
+                source={{ uri: photo }} 
+                style={{ 
+                  width: 100, 
+                  height: 100, 
+                  borderRadius: 12,
+                  // shadowColor: colors.shadowColor,
+                  // shadowOffset: colors.shadowOffset,
+                  // shadowOpacity: 0.1,
+                  // shadowRadius: 4,
+                }}
+                resizeMode="cover"
+              />
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  top: -8,
+                  right: -8,
+                  width: 28,
+                  height: 28,
+                  borderRadius: 14,
+                  backgroundColor: colors.error,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  // shadowColor: colors.shadowColor,
+                  // shadowOffset: colors.shadowOffset,
+                  // shadowOpacity: 0.2,
+                  // shadowRadius: 4,
+                  // elevation: 3,
+                }}
+                onPress={() => removeSetupPhoto(index)}
+              >
+                <MaterialIcons name="close" size={16} color={colors.white} />
+              </TouchableOpacity>
+            </View>
+          ))}
+          
+          {formData.setupPhotos.length < 4 && (
             <TouchableOpacity
-              className="absolute -top-2 -right-2 w-6 h-6 rounded-full items-center justify-center"
-              style={{ backgroundColor: colors.error }}
-              onPress={() => removeSetupPhoto(index)}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 12,
+                borderWidth: 2,
+                borderStyle: 'dashed',
+                borderColor: colors.primary,
+                backgroundColor: colors.primary + '08',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onPress={() => pickImage('setup')}
             >
-              <MaterialIcons name="close" size={16} color={colors.white} />
+              <MaterialIcons name="add-photo-alternate" size={32} color={colors.primary} />
             </TouchableOpacity>
-          </View>
-        ))}
-        
-        {formData.setupPhotos.length < 5 && (
-          <TouchableOpacity
-            className="w-20 h-20 rounded-lg border-2 border-dashed items-center justify-center"
-            style={{ borderColor: colors.primary + '50' }}
-            onPress={() => pickImage('setup')}
-          >
-            <MaterialIcons name="add-a-photo" size={24} color={colors.primary} />
-          </TouchableOpacity>
-        )}
+          )}
+        </View>
       </View>
 
       {/* Terms and Conditions */}
-      <View className="mt-4">
+      <View style={{ marginBottom: 20 }}>
         <TouchableOpacity
-          className="flex-row items-start"
+          style={{
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            padding: 16,
+            backgroundColor: colors.secondaryLight,
+            borderRadius: 12,
+            borderWidth: 1,
+            borderColor: formData.termsAccepted ? colors.primary : colors.gray.light,
+          }}
           onPress={() => setFormData({ ...formData, termsAccepted: !formData.termsAccepted })}
         >
-          <MaterialIcons
-            name={formData.termsAccepted ? 'check-box' : 'check-box-outline-blank'}
-            size={24}
-            color={formData.termsAccepted ? colors.primary : colors.gray?.medium || '#999999'}
-            style={{ marginTop: 2 }}
-          />
-          <View className="flex-1 ml-3">
-            <Text 
-              className="text-sm leading-5"
-              style={{ color: colors.text.primary }}
+          <View style={{
+            width: 20,
+            height: 20,
+            borderRadius: 4,
+            borderWidth: 2,
+            borderColor: formData.termsAccepted ? colors.primary : colors.gray.medium,
+            backgroundColor: formData.termsAccepted ? colors.primary : 'transparent',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginRight: 12,
+            marginTop: 2,
+          }}>
+            {formData.termsAccepted && (
+              <MaterialIcons name="check" size={14} color={colors.white} />
+            )}
+          </View>
+          <View style={{ flex: 1 }}>
+            <Typography 
+              variant="medium"
+              style={{ color: colors.text.primary, fontSize: 14, lineHeight: 20 }}
             >
-              I agree to the{' '}
-              <Text style={{ color: colors.primary, fontWeight: '600' }}>
-                Terms and Conditions
-              </Text>
-              {' '}and{' '}
-              <Text style={{ color: colors.primary, fontWeight: '600' }}>
-                Privacy Policy
-              </Text>
-              . I understand that providing false information may result in rejection of my application.
-            </Text>
+              I agree to the Terms and Conditions and Privacy Policy
+            </Typography>
+            <Typography 
+              variant="regular"
+              style={{ color: colors.text.secondary, fontSize: 12, marginTop: 4, lineHeight: 16 }}
+            >
+              By checking this box, you confirm that all information provided is accurate and you agree to our terms.
+            </Typography>
           </View>
         </TouchableOpacity>
       </View>
 
-      {/* Upload Progress Indicator */}
-      {formData.idDocument && (
-        <View 
-          className="flex-row items-center justify-center mt-4 py-2 px-4 rounded-lg"
-          style={{ backgroundColor: colors.success + '20' }}
-        >
-          <MaterialIcons name="verified" size={16} color={colors.success} />
-          <Text 
-            className="ml-2 text-sm font-medium"
-            style={{ color: colors.success }}
-          >
-            Ready for submission
-          </Text>
-        </View>
-      )}
     </Animated.View>
   );
 };

@@ -10,43 +10,42 @@ const BenefitCard: React.FC<IBenefitCardProps> = ({ benefit }) => {
     <View
       style={{
         flexDirection: 'row',
-        marginBottom: 8,
-        marginHorizontal: 0,
-        borderRadius: 20,
-        backgroundColor: 'white',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 2,
-        elevation: 2,
-        marginVertical: 0,
-        gap: 12,
+        alignItems: 'center',
+        backgroundColor: colors.white,
+        borderRadius: 16,
         padding: 16,
+        // shadowColor: colors.shadowColor,
+        // shadowOffset: colors.shadowOffset,
+        // shadowOpacity: 0.07,
+        // shadowRadius: 10,
+        // elevation: 4,
       }}
     >
       <View
         style={{
-          width: 36,
-          height: 36,
-          borderRadius: 20,
-          backgroundColor: colors.secondary + '33', // 20% opacity
+          width: 48,
+          height: 48,
+          borderRadius: 24,
+          backgroundColor: colors.primary + '20',
           alignItems: 'center',
           justifyContent: 'center',
+          marginRight: 16,
         }}
       >
         <MaterialIcons
           name={benefit.icon as any}
           size={24}
-          color={colors.secondary}
+          color={colors.primary}
         />
       </View>
 
-      <View style={{ flex: 1, }}>
+      <View style={{ flex: 1 }}>
         <Typography
           style={{
             fontSize: 16,
             fontWeight: '600',
-            color: '#212121',
+            color: colors.text.primary,
+            marginBottom: 4,
           }}
         >
           {benefit.title}
@@ -54,8 +53,8 @@ const BenefitCard: React.FC<IBenefitCardProps> = ({ benefit }) => {
         <Typography
           style={{
             fontSize: 14,
-            color: '#757575',
-            marginTop: 4,
+            color: colors.text.secondary,
+            lineHeight: 20,
           }}
         >
           {benefit.desc}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TextInput, TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Typography } from '../../../../../components/common';
@@ -16,6 +16,7 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
   setFormData,
   cardStyle,
 }) => {
+  const [focusedInput, setFocusedInput] = useState<string | null>(null);
   const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
   const toggleDayOpen = (day: string) => {
@@ -44,33 +45,78 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
     });
   };
 
+  const getTimeInputStyle = (inputName: string) => ({
+    width: 80,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: colors.white,
+    borderColor: focusedInput === inputName ? colors.primary : colors.gray.light,
+    borderWidth: focusedInput === inputName ? 2 : 1,
+    textAlign: 'center' as const,
+    color: colors.text.primary,
+    fontSize: 14,
+    fontFamily: 'JosefinSans_400Regular',
+    // shadowColor: focusedInput === inputName ? colors.primary : colors.shadowColor,
+    // shadowOffset: colors.shadowOffset,
+    // shadowOpacity: focusedInput === inputName ? 0.1 : 0.05,
+    // shadowRadius: focusedInput === inputName ? 4 : 2,
+    // elevation: focusedInput === inputName ? 2 : 1,
+  });
+
   return (
     <Animated.View
-      style={[cardStyle, { marginTop: 20 }]}
-      className="bg-white/95 rounded-2xl p-5 mb-5 border border-primary/30 shadow-lg"
+      style={[cardStyle, {
+        backgroundColor: colors.white,
+        borderRadius: 20,
+        padding: 24,
+        marginBottom: 20,
+        // shadowColor: colors.shadowColor,
+        // shadowOffset: colors.shadowOffset,
+        // shadowOpacity: 0.1,
+        // shadowRadius: 16,
+        // elevation: 8,
+        borderWidth: 1,
+        borderColor: colors.gray.light,
+        marginTop: 10,
+      }]}
     >
-      <Typography variant="semibold" size={18} className=" text-[#212121] mb-2">
-        Operating Details
-      </Typography>
-      <Typography variant="regular" size={14} className="text-sm text-[#757575] mb-5">
-        When are you ready to serve? ⏰
-      </Typography>
+      <View style={{ marginBottom: 24 }}>
+        <Typography variant="semibold" size={18} style={{ color: colors.text.primary, marginBottom: 8 }}>
+          Operating Details
+        </Typography>
+        <Typography variant="regular" size={14} style={{ color: colors.text.secondary, lineHeight: 20 }}>
+          When are you ready to serve? Set your business hours to help customers know when to visit.
+        </Typography>
+      </View>
 
       {/* Days Operating Hours */}
       {days.map((day) => (
-        <View key={day} className="mb-4">
-          <View className="flex-row items-center justify-between bg-[#E0E0E0] p-3 rounded-xl mb-4 px-4">
-            <Typography className="flex-1 text-base text-[#212121] font-semibold capitalize">
+        <View key={day} style={{ marginBottom: 16 }}>
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            backgroundColor: colors.gray.light,
+            paddingVertical: 16,
+            paddingHorizontal: 20,
+            borderRadius: 12,
+            marginBottom: 12,
+            // shadowColor: colors.shadowColor,
+            // shadowOffset: colors.shadowOffset,
+            // shadowOpacity: 0.05,
+            // shadowRadius: 4,
+            // elevation: 2,
+          }}>
+            <Typography style={{
+              flex: 1,
+              fontSize: 16,
+              color: colors.text.primary,
+              fontWeight: '600',
+              textTransform: 'capitalize' as any,
+            }}>
               {day}
             </Typography>
-            {/* <Switch
-              value={!formData.operatingHours[day].isClosed}
-              onValueChange={() => toggleDayOpen(day)}
-              trackColor={{ false: '#E0E0E0', true: '#00BFA5' }}
-              thumbColor="#FFFFFF"
-            /> */}
-
-
 
             <TouchableOpacity
               onPress={() => toggleDayOpen(day)}
@@ -83,7 +129,9 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
                   borderRadius: 16,
                   padding: 4,
                   justifyContent: 'center',
-                  backgroundColor: !formData.operatingHours[day].isClosed ? colors.accent : colors.white,
+                  backgroundColor: !formData.operatingHours[day].isClosed ? colors.primary : colors.gray.medium,
+                  borderWidth: 1,
+                  borderColor: colors.gray.light,
                 }}
               >
                 <View
@@ -92,38 +140,49 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
                     height: 24,
                     borderRadius: 12,
                     backgroundColor: 'white',
-                    shadowColor: 'black',
-                    shadowOpacity: 0.2,
-                    shadowRadius: 3,
-                    shadowOffset: { width: 0, height: 1 },
-                    elevation: 3,
+                    // shadowColor: colors.shadowColor,
+                    // shadowOpacity: 0.2,
+                    // shadowRadius: 3,
+                    // shadowOffset: colors.shadowOffset,
+                    // elevation: 3,
                     alignSelf: !formData.operatingHours[day].isClosed ? 'flex-end' : 'flex-start',
                   }}
                 />
               </View>
             </TouchableOpacity>
-
-
           </View>
 
           {!formData.operatingHours[day].isClosed && (
-            <View className="flex-row items-center ml-2">
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginLeft: 20,
+              gap: 12,
+            }}>
               <TextInput
-                className="w-20 p-2 rounded-lg bg-white text-[#212121] text-center mx-1 border border-[#9E9E9E]"
-                placeholder="Open"
+                style={getTimeInputStyle(`${day}_open`)}
+                placeholder="09:00"
                 value={formData.operatingHours[day].open}
                 onChangeText={(text) => updateDayTime(day, 'open', text)}
                 keyboardType="numeric"
-                placeholderTextColor="#9E9E9E"
+                placeholderTextColor={colors.text.secondary}
+                onFocus={() => setFocusedInput(`${day}_open`)}
+                onBlur={() => setFocusedInput(null)}
+                maxLength={5}
               />
-              <Typography className="text-base text-[#212121] mx-2">-</Typography>
+              <Typography style={{ fontSize: 16, color: colors.text.primary, fontWeight: '500' }}>
+                to
+              </Typography>
               <TextInput
-                className="w-20 p-2 rounded-lg bg-white text-[#212121] text-center mx-1 border border-[#9E9E9E]"
-                placeholder="Close"
+                style={getTimeInputStyle(`${day}_close`)}
+                placeholder="18:00"
                 value={formData.operatingHours[day].close}
                 onChangeText={(text) => updateDayTime(day, 'close', text)}
                 keyboardType="numeric"
-                placeholderTextColor="#9E9E9E"
+                placeholderTextColor={colors.text.secondary}
+                onFocus={() => setFocusedInput(`${day}_close`)}
+                onBlur={() => setFocusedInput(null)}
+                maxLength={5}
               />
             </View>
           )}
@@ -131,12 +190,28 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
       ))}
 
       {/* Currently Open Switch */}
-      <View className="flex-row items-center justify-between bg-[#E0E0E0] p-3 rounded-xl">
-        <Typography className={`text-base ${formData.isOpen ? 'text-primary' : 'text-error'} font-semibold`}>
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: colors.gray.light,
+        paddingVertical: 16,
+        paddingHorizontal: 20,
+        borderRadius: 12,
+        marginTop: 8,
+        // shadowColor: colors.shadowColor,
+        // shadowOffset: colors.shadowOffset,
+        // shadowOpacity: 0.05,
+        // shadowRadius: 4,
+        // elevation: 2,
+      }}>
+        <Typography style={{
+          fontSize: 16,
+          color: formData.isOpen ? colors.success : colors.error,
+          fontWeight: '600',
+        }}>
           {formData.isOpen ? 'Currently Open' : 'Currently Closed'}
         </Typography>
-
-
 
         <TouchableOpacity
           onPress={() => setFormData({ ...formData, isOpen: !formData.isOpen })}
@@ -149,7 +224,9 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
               borderRadius: 16,
               padding: 4,
               justifyContent: 'center',
-              backgroundColor: formData.isOpen ? colors.accent : colors.white,
+              backgroundColor: formData.isOpen ? colors.success : colors.gray.medium,
+              borderWidth: 1,
+              borderColor: colors.gray.light,
             }}
           >
             <View
@@ -158,26 +235,18 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
                 height: 24,
                 borderRadius: 12,
                 backgroundColor: 'white',
-                shadowColor: 'black',
-                shadowOpacity: 0.2,
-                shadowRadius: 3,
-                shadowOffset: { width: 0, height: 1 },
-                elevation: 3,
+                shadowColor: colors.shadowColor,
+                // shadowOpacity: 0.2,
+                // shadowRadius: 3,
+                // shadowOffset: colors.shadowOffset,
+                // elevation: 3,
                 alignSelf: formData.isOpen ? 'flex-end' : 'flex-start',
               }}
             />
           </View>
         </TouchableOpacity>
-
-
-
-        {/* <Switch 
-          value={formData.isOpen}
-          onValueChange={() => setFormData({ ...formData, isOpen: !formData.isOpen })}
-          trackColor={{ false: '#E0E0E0', true: '#00BFA5' }}
-          thumbColor="#FFFFFF"
-        /> */}
       </View>
+
     </Animated.View>
   );
 };

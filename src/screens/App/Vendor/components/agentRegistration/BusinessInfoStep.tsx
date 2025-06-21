@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import React from 'react';
-import { FlatList, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList, Platform, TextInput, TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
@@ -31,7 +31,7 @@ const BusinessInfoStep: React.FC<IBusinessInfoStepProps> = ({
   setFormData,
   cardStyle,
 }) => {
-  const agentTypes: Array<'Retail' | 'Mobile' | 'Corporate'> = ['Retail', 'Mobile', 'Corporate'];
+  const [focusedInput, setFocusedInput] = useState<string | null>(null);
 
   const inputStyle = {
     flex: 1,
@@ -67,6 +67,30 @@ const BusinessInfoStep: React.FC<IBusinessInfoStepProps> = ({
     minHeight: 100,
   };
 
+  const getInputContainerStyle = (inputName: string) => ({
+    ...containerStyle,
+    backgroundColor: colors.white,
+    borderColor: focusedInput === inputName ? colors.primary : colors.gray.light,
+    borderWidth: focusedInput === inputName ? 2 : 1,
+    // shadowColor: focusedInput === inputName ? colors.primary : colors.shadowColor,
+    // shadowOffset: colors.shadowOffset,
+    // shadowOpacity: focusedInput === inputName ? 0.1 : 0.05,
+    // shadowRadius: focusedInput === inputName ? 8 : 4,
+    // elevation: focusedInput === inputName ? 4 : 2,
+  });
+
+  const getMultilineContainerStyle = (inputName: string) => ({
+    ...multilineContainerStyle,
+    backgroundColor: colors.white,
+    borderColor: focusedInput === inputName ? colors.primary : colors.gray.light,
+    borderWidth: focusedInput === inputName ? 2 : 1,
+    // shadowColor: focusedInput === inputName ? colors.primary : colors.shadowColor,
+    // shadowOffset: colors.shadowOffset,
+    // shadowOpacity: focusedInput === inputName ? 0.1 : 0.05,
+    // shadowRadius: focusedInput === inputName ? 8 : 4,
+    // elevation: focusedInput === inputName ? 4 : 2,
+  });
+
   const toggleService = (serviceId: string) => {
     setFormData({
       ...formData,
@@ -86,180 +110,172 @@ const BusinessInfoStep: React.FC<IBusinessInfoStepProps> = ({
   };
 
   return (
-    <ScrollView 
-      style={{ flex: 1, marginTop: 20 }}
-      contentContainerStyle={{ 
-        paddingBottom: 10,
-        flexGrow: 1 
-      }}
-      showsVerticalScrollIndicator={false}
-      keyboardShouldPersistTaps="handled"
+    <Animated.View
+      style={[cardStyle, {
+        backgroundColor: colors.white,
+        borderRadius: 20,
+        padding: 24,
+        // marginBottom: 20,
+        // shadowColor: colors.shadowColor,
+        // shadowOffset: colors.shadowOffset,
+        // shadowOpacity: 0.1,
+        // shadowRadius: 16,
+        // elevation: 8,
+        borderWidth: 1,
+        borderColor: colors.gray.light,
+        marginTop: 10,
+      }]}
     >
-      <Animated.View 
-        className="bg-white/95 rounded-2xl p-5 mb-5 shadow-lg"
-        style={[cardStyle, { 
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
-          borderWidth: 1,
-          borderColor: colors.primary + '30'
-        }]}
-      >
+      <View style={{ marginBottom: 24 }}>
         <Typography variant='semibold'
-          className="text-xl font-bold mb-0"
+          className="text-xl font-bold mb-2"
           style={{ color: colors.text.primary }}
         >
           Business Information
         </Typography>
         <Typography size={14}
-          className="text-sm mb-5"
-          style={{ color: colors.text.secondary }}
+          className="text-sm"
+          style={{ color: colors.text.secondary, lineHeight: 20 }}
         >
-          Showcase your business! 🚀
+          Showcase your business! Tell us about your operations and services.
         </Typography>
+      </View>
 
-        {/* Business Name */}
-        <View 
-          className="flex-row items-center rounded-xl px-4 mb-4 border"
-          style={[containerStyle, { 
-            backgroundColor: colors.background || '#F8F9FA',
-            borderColor: colors.primary + '30'
-          }]}
-        >
-          <MaterialIcons name="business" size={24} color={colors.primary} style={iconStyle} />
-          <TextInput
-            style={inputStyle}
-            placeholder="Business Name"
-            value={formData.businessName}
-            onChangeText={(text) => setFormData({ ...formData, businessName: text })}
-            placeholderTextColor={colors.text.secondary}
-          />
-        </View>
+      {/* Business Name */}
+      <View 
+        className="flex-row items-center rounded-xl px-4 mb-4 border"
+        style={getInputContainerStyle('businessName')}
+      >
+        <MaterialIcons name="business" size={24} color={focusedInput === 'businessName' ? colors.primary : colors.text.secondary} style={iconStyle} />
+        <TextInput
+          style={inputStyle}
+          placeholder="Business Name"
+          value={formData.businessName}
+          onChangeText={(text) => setFormData({ ...formData, businessName: text })}
+          placeholderTextColor={colors.text.secondary}
+          onFocus={() => setFocusedInput('businessName')}
+          onBlur={() => setFocusedInput(null)}
+          autoCapitalize="words"
+        />
+      </View>
 
-        {/* Business Description */}
-        <View 
-          className="flex-row items-start rounded-xl px-4 mb-4 border"
-          style={[multilineContainerStyle, { 
-            backgroundColor: colors.background || '#F8F9FA',
-            borderColor: colors.primary + '30'
-          }]}
-        >
-          <MaterialIcons 
-            name="description" 
-            size={24} 
-            color={colors.primary} 
-            style={{ ...iconStyle, marginTop: Platform.OS === 'ios' ? 4 : 2 }}
-          />
-          <TextInput
-            style={multilineInputStyle}
-            placeholder="Business Description"
-            value={formData.businessDescription}
-            onChangeText={(text) => setFormData({ ...formData, businessDescription: text })}
-            multiline
-            placeholderTextColor={colors.text.secondary}
-          />
-        </View>
+      {/* Business Description */}
+      <View 
+        className="flex-row items-start rounded-xl px-4 mb-4 border"
+        style={getMultilineContainerStyle('businessDescription')}
+      >
+        <MaterialIcons 
+          name="description" 
+          size={24} 
+          color={focusedInput === 'businessDescription' ? colors.primary : colors.text.secondary} 
+          style={{ ...iconStyle, marginTop: Platform.OS === 'ios' ? 4 : 2 }}
+        />
+        <TextInput
+          style={multilineInputStyle}
+          placeholder="Describe your business and what makes it unique..."
+          value={formData.businessDescription}
+          onChangeText={(text) => setFormData({ ...formData, businessDescription: text })}
+          multiline
+          placeholderTextColor={colors.text.secondary}
+          onFocus={() => setFocusedInput('businessDescription')}
+          onBlur={() => setFocusedInput(null)}
+          autoCapitalize="sentences"
+        />
+      </View>
 
-        {/* Agent Type */}
-        <Text 
-          className="text-lg font-semibold mb-2 mt-4"
-          style={{ color: colors.text.primary }}
-        >
-          Agent Type
-        </Text>
-        <View className="flex-row justify-between mb-4">
-          {agentTypes.map((type) => (
-            <TouchableOpacity
-              key={type}
-              className="flex-1 p-3 rounded-lg border-2 items-center mx-1"
-              style={{
-                backgroundColor: formData.agentType === type ? colors.primary : 'transparent',
-                borderColor: formData.agentType === type ? colors.primary : colors.gray?.light || '#E0E0E0'
-              }}
-              onPress={() => setFormData({ ...formData, agentType: type })}
-            >
-              <Text
-                className="text-sm"
-                style={{
-                  color: formData.agentType === type ? colors.white : colors.text.primary,
-                  fontWeight: formData.agentType === type ? 'bold' : 'normal'
-                }}
-              >
-                {type}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        {/* Services Offered */}
-        <Text 
-          className="text-lg font-semibold mb-2 mt-4"
-          style={{ color: colors.text.primary }}
-        >
+      {/* Services Offered */}
+      <View style={{ marginBottom: 20 }}>
+        <Typography variant="semibold" style={{ color: colors.text.primary, fontSize: 16, marginBottom: 12 }}>
           Services Offered
-        </Text>
+        </Typography>
         <FlatList
           data={servicesList}
-          keyExtractor={(item) => item.id}
           numColumns={2}
           scrollEnabled={false}
           renderItem={({ item }) => (
             <TouchableOpacity
-              className="flex-1 flex-row items-center p-2 rounded-lg border m-1"
+              className="flex-1 p-3 rounded-xl border items-center m-1"
               style={{
-                backgroundColor: formData.services.includes(item.id) ? colors.primary : 'transparent',
-                borderColor: formData.services.includes(item.id) ? colors.primary : colors.gray?.light || '#E0E0E0'
+                backgroundColor: formData.services.includes(item.id) ? colors.primary : colors.white,
+                borderColor: formData.services.includes(item.id) ? colors.primary : colors.gray.light,
+                // shadowColor: colors.shadowColor,
+                // shadowOffset: colors.shadowOffset,
+                // shadowOpacity: formData.services.includes(item.id) ? 0.2 : 0.05,
+                // shadowRadius: formData.services.includes(item.id) ? 8 : 4,
+                // elevation: formData.services.includes(item.id) ? 4 : 2,
               }}
               onPress={() => toggleService(item.id)}
             >
               <MaterialIcons
                 name={item.icon as any}
-                size={20}
-                color={formData.services.includes(item.id) ? colors.white : colors.primary}
+                size={24}
+                color={formData.services.includes(item.id) ? colors.white : colors.text.secondary}
+                style={{ marginBottom: 8 }}
               />
-              <Text
-                className="ml-2 text-sm"
+              <Typography
+                variant={formData.services.includes(item.id) ? "semibold" : "regular"}
                 style={{
                   color: formData.services.includes(item.id) ? colors.white : colors.text.primary,
-                  fontWeight: formData.services.includes(item.id) ? 'bold' : 'normal'
+                  fontSize: 12,
+                  textAlign: 'center',
                 }}
               >
                 {item.name}
-              </Text>
+              </Typography>
             </TouchableOpacity>
           )}
+          keyExtractor={(item) => item.id}
         />
+      </View>
 
-        {/* Supported Networks */}
-        <Text 
-          className="text-lg font-semibold mb-2 mt-4"
-          style={{ color: colors.text.primary }}
-        >
-          Supported Networks
-        </Text>
-        {networksList.map((network) => (
-          <TouchableOpacity
-            key={network.id}
-            className="flex-row items-center mb-2"
-            onPress={() => toggleNetwork(network.id)}
-          >
-            <MaterialIcons
-              name={
-                formData.networks.includes(network.id)
-                  ? 'check-box'
-                  : 'check-box-outline-blank'
-              }
-              size={24}
-              color={network.color}
-            />
-            <Text 
-              className="ml-2 text-base"
-              style={{ color: network.color }}
+      {/* Networks Supported */}
+      <View style={{ marginBottom: 20 }}>
+        <Typography variant="semibold" style={{ color: colors.text.primary, fontSize: 16, marginBottom: 12 }}>
+          Networks Supported
+        </Typography>
+        <FlatList
+          data={networksList}
+          numColumns={1}
+          scrollEnabled={false}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              className="flex-row items-center p-3 rounded-xl border m-1"
+              style={{
+                backgroundColor: formData.networks.includes(item.id) ? colors.primary : colors.white,
+                borderColor: formData.networks.includes(item.id) ? colors.primary : colors.gray.light,
+                // shadowColor: colors.shadowColor,
+                // shadowOffset: colors.shadowOffset,
+                // shadowOpacity: formData.networks.includes(item.id) ? 0.2 : 0.05,
+                // shadowRadius: formData.networks.includes(item.id) ? 8 : 4,
+                // elevation: formData.networks.includes(item.id) ? 4 : 2,
+              }}
+              onPress={() => toggleNetwork(item.id)}
             >
-              {network.name}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </Animated.View>
-    </ScrollView>
+              <View
+                style={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: 6,
+                  backgroundColor: formData.networks.includes(item.id) ? colors.white : item.color,
+                  marginRight: 12,
+                }}
+              />
+              <Typography
+                variant={formData.networks.includes(item.id) ? "semibold" : "regular"}
+                style={{
+                  color: formData.networks.includes(item.id) ? colors.white : colors.text.primary,
+                  fontSize: 14,
+                }}
+              >
+                {item.name}
+              </Typography>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
+
+    </Animated.View>
   );
 };
 

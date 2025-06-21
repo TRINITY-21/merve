@@ -10,25 +10,28 @@ const AgentRegistrationHeader: React.FC<IAgentRegistrationHeaderProps> = ({
   onGoBack,
   step,
   totalSteps,
+  onLayout,
 }) => {
   return (
     <View 
+      onLayout={onLayout}
       style={{
         position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
         zIndex: 1000,
-        backgroundColor: colors.primary,
-        paddingTop: Platform.OS === 'ios' ? 50 : 10,
-        paddingBottom: 16,
-        paddingHorizontal: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 8,
-        
+        backgroundColor: colors.background,
+        paddingTop: Platform.OS === 'ios' ? 60 : 10,
+        paddingBottom: 12,
+        paddingHorizontal: 16,
+        // shadowColor: colors.shadowColor,
+        // shadowOffset: colors.shadowOffset,
+        // shadowOpacity: 0.08,
+        // shadowRadius: 8,
+        // elevation: 4,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.white,
       }}
     >
       {/* Header */}
@@ -40,14 +43,21 @@ const AgentRegistrationHeader: React.FC<IAgentRegistrationHeaderProps> = ({
             width: 40,
             height: 40,
             borderRadius: 20,
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            // backgroundColor: colors.white,
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            // shadowColor: colors.shadowColor,
+            // shadowOffset: colors.shadowOffset,
+            // shadowOpacity: 0.1,
+            // shadowRadius: 4,
+            // elevation: 2,
+            // borderWidth: 1,
+            borderColor: colors.gray.light,
           }}
         >
-          <MaterialIcons name="chevron-left" size={24} color={colors.white} />
+          <MaterialIcons name="chevron-left" size={24} color={colors.text.primary} />
         </TouchableOpacity>
-        <Typography variant="semibold" size={18} className="text-lg font-bold" style={{ color: colors.white }}>
+        <Typography variant="semibold" size={18} className="text-lg font-bold" style={{ color: colors.text.primary }}>
           Become an Agent
         </Typography>
       </View>
@@ -55,18 +65,18 @@ const AgentRegistrationHeader: React.FC<IAgentRegistrationHeaderProps> = ({
       {/* Progress Container */}
       <View>
         <View 
-          className="h-2 rounded-sm overflow-hidden mb-2"
-          style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
+          className="h-2 rounded-full overflow-hidden mb-2"
+          style={{ backgroundColor: colors.gray.light }}
         >
           <Animated.View
-            className="h-full rounded-sm"
+            className="h-full rounded-full"
             style={{ 
               width: `${(step / totalSteps) * 100}%`,
-              backgroundColor: colors.white
+              backgroundColor: colors.primary
             }}
           />
         </View>
-        <Typography variant="regular" size={12} className="text-center" style={{ color: colors.white }}>
+        <Typography variant="regular" size={12} className="text-center" style={{ color: colors.text.secondary }}>
           Step {step} of {totalSteps}
         </Typography>
       </View>

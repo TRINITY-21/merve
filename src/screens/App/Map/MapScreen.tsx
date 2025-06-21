@@ -11,6 +11,7 @@ import {
     Animated as RNAnimated,
     StatusBar,
     StyleSheet,
+    TouchableOpacity,
     View
 } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
@@ -26,7 +27,7 @@ import { MapStackParamList } from '../../../navigation/AppNavigator';
 import useStore from '../../../store/useStore';
 import { IAgent } from '../../../types';
 import { AgentNotificationCard } from '../Notification/components';
-import { AgentListItem, MapHeader, NavigationOverlay, SelectedAgentCard, ZoomControls } from './components';
+import { AgentListItem, MapHeader, SelectedAgentCard, ZoomControls } from './components';
 import { QuickCashBottomSheet } from './components/quickcash';
 
 type NavigationProp = NativeStackNavigationProp<MapStackParamList>;
@@ -36,7 +37,7 @@ const { width, height } = Dimensions.get('window');
 const MapScreen: React.FC = () => {
     const navigation = useNavigation<NavigationProp>();
     const { agents, selectedAgent, setSelectedAgent } = useStore();
-    const { location, isLoading: locationLoading } = useLocation();
+    const { location, isLoading: locationLoading, watchLocation } = useLocation();
     const mapNavigation = useMapNavigation();
     const quickCash = useQuickCash();
 
@@ -48,9 +49,16 @@ const MapScreen: React.FC = () => {
     const [showAgentNotification, setShowAgentNotification] = useState<boolean>(false);
     const [requestData, setRequestData] = useState<any>(null);
     const [showUrgentSheet, setShowUrgentSheet] = useState<boolean>(false);
+    const [selectedTransport, setSelectedTransport] = useState<string>('car');
+    const [isCameraFollowing, setIsCameraFollowing] = useState<boolean>(true);
 
     const mapRef = useRef<MapView>(null);
     const slideAnim = useRef(new RNAnimated.Value(height)).current;
+
+    useEffect(() => {
+        const stopWatching = watchLocation();
+        return stopWatching; // Cleanup on unmount
+    }, []);
 
     useEffect(() => {
         console.log('Navigation object:', navigation); // Debug navigation
@@ -58,6 +66,18 @@ const MapScreen: React.FC = () => {
             setMapLoading(false);
         }
     }, [location, navigation]);
+
+    useEffect(() => {
+        if (mapNavigation.isNavigating && location && mapRef.current && isCameraFollowing) {
+            mapNavigation.updateUserLocation(location);
+            mapRef.current.animateCamera({
+                center: location,
+                heading: location.heading,
+                pitch: 45, // For a 3D-like view
+                zoom: 18, // Closer zoom level
+            }, { duration: 1000 });
+        }
+    }, [location, mapNavigation.isNavigating, isCameraFollowing]);
 
     const getMarkerColor = (provider: string): string => {
         return colors.vendor[provider as keyof typeof colors.vendor] || colors.primary;
@@ -104,6 +124,7 @@ const MapScreen: React.FC = () => {
 
     const handleAgentSelect = (agent: IAgent) => {
         setSelectedAgent(agent);
+        setSelectedTransport('car');
         mapNavigation.selectAgent(agent);
         setShowList(false);
         RNAnimated.spring(slideAnim, {
@@ -123,7 +144,8 @@ const MapScreen: React.FC = () => {
     const handleGetDirections = async () => {
         if (!location || !selectedAgent) return;
         try {
-            const modes = defaultTransportModes.map(mode => mode.profile);
+            // Get directions for all transport modes to show times for all options
+            const modes = defaultTransportModes.map(mode => mode.label.toLowerCase());
             await mapNavigation.getDirections(location, modes);
         } catch (error) {
             Alert.alert('Unable to get directions. Please try again.');
@@ -131,10 +153,20 @@ const MapScreen: React.FC = () => {
     };
 
     const handleStartNavigation = async () => {
-        if (location) {
-            mapNavigation.updateUserLocation(location);
-            await mapNavigation.startNavigation();
+        if (location && selectedAgent) {
+            const route = mapNavigation.routes[selectedTransport];
+            const time = mapNavigation.routeTimes[selectedTransport];
+
+            if (route && typeof time === 'number') {
+                setIsCameraFollowing(true);
+                mapNavigation.updateUserLocation(location);
+                await mapNavigation.startNavigation(route, time);
+            }
         }
+    };
+
+    const handleStopNavigation = () => {
+        mapNavigation.stopNavigation();
     };
 
     const handleQuickCashRequest = async (service: string, amount: string) => {
@@ -217,6 +249,20 @@ const MapScreen: React.FC = () => {
         quickCash.resetState();
     };
 
+    const handleTransportChange = (transport: string) => {
+        setSelectedTransport(transport);
+        // Get directions for the selected transport mode
+        if (selectedAgent && location) {
+            const selectedMode = defaultTransportModes.find(mode => 
+                mode.label.toLowerCase() === transport
+            );
+            
+            if (selectedMode) {
+                mapNavigation.getDirections(location, [transport]);
+            }
+        }
+    };
+
 
     return (
         <View className="flex-1">
@@ -235,10 +281,10 @@ const MapScreen: React.FC = () => {
                     latitudeDelta: zoomLevel,
                     longitudeDelta: zoomLevel * 0.5,
                 }}
-                showsUserLocation={!mapNavigation.isNavigating}
+                showsUserLocation={true}
                 showsMyLocationButton={false}
                 onMapReady={() => setMapLoading(false)}
-                followsUserLocation={mapNavigation.isNavigating}
+                followsUserLocation={mapNavigation.isNavigating && isCameraFollowing}
                 showsTraffic={mapNavigation.isNavigating}
                 showsBuildings={true}
                 showsCompass={mapNavigation.isNavigating}
@@ -246,8 +292,15 @@ const MapScreen: React.FC = () => {
                 scrollEnabled={true}
                 pitchEnabled={true}
                 rotateEnabled={true}
+                onRegionChange={(region, details) => {
+                    if (details?.isGesture && mapNavigation.isNavigating && isCameraFollowing) {
+                        setIsCameraFollowing(false);
+                    }
+                }}
                 onRegionChangeComplete={(region) => {
-                    setZoomLevel(region.latitudeDelta);
+                    if (!mapNavigation.isNavigating) {
+                        setZoomLevel(region.latitudeDelta);
+                    }
                 }}
             >
                 {!mapLoading && filteredAgents.map((agent) => (
@@ -279,14 +332,14 @@ const MapScreen: React.FC = () => {
                     <>
                         <Polyline
                             coordinates={mapNavigation.remainingRoute}
-                            strokeWidth={8}
-                            strokeColor="rgba(0, 122, 255, 0.3)"
+                            strokeWidth={12}
+                            strokeColor="rgba(0, 122, 255, 0.2)"
                             lineCap="round"
                             lineJoin="round"
                         />
                         <Polyline
                             coordinates={mapNavigation.remainingRoute}
-                            strokeWidth={5}
+                            strokeWidth={8}
                             strokeColor="#007AFF"
                             lineCap="round"
                             lineJoin="round"
@@ -298,11 +351,9 @@ const MapScreen: React.FC = () => {
                         coordinate={mapNavigation.currentUserLocation}
                         anchor={{ x: 0.5, y: 0.5 }}
                         flat={true}
+                        rotation={mapNavigation.currentUserLocation.heading || 0}
                     >
-                        <View className="items-center justify-center">
-                            <View className="w-5 h-5 rounded-full bg-blue-500 border-3 border-white shadow-md" />
-                            <View className="absolute w-12 h-12 rounded-full bg-blue-500 opacity-20" />
-                        </View>
+                        <MaterialIcons name="navigation" size={24} color={colors.primary} />
                     </Marker>
                 )}
                 {mapNavigation.isNavigating && selectedAgent && (
@@ -334,60 +385,105 @@ const MapScreen: React.FC = () => {
             </MapView>
 
 
-            <MapHeader
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                onSearchSubmit={searchQuery => console.log('Search submitted:', searchQuery)}
-                selectedFilter={selectedFilter}
-                onFilterChange={setSelectedFilter}
-                onProfilePress={() => navigation.navigate('UserProfile')}
-                searchPlaceholder="Search locations near you"
+            {!mapNavigation.isNavigating && (
+                <MapHeader
+                    searchQuery={searchQuery}
+                    onSearchChange={setSearchQuery}
+                    onSearchSubmit={searchQuery => console.log('Search submitted:', searchQuery)}
+                    selectedFilter={selectedFilter}
+                    onFilterChange={setSelectedFilter}
+                    onProfilePress={() => navigation.navigate('UserProfile')}
+                    searchPlaceholder="Search locations near you"
 
-                // Profile props for Google Maps style
-                userAvatarUrl="https://picsum.photos/100/100?random=10"
-                userName="John Doe"
-                showAvatar={true}
-            />
-
-
+                    // Profile props for Google Maps style
+                    userAvatarUrl="https://picsum.photos/100/100?random=10"
+                    userName="John Doe"
+                    showAvatar={true}
+                />
+            )}
 
             <ZoomControls
                 onZoomIn={handleZoomIn}
                 onZoomOut={handleZoomOut}
                 onResetZoom={handleResetZoom}
+                onRecenter={() => setIsCameraFollowing(true)}
+                isNavigating={mapNavigation.isNavigating}
+                isCameraFollowing={isCameraFollowing}
             />
 
-            <EmergencyButton quickCash={quickCash} setShowUrgentSheet={setShowUrgentSheet} />
+            {!mapNavigation.isNavigating && (
+                <EmergencyButton quickCash={quickCash} setShowUrgentSheet={setShowUrgentSheet} />
+            )}
 
+            {!mapNavigation.isNavigating && (
+                <ListToggleButton toggleList={toggleList} />
+            )}
 
-            <ListToggleButton toggleList={toggleList} />
+            {/* Navigation Exit Button - Google Maps style */}
+            {mapNavigation.isNavigating && (
+                <View className={`absolute ${Platform.OS === 'ios' ? 'top-16' : 'top-3'} right-4 z-50`}>
+                    <TouchableOpacity
+                        onPress={handleStopNavigation}
+                        className="w-12 h-12 rounded-full bg-white shadow-lg items-center justify-center border border-gray-200"
+                    >
+                        <MaterialIcons name="close" size={24} color={colors.gray.dark} />
+                    </TouchableOpacity>
+                </View>
+            )}
 
-            <NavigationOverlay
-                visible={mapNavigation.isNavigating}
-                progress={mapNavigation.routeProgress}
-                stats={{
-                    distance: 0,
-                    time: 0
-                }}
-                distanceTraveled={0}
-                onStop={mapNavigation.stopNavigation}
-            />
+            {/* Navigation Instructions - Google Maps style */}
+            {mapNavigation.isNavigating && selectedAgent && (
+                <View className="absolute bottom-8 left-4 right-4 z-50">
+                    <View className="bg-white rounded-2xl shadow-lg p-4 border border-gray-200">
+                        <View className="flex-row items-center justify-between mb-3">
+                            <View className="flex-1">
+                                <Typography variant="bold" size={16} className="text-gray-900 mb-1">
+                                    Navigating to {selectedAgent.name}
+                                </Typography>
+                                <Typography variant="medium" size={14} className="text-gray-600">
+                                    {selectedTransport.charAt(0).toUpperCase() + selectedTransport.slice(1)} • {mapNavigation.remainingTime ?? '...'} min
+                                </Typography>
+                            </View>
+                            <View className="items-center">
+                                <MaterialIcons 
+                                    name={selectedTransport === 'car' || selectedTransport === 'motorcycle' ? 'directions-car' : 
+                                          selectedTransport === 'bike' ? 'directions-bike' : 'directions-walk'} 
+                                    size={32} 
+                                    color={colors.primary} 
+                                />
+                            </View>
+                        </View>
+                        
+                        {/* Progress Bar */}
+                        <View className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <View
+                                className="h-full bg-blue-500 rounded-full"
+                                style={{ width: `${mapNavigation.routeProgress}%` }}
+                            />
+                        </View>
+                        <Typography variant="semibold" size={12} className="text-gray-600 text-center mt-2">
+                            {mapNavigation.routeProgress.toFixed(0)}% complete
+                        </Typography>
+                    </View>
+                </View>
+            )}
 
-            {selectedAgent && (
+            {selectedAgent && !mapNavigation.isNavigating && (
                 <SelectedAgentCard
                     agent={selectedAgent}
-                    selectedTransport="car"
-                    onTransportChange={() => { }}
+                    selectedTransport={selectedTransport}
+                    onTransportChange={handleTransportChange}
                     onClose={() => {
                         setSelectedAgent(null);
                     }}
                     onGetDirections={handleGetDirections}
                     onStartNavigation={handleStartNavigation}
-                    onStopNavigation={mapNavigation.stopNavigation}
+                    onStopNavigation={handleStopNavigation}
                     isNavigating={mapNavigation.isNavigating}
                     showDirections={mapNavigation.showDirections}
                     routeTimes={mapNavigation.routeTimes}
                     transportModes={defaultTransportModes}
+                    isCalculatingDirections={mapNavigation.isCalculatingDirections}
                 />
             )}
 

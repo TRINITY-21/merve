@@ -1,8 +1,6 @@
-import { MaterialIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import { Typography } from '../../../../../components/common';
+import { View } from 'react-native';
+import { Button, Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
 import { ICTASectionProps } from '../../../../../types/vendorTypes';
 
@@ -10,47 +8,32 @@ const CTASection: React.FC<ICTASectionProps> = ({ onStartAsAgent }) => {
   return (
     <View
       style={{
-        padding: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 30,
         alignItems: 'center',
       }}
     >
-      <TouchableOpacity
+      <Button
+        title="Start as an Agent"
         onPress={onStartAsAgent}
-        activeOpacity={0.8}
+        size="large"
+        icon="rocket-launch"
+        iconPosition="left"
         style={{
-          borderRadius: 16,
-          overflow: 'hidden',
           width: '100%',
+          shadowColor: colors.shadowColor,
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          elevation: 10,
         }}
-      >
-        <LinearGradient
-          colors={colors.gradient.primary} // Assuming this is your primary gradient
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingVertical: 16,
-            paddingHorizontal: 24,
-            gap: 8,
-          }}
-        >
-          <MaterialIcons name="rocket-launch" size={20} color={colors.white} />
-          <Typography variant='bold'
-            style={{
-              fontSize: 18,
-              color: colors.white,
-            }}
-          >
-            Start as an Agent
-          </Typography>
-        </LinearGradient>
-      </TouchableOpacity>
+      />
 
       <Typography
         style={{
           fontSize: 14,
           color: colors.text.secondary,
-          marginTop: 12,
+          marginTop: 16,
         }}
       >
         Free for the first month!

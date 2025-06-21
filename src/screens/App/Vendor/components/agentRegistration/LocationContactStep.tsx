@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import React from 'react';
-import { Platform, ScrollView, TextInput, View } from 'react-native';
+import React, { useState } from 'react';
+import { Platform, TextInput, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Animated from 'react-native-reanimated';
 import { Typography } from '../../../../../components/common';
@@ -18,6 +18,8 @@ const LocationContactStep: React.FC<ILocationContactStepProps> = ({
   setFormData,
   cardStyle,
 }) => {
+  const [focusedInput, setFocusedInput] = useState<string | null>(null);
+
   const inputStyle = {
     flex: 1,
     fontSize: 16,
@@ -40,31 +42,36 @@ const LocationContactStep: React.FC<ILocationContactStepProps> = ({
     minHeight: Platform.OS === 'ios' ? 52 : 48
   };
 
+  const getInputContainerStyle = (inputName: string) => ({
+    ...containerStyle,
+    backgroundColor: colors.white,
+    borderColor: focusedInput === inputName ? colors.primary : colors.gray.light,
+    borderWidth: focusedInput === inputName ? 2 : 1,
+    // shadowColor: focusedInput === inputName ? colors.primary : colors.shadowColor,
+    // shadowOffset: colors.shadowOffset,
+    // shadowOpacity: focusedInput === inputName ? 0.1 : 0.05,
+    // shadowRadius: focusedInput === inputName ? 8 : 4,
+    // elevation: focusedInput === inputName ? 4 : 2,
+  });
+
   return (
-    <ScrollView
-      style={{ flex: 1, marginTop: 20 }}
-      contentContainerStyle={{
-        paddingBottom: 10,
-        flexGrow: 1
-      }}
-      showsVerticalScrollIndicator={false}
-      keyboardShouldPersistTaps="handled"
+    <Animated.View
+      style={[cardStyle, {
+        backgroundColor: colors.white,
+        borderRadius: 20,
+        padding: 24,
+        // marginBottom: 20,
+        // shadowColor: colors.shadowColor,
+        // shadowOffset: colors.shadowOffset,
+        // shadowOpacity: 0.1,
+        // shadowRadius: 16,
+        // elevation: 8,
+        borderWidth: 1,
+        borderColor: colors.gray.light,
+        marginTop: 10,
+      }]}
     >
-      <Animated.View
-        style={[cardStyle, {
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
-          borderRadius: 16,
-          padding: 20,
-          marginBottom: 20,
-          borderWidth: 1,
-          borderColor: colors.primary + '30',
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.1,
-          shadowRadius: 12,
-          elevation: 6,
-        }]}
-      >
+      <View style={{  }}>
         <Typography
           variant="semibold"
           className="text-xl font-bold mb-2"
@@ -73,173 +80,176 @@ const LocationContactStep: React.FC<ILocationContactStepProps> = ({
           Location & Contact
         </Typography>
         <Typography size={14}
-          className="text-sm mb-5"
-          style={{ color: colors.text.secondary }}
+          className="text-sm"
+          style={{ color: colors.text.secondary, lineHeight: 20 }}
         >
-          Where can customers find you? 📍
+          Where can customers find you? Help them locate your business easily.
+        </Typography>
+      </View>
+
+      {/* Address Input */}
+      <View
+        className="flex-row items-center rounded-xl px-4 mb-4 border"
+        style={getInputContainerStyle('address')}
+      >
+        <MaterialIcons name="location-on" size={24} color={focusedInput === 'address' ? colors.primary : colors.text.secondary} style={iconStyle} />
+        <TextInput
+          style={inputStyle}
+          placeholder="Precise Address"
+          value={formData.address}
+          onChangeText={(text) => setFormData({ ...formData, address: text })}
+          placeholderTextColor={colors.text.secondary}
+          onFocus={() => setFocusedInput('address')}
+          onBlur={() => setFocusedInput(null)}
+          autoCapitalize="words"
+        />
+      </View>
+
+      {/* Landmark Input */}
+      <View
+        className="flex-row items-center rounded-xl px-4 mb-4 border"
+        style={getInputContainerStyle('landmark')}
+      >
+        <MaterialIcons name="place" size={24} color={focusedInput === 'landmark' ? colors.primary : colors.text.secondary} style={iconStyle} />
+        <TextInput
+          style={inputStyle}
+          placeholder="Nearby Landmark"
+          value={formData.landmark}
+          onChangeText={(text) => setFormData({ ...formData, landmark: text })}
+          placeholderTextColor={colors.text.secondary}
+          onFocus={() => setFocusedInput('landmark')}
+          onBlur={() => setFocusedInput(null)}
+          autoCapitalize="words"
+        />
+      </View>
+
+      {/* Contact Phone Input */}
+      <View
+        className="flex-row items-center rounded-xl px-4 mb-4 border"
+        style={getInputContainerStyle('contactPhone')}
+      >
+        <MaterialIcons name="phone" size={24} color={focusedInput === 'contactPhone' ? colors.primary : colors.text.secondary} style={iconStyle} />
+        <TextInput
+          style={inputStyle}
+          placeholder="Contact Phone Number"
+          value={formData.contactPhone}
+          onChangeText={(text) => setFormData({ ...formData, contactPhone: text })}
+          keyboardType="phone-pad"
+          maxLength={10}
+          placeholderTextColor={colors.text.secondary}
+          onFocus={() => setFocusedInput('contactPhone')}
+          onBlur={() => setFocusedInput(null)}
+        />
+      </View>
+
+      {/* WhatsApp Input */}
+      <View
+        className="flex-row items-center rounded-xl px-4 mb-4 border"
+        style={getInputContainerStyle('whatsapp')}
+      >
+        <MaterialIcons name="chat" size={24} color={focusedInput === 'whatsapp' ? colors.primary : colors.text.secondary} style={iconStyle} />
+        <TextInput
+          style={inputStyle}
+          placeholder="WhatsApp Number (Optional)"
+          value={formData.whatsapp}
+          onChangeText={(text) => setFormData({ ...formData, whatsapp: text })}
+          keyboardType="phone-pad"
+          maxLength={10}
+          placeholderTextColor={colors.text.secondary}
+          onFocus={() => setFocusedInput('whatsapp')}
+          onBlur={() => setFocusedInput(null)}
+        />
+      </View>
+
+      {/* Map Section */}
+      <View style={{ marginBottom: 20 }}>
+        <Typography variant='semibold'
+          className="text-lg mb-3"
+          style={{ color: colors.text.primary }}
+        >
+          Pin Your Location
+        </Typography>
+        <Typography
+          variant='regular'
+          size={14}
+          className="text-sm mb-3"
+          style={{ color: colors.text.secondary, lineHeight: 20 }}
+        >
+          Tap on the map to set your exact location. This helps customers find you easily.
         </Typography>
 
-        {/* Address Input */}
+        {/* Map Container */}
         <View
-          className="flex-row items-center rounded-xl px-4 mb-4 border"
-          style={[containerStyle, {
-            backgroundColor: colors.background || '#F8F9FA',
-            borderColor: colors.primary + '30'
-          }]}
+          className="rounded-2xl overflow-hidden"
+          style={{
+            height: 200,
+            borderWidth: 2,
+            borderColor: colors.primary,
+            shadowColor: colors.shadowColor,
+            shadowOffset: colors.shadowOffset,
+            shadowOpacity: 0.1,
+            shadowRadius: 8,
+            elevation: 4,
+          }}
         >
-          <MaterialIcons name="location-on" size={24} color={colors.primary} style={iconStyle} />
-          <TextInput
-            style={inputStyle}
-            placeholder="Precise Address"
-            value={formData.address}
-            onChangeText={(text) => setFormData({ ...formData, address: text })}
-            placeholderTextColor={colors.text.secondary}
-          />
-        </View>
-
-        {/* Landmark Input */}
-        <View
-          className="flex-row items-center rounded-xl px-4 mb-4 border"
-          style={[containerStyle, {
-            backgroundColor: colors.background || '#F8F9FA',
-            borderColor: colors.primary + '30'
-          }]}
-        >
-          <MaterialIcons name="place" size={24} color={colors.primary} style={iconStyle} />
-          <TextInput
-            style={inputStyle}
-            placeholder="Landmark"
-            value={formData.landmark}
-            onChangeText={(text) => setFormData({ ...formData, landmark: text })}
-            placeholderTextColor={colors.text.secondary}
-          />
-        </View>
-
-        {/* Contact Phone Input */}
-        <View
-          className="flex-row items-center rounded-xl px-4 mb-4 border"
-          style={[containerStyle, {
-            backgroundColor: colors.background || '#F8F9FA',
-            borderColor: colors.primary + '30'
-          }]}
-        >
-          <MaterialIcons name="phone" size={24} color={colors.primary} style={iconStyle} />
-          <TextInput
-            style={inputStyle}
-            placeholder="Contact Phone"
-            value={formData.contactPhone}
-            onChangeText={(text) => setFormData({ ...formData, contactPhone: text })}
-            keyboardType="phone-pad"
-            maxLength={10}
-            placeholderTextColor={colors.text.secondary}
-          />
-        </View>
-
-        {/* WhatsApp Input */}
-        <View
-          className="flex-row items-center rounded-xl px-4 mb-4 border"
-          style={[containerStyle, {
-            backgroundColor: colors.background || '#F8F9FA',
-            borderColor: colors.primary + '30'
-          }]}
-        >
-          <MaterialIcons name="chat" size={24} color={colors.primary} style={iconStyle} />
-          <TextInput
-            style={inputStyle}
-            placeholder="WhatsApp Number (Optional)"
-            value={formData.whatsapp}
-            onChangeText={(text) => setFormData({ ...formData, whatsapp: text })}
-            keyboardType="phone-pad"
-            maxLength={10}
-            placeholderTextColor={colors.text.secondary}
-          />
-        </View>
-
-        {/* Map Section */}
-        <View className="mb-4">
-          <Typography variant='semibold'
-            className="text-lg mb-3"
-            style={{ color: colors.text.primary }}
+          <MapView
+            style={{ flex: 1 }}
+            region={{
+              latitude: formData.location.latitude || 5.6037, // Default to Accra
+              longitude: formData.location.longitude || -0.1870,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            }}
+            onPress={(e) =>
+              setFormData({
+                ...formData,
+                location: {
+                  latitude: e.nativeEvent.coordinate.latitude,
+                  longitude: e.nativeEvent.coordinate.longitude,
+                },
+              })
+            }
           >
-            Pin Your Location
-          </Typography>
-          <Typography
-            className="text-sm mb-3"
-            style={{ color: colors.text.secondary }}
-          >
-            Tap on the map to set your exact location
-          </Typography>
+            {formData.location.latitude !== 0 && (
+              <Marker
+                coordinate={{
+                  latitude: formData.location.latitude,
+                  longitude: formData.location.longitude,
+                }}
+                pinColor={colors.primary}
+              />
+            )}
+          </MapView>
+        </View>
 
-          {/* Map Container */}
+        {/* Location Status */}
+        {formData.location.latitude !== 0 && (
           <View
-            className="rounded-2xl overflow-hidden"
             style={{
-              height: 200,
-              borderWidth: 2,
-              borderColor: colors.primary + '30'
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 12,
+              backgroundColor: colors.primary + '10',
+              paddingVertical: 8,
+              paddingHorizontal: 12,
+              borderRadius: 12,
             }}
           >
-            <MapView
-              style={{ flex: 1 }}
-              region={{
-                latitude: formData.location.latitude || 5.6037, // Default to Accra
-                longitude: formData.location.longitude || -0.1870,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
+            <MaterialIcons name="location-on" size={16} color={colors.primary} />
+            <Typography variant='regular'
+              style={{
+                marginLeft: 8,
+                fontSize: 12,
+                color: colors.primary,
               }}
-              onPress={(e) =>
-                setFormData({
-                  ...formData,
-                  location: {
-                    latitude: e.nativeEvent.coordinate.latitude,
-                    longitude: e.nativeEvent.coordinate.longitude,
-                  },
-                })
-              }
             >
-              {formData.location.latitude !== 0 && (
-                <Marker
-                  coordinate={{
-                    latitude: formData.location.latitude,
-                    longitude: formData.location.longitude,
-                  }}
-                  pinColor={colors.primary}
-                />
-              )}
-            </MapView>
+              Lat: {formData.location.latitude.toFixed(4)}, Lng: {formData.location.longitude.toFixed(4)}
+            </Typography>
           </View>
+        )}
+      </View>
 
-          {/* Location Status */}
-          {formData.location.latitude !== 0 ? (
-            <View
-              className="flex-row items-center justify-center mt-3 py-2 px-4 rounded-lg"
-              style={{ backgroundColor: colors.success + '20' }}
-            >
-              <MaterialIcons name="check-circle" size={16} color={colors.success} />
-              <Typography variant='regular'
-                className="ml-2 text-sm"
-                style={{ color: colors.success }}
-              >
-                Location selected successfully
-              </Typography>
-            </View>
-          ) : (
-            <View
-              className="flex-row items-center justify-center mt-3 py-2 px-4 rounded-lg"
-              style={{ backgroundColor: colors.warning + '20' }}
-            >
-              <MaterialIcons name="location-off" size={16} color={colors.warning} />
-              <Typography
-                className="ml-2 text-sm"
-                style={{ color: colors.warning }}
-              >
-                Please tap on the map to set your location
-              </Typography>
-            </View>
-          )}
-        </View>
-      </Animated.View>
-    </ScrollView>
+    </Animated.View>
   );
 };
 

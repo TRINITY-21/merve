@@ -6,6 +6,7 @@ import { Alert } from 'react-native';
 export interface LocationCoordinate {
   latitude: number;
   longitude: number;
+  heading?: number;
 }
 
 interface UseLocationReturn {
@@ -38,6 +39,7 @@ export const useLocation = (autoRequest: boolean = true): UseLocationReturn => {
       setLocation({
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
+        heading: currentLocation.coords.heading ?? undefined,
       });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get location';
@@ -71,6 +73,7 @@ export const useLocation = (autoRequest: boolean = true): UseLocationReturn => {
             setLocation({
               latitude: newLocation.coords.latitude,
               longitude: newLocation.coords.longitude,
+              heading: newLocation.coords.heading ?? undefined,
             });
           }
         );

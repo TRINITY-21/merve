@@ -1,6 +1,6 @@
 // src/config/componentDefaults.ts
-import { TransportMode } from '../components/map/SelectedAgentCard';
-import type { ServiceType } from '../components/quickcash';
+import { TransportMode } from '../screens/App/Map/components/SelectedAgentCard';
+import type { ServiceType } from '../screens/App/Map/components/quickcash/ServiceSelectionGrid';
 
 export const defaultServiceTypes: ServiceType[] = [
   {
@@ -38,5 +38,4 @@ export const defaultTransportModes: TransportMode[] = [
   { label: 'Motorcycle', icon: 'motorcycle', iconSet: 'MaterialIcons' as const, mode: 'driving', profile: 'driving' },
   { label: 'Bike', icon: 'bicycle', iconSet: 'Ionicons' as const, mode: 'cycling', profile: 'cycling' },
   { label: 'Walk', icon: 'walk', iconSet: 'Ionicons' as const, mode: 'walking', profile: 'walking' },
-  { label: 'Train', icon: 'train', iconSet: 'Ionicons' as const, mode: 'driving', profile: 'driving' },
 ];

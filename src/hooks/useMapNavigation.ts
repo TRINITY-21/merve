@@ -19,9 +19,11 @@ interface UseMapNavigationReturn {
   currentUserLocation: LocationCoordinate | null;
   remainingRoute: LocationCoordinate[] | null;
   routeProgress: number;
-  selectAgent: (agent: IAgent) => void;
+  isCalculatingDirections: boolean;
+  remainingTime: number | null;
+  selectAgent: (agent: IAgent | null) => void;
   getDirections: (origin: LocationCoordinate, modes: string[]) => Promise<void>;
-  startNavigation: () => Promise<void>;
+  startNavigation: (route: LocationCoordinate[], initialTime: number) => Promise<void>;
   stopNavigation: () => void;
   updateUserLocation: (location: LocationCoordinate) => void;
 }
@@ -31,10 +33,13 @@ export const useMapNavigation = (): UseMapNavigationReturn => {
   const [routes, setRoutes] = useState<Record<string, LocationCoordinate[]>>({});
   const [routeTimes, setRouteTimes] = useState<Record<string, number>>({});
   const [isNavigating, setIsNavigating] = useState(false);
+  const [isCalculatingDirections, setIsCalculatingDirections] = useState(false);
   const [showDirections, setShowDirections] = useState(false);
   const [currentUserLocation, setCurrentUserLocation] = useState<LocationCoordinate | null>(null);
   const [remainingRoute, setRemainingRoute] = useState<LocationCoordinate[] | null>(null);
   const [routeProgress, setRouteProgress] = useState(0);
+  const [remainingTime, setRemainingTime] = useState<number | null>(null);
+  const [initialNavigationTime, setInitialNavigationTime] = useState<number | null>(null);
 
   const getOSRMDirections = async (
     origin: LocationCoordinate,
@@ -79,56 +84,74 @@ export const useMapNavigation = (): UseMapNavigationReturn => {
   const getDirections = useCallback(async (origin: LocationCoordinate, modes: string[]) => {
     if (!selectedAgent) return;
 
-    const newRoutes: Record<string, LocationCoordinate[]> = {};
-    const newTimes: Record<string, number> = {};
+    setIsCalculatingDirections(true);
+    try {
+        const newRoutes: Record<string, LocationCoordinate[]> = {};
+        const newTimes: Record<string, number> = {};
 
-    for (const mode of modes) {
-      const routeData = await getOSRMDirections(origin, selectedAgent, mode);
-      if (routeData) {
-        newRoutes[mode] = routeData.coordinates;
-        newTimes[mode] = Math.round(routeData.duration);
-      }
+        // Map transport mode labels to OSRM profiles
+        const modeToProfile: Record<string, string> = {
+            'car': 'driving',
+            'motorcycle': 'driving',
+            'bike': 'cycling',
+            'walk': 'walking'
+        };
+
+        for (const mode of modes) {
+            const profile = modeToProfile[mode] || 'driving';
+            const routeData = await getOSRMDirections(origin, selectedAgent, profile);
+            if (routeData) {
+                newRoutes[mode] = routeData.coordinates;
+                newTimes[mode] = Math.round(routeData.duration);
+            }
+        }
+
+        setRoutes(newRoutes);
+        setRouteTimes(newTimes);
+        setShowDirections(true);
+    } catch (error) {
+        console.error("Error getting directions:", error);
+    } finally {
+        setIsCalculatingDirections(false);
     }
+}, [selectedAgent]);
 
-    setRoutes(newRoutes);
-    setRouteTimes(newTimes);
-    setShowDirections(true);
-  }, [selectedAgent]);
-
-  const startNavigation = useCallback(async () => {
-    if (!selectedAgent || !currentUserLocation) return;
-
+  const startNavigation = useCallback(async (route: LocationCoordinate[], initialTime: number) => {
     setIsNavigating(true);
-    const routeData = await getOSRMDirections(currentUserLocation, selectedAgent);
-    if (routeData) {
-      setRemainingRoute(routeData.coordinates);
-    }
-  }, [selectedAgent, currentUserLocation]);
+    setRemainingRoute(route);
+    setInitialNavigationTime(initialTime);
+    setRemainingTime(initialTime);
+  }, []);
 
   const stopNavigation = useCallback(() => {
     setIsNavigating(false);
     setRemainingRoute(null);
     setRouteProgress(0);
+    setInitialNavigationTime(null);
+    setRemainingTime(null);
   }, []);
 
   const updateUserLocation = useCallback((location: LocationCoordinate) => {
     setCurrentUserLocation(location);
     
     // Calculate progress if navigating
-    if (isNavigating && remainingRoute) {
+    if (isNavigating && remainingRoute && selectedAgent && initialNavigationTime) {
       // Simple progress calculation based on distance to destination
-      if (selectedAgent) {
-        const distanceToDestination = getDistance(location, selectedAgent);
-        const totalDistance = remainingRoute.length > 0 ? 
-          getDistance(remainingRoute[0], selectedAgent) : 0;
-        
-        if (totalDistance > 0) {
-          const progress = Math.max(0, 100 - (distanceToDestination / totalDistance) * 100);
-          setRouteProgress(Math.min(progress, 100));
+      const initialRouteDistance = getDistance(remainingRoute[0], selectedAgent);
+      const remainingDistance = getDistance(location, selectedAgent);
+      
+      if (initialRouteDistance > 0) {
+        const progress = Math.max(0, 100 - (remainingDistance / initialRouteDistance) * 100);
+        setRouteProgress(Math.min(progress, 100));
+
+        // Update remaining time based on progress
+        if (typeof initialNavigationTime === 'number') {
+            const newRemainingTime = initialNavigationTime * (1 - progress / 100);
+            setRemainingTime(Math.round(newRemainingTime));
         }
       }
     }
-  }, [isNavigating, remainingRoute, selectedAgent]);
+  }, [isNavigating, remainingRoute, selectedAgent, initialNavigationTime]);
 
   return {
     selectedAgent,
@@ -139,6 +162,8 @@ export const useMapNavigation = (): UseMapNavigationReturn => {
     currentUserLocation,
     remainingRoute,
     routeProgress,
+    isCalculatingDirections,
+    remainingTime,
     selectAgent,
     getDirections,
     startNavigation,

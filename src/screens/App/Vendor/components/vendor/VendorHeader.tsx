@@ -13,7 +13,7 @@ const VendorHeader: React.FC<IVendorHeaderProps> = ({ title, onBack }) => {
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        paddingTop: Platform.OS === 'ios' ? 60 :10, // ~pt-12
+        paddingTop: Platform.OS === 'ios' ? 60 : 20, // Adjust top padding
         paddingHorizontal: 16, // px-4
         paddingBottom: 20, // pb-5
       }}
@@ -25,7 +25,7 @@ const VendorHeader: React.FC<IVendorHeaderProps> = ({ title, onBack }) => {
           marginRight: 12,
         }}
       >
-        <Ionicons name="chevron-back" size={26} color={colors.white} />
+        <Ionicons name="chevron-back" size={20} color={colors.white} />
       </TouchableOpacity>
 
       <Typography

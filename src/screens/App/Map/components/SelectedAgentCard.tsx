@@ -1,7 +1,7 @@
 // components/map/SelectedAgentCard.tsx
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Platform, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Platform, TouchableOpacity, View } from 'react-native';
 import { Button, Card, Typography } from '../../../../components/common';
 import { colors } from '../../../../constants/theme/colors';
 import { IAgent } from '../../../../types';
@@ -28,6 +28,7 @@ interface SelectedAgentCardProps {
   transportModes?: TransportMode[];
   position?: 'bottom' | 'top';
   compact?: boolean;
+  isCalculatingDirections: boolean;
 }
 
 const defaultTransportModes: TransportMode[] = [
@@ -50,7 +51,8 @@ export const SelectedAgentCard: React.FC<SelectedAgentCardProps> = ({
   routeTimes,
   transportModes = defaultTransportModes,
   position = 'bottom',
-  compact = false
+  compact = false,
+  isCalculatingDirections = false,
 }) => {
   const positionClass = position === 'bottom' 
     ? Platform.OS === 'ios' ? 'bottom-28' : 'bottom-24'
@@ -146,20 +148,24 @@ export const SelectedAgentCard: React.FC<SelectedAgentCardProps> = ({
                 size={compact ? 11 : 12}
                 className={`mt-1 ${
                   selectedTransport === mode.label.toLowerCase()
-                    ? 'text-yellow-500'
+                    ? 'text-primary'
                     : 'text-gray-500'
                 }`}
               >
                 {mode.label}
               </Typography>
-              {routeTimes[mode.label.toLowerCase()] && (
+              {isCalculatingDirections ? (
+                <ActivityIndicator size="small" color={colors.primary} style={{ marginTop: 2 }}/>
+              ) : routeTimes[mode.label.toLowerCase()] ? (
                 <Typography 
                   variant="semibold" 
                   size={compact ? 9 : 10} 
                   className="text-gray-500 mt-0.5"
                 >
-                  {routeTimes[mode.label.toLowerCase()]}min
+                  {routeTimes[mode.label.toLowerCase()]} min
                 </Typography>
+              ) : (
+                <View style={{ height: 15 }} />
               )}
             </TouchableOpacity>
           ))}
@@ -175,6 +181,7 @@ export const SelectedAgentCard: React.FC<SelectedAgentCardProps> = ({
               size="small"
               onPress={onGetDirections}
               style={{ flex: 1, marginRight: 8 }}
+              loading={isCalculatingDirections}
             />
             {showDirections && (
               <Button

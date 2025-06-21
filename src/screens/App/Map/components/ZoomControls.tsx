@@ -9,6 +9,9 @@ interface ZoomControlsProps {
   onZoomIn: () => void;
   onZoomOut: () => void;
   onResetZoom: () => void;
+  onRecenter: () => void;
+  isNavigating: boolean;
+  isCameraFollowing: boolean;
   style?: any;
   position?: 'right' | 'left';
   top?: number;
@@ -18,6 +21,9 @@ export const ZoomControls: React.FC<ZoomControlsProps> = ({
   onZoomIn,
   onZoomOut,
   onResetZoom,
+  onRecenter,
+  isNavigating,
+  isCameraFollowing,
   style,
   position = 'right',
   top
@@ -46,13 +52,15 @@ export const ZoomControls: React.FC<ZoomControlsProps> = ({
         <MaterialIcons name="remove" size={24} color={colors.text.primary} />
       </TouchableOpacity>
 
-      <TouchableOpacity
-        className="w-11 h-11 rounded-full bg-yellow-400 items-center justify-center shadow-md border border-gray-100"
-        onPress={onResetZoom}
-        activeOpacity={0.7}
-      >
-        <MaterialIcons name="my-location" size={20} color={colors.text.primary} />
-      </TouchableOpacity>
+      {(!isNavigating || !isCameraFollowing) && (
+        <TouchableOpacity
+          className="w-11 h-11 rounded-full bg-white items-center justify-center shadow-md border border-gray-100"
+          onPress={isNavigating ? onRecenter : onResetZoom}
+          activeOpacity={0.7}
+        >
+          <MaterialIcons name="my-location" size={20} color={colors.text.primary} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
