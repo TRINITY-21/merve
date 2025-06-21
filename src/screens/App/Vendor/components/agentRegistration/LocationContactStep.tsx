@@ -19,6 +19,7 @@ const LocationContactStep: React.FC<ILocationContactStepProps> = ({
   cardStyle,
 }) => {
   const [focusedInput, setFocusedInput] = useState<string | null>(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
   const inputStyle = {
     flex: 1,
@@ -47,6 +48,7 @@ const LocationContactStep: React.FC<ILocationContactStepProps> = ({
     backgroundColor: colors.white,
     borderColor: focusedInput === inputName ? colors.primary : colors.gray.light,
     borderWidth: focusedInput === inputName ? 2 : 1,
+    borderRadius: 12,
     // shadowColor: focusedInput === inputName ? colors.primary : colors.shadowColor,
     // shadowOffset: colors.shadowOffset,
     // shadowOpacity: focusedInput === inputName ? 0.1 : 0.05,
@@ -60,18 +62,12 @@ const LocationContactStep: React.FC<ILocationContactStepProps> = ({
         backgroundColor: colors.white,
         borderRadius: 20,
         padding: 24,
-        // marginBottom: 20,
-        // shadowColor: colors.shadowColor,
-        // shadowOffset: colors.shadowOffset,
-        // shadowOpacity: 0.1,
-        // shadowRadius: 16,
-        // elevation: 8,
         borderWidth: 1,
         borderColor: colors.gray.light,
         marginTop: 10,
       }]}
     >
-      <View style={{  }}>
+      <View style={{ marginBottom: 24 }}>
         <Typography
           variant="semibold"
           className="text-xl font-bold mb-2"
@@ -180,20 +176,32 @@ const LocationContactStep: React.FC<ILocationContactStepProps> = ({
 
         {/* Map Container */}
         <View
-          className="rounded-2xl overflow-hidden"
           style={{
             height: 200,
             borderWidth: 2,
             borderColor: colors.primary,
-            shadowColor: colors.shadowColor,
-            shadowOffset: colors.shadowOffset,
-            shadowOpacity: 0.1,
-            shadowRadius: 8,
-            elevation: 4,
+            borderRadius: 16,
+            overflow: 'hidden',
+            backgroundColor: colors.gray.light,
+            ...(Platform.OS === 'android' && {
+              elevation: 4,
+            }),
+            ...(Platform.OS === 'ios' && {
+              shadowColor: colors.shadowColor,
+              shadowOffset: colors.shadowOffset,
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+            }),
           }}
         >
           <MapView
-            style={{ flex: 1 }}
+            style={{ 
+              flex: 1,
+              ...(Platform.OS === 'android' && {
+                width: '100%',
+                height: '100%',
+              }),
+            }}
             region={{
               latitude: formData.location.latitude || 5.6037, // Default to Accra
               longitude: formData.location.longitude || -0.1870,
@@ -209,6 +217,9 @@ const LocationContactStep: React.FC<ILocationContactStepProps> = ({
                 },
               })
             }
+            onMapReady={() => setMapLoaded(true)}
+            showsUserLocation={true}
+            showsMyLocationButton={true}
           >
             {formData.location.latitude !== 0 && (
               <Marker

@@ -1,5 +1,6 @@
+import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
-import { TextInput, TouchableOpacity, View } from 'react-native';
+import { Platform, TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Typography } from '../../../../../components/common';
 import { colors } from '../../../../../constants/theme/colors';
@@ -16,8 +17,27 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
   setFormData,
   cardStyle,
 }) => {
-  const [focusedInput, setFocusedInput] = useState<string | null>(null);
+  const [showPicker, setShowPicker] = useState(false);
+  const [pickerConfig, setPickerConfig] = useState<{ day: string, type: 'open' | 'close' } | null>(null);
+
   const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+  const showTimePicker = (day: string, type: 'open' | 'close') => {
+    setPickerConfig({ day, type });
+    setShowPicker(true);
+  };
+
+  const onTimeChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    setShowPicker(false);
+    if (event.type === 'set' && selectedDate && pickerConfig) {
+      const { day, type } = pickerConfig;
+      const hours = selectedDate.getHours().toString().padStart(2, '0');
+      const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
+      const newTime = `${hours}:${minutes}`;
+      updateDayTime(day, type, newTime);
+    }
+    setPickerConfig(null);
+  };
 
   const toggleDayOpen = (day: string) => {
     setFormData({
@@ -45,25 +65,6 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
     });
   };
 
-  const getTimeInputStyle = (inputName: string) => ({
-    width: 80,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    backgroundColor: colors.white,
-    borderColor: focusedInput === inputName ? colors.primary : colors.gray.light,
-    borderWidth: focusedInput === inputName ? 2 : 1,
-    textAlign: 'center' as const,
-    color: colors.text.primary,
-    fontSize: 14,
-    fontFamily: 'JosefinSans_400Regular',
-    // shadowColor: focusedInput === inputName ? colors.primary : colors.shadowColor,
-    // shadowOffset: colors.shadowOffset,
-    // shadowOpacity: focusedInput === inputName ? 0.1 : 0.05,
-    // shadowRadius: focusedInput === inputName ? 4 : 2,
-    // elevation: focusedInput === inputName ? 2 : 1,
-  });
-
   return (
     <Animated.View
       style={[cardStyle, {
@@ -71,11 +72,6 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
         borderRadius: 20,
         padding: 24,
         marginBottom: 20,
-        // shadowColor: colors.shadowColor,
-        // shadowOffset: colors.shadowOffset,
-        // shadowOpacity: 0.1,
-        // shadowRadius: 16,
-        // elevation: 8,
         borderWidth: 1,
         borderColor: colors.gray.light,
         marginTop: 10,
@@ -90,7 +86,6 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
         </Typography>
       </View>
 
-      {/* Days Operating Hours */}
       {days.map((day) => (
         <View key={day} style={{ marginBottom: 16 }}>
           <View style={{
@@ -102,11 +97,6 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
             paddingHorizontal: 20,
             borderRadius: 12,
             marginBottom: 12,
-            // shadowColor: colors.shadowColor,
-            // shadowOffset: colors.shadowOffset,
-            // shadowOpacity: 0.05,
-            // shadowRadius: 4,
-            // elevation: 2,
           }}>
             <Typography style={{
               flex: 1,
@@ -140,11 +130,6 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
                     height: 24,
                     borderRadius: 12,
                     backgroundColor: 'white',
-                    // shadowColor: colors.shadowColor,
-                    // shadowOpacity: 0.2,
-                    // shadowRadius: 3,
-                    // shadowOffset: colors.shadowOffset,
-                    // elevation: 3,
                     alignSelf: !formData.operatingHours[day].isClosed ? 'flex-end' : 'flex-start',
                   }}
                 />
@@ -159,37 +144,32 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
               marginLeft: 20,
               gap: 12,
             }}>
-              <TextInput
-                style={getTimeInputStyle(`${day}_open`)}
-                placeholder="09:00"
-                value={formData.operatingHours[day].open}
-                onChangeText={(text) => updateDayTime(day, 'open', text)}
-                keyboardType="numeric"
-                placeholderTextColor={colors.text.secondary}
-                onFocus={() => setFocusedInput(`${day}_open`)}
-                onBlur={() => setFocusedInput(null)}
-                maxLength={5}
-              />
+              <TouchableOpacity onPress={() => showTimePicker(day, 'open')} style={{
+                  padding: 10,
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  borderColor: colors.gray.light,
+                  backgroundColor: colors.white
+              }}>
+                <Typography>{formData.operatingHours[day].open || 'Open'}</Typography>
+              </TouchableOpacity>
               <Typography style={{ fontSize: 16, color: colors.text.primary, fontWeight: '500' }}>
                 to
               </Typography>
-              <TextInput
-                style={getTimeInputStyle(`${day}_close`)}
-                placeholder="18:00"
-                value={formData.operatingHours[day].close}
-                onChangeText={(text) => updateDayTime(day, 'close', text)}
-                keyboardType="numeric"
-                placeholderTextColor={colors.text.secondary}
-                onFocus={() => setFocusedInput(`${day}_close`)}
-                onBlur={() => setFocusedInput(null)}
-                maxLength={5}
-              />
+              <TouchableOpacity onPress={() => showTimePicker(day, 'close')} style={{
+                  padding: 10,
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  borderColor: colors.gray.light,
+                  backgroundColor: colors.white
+              }}>
+                <Typography>{formData.operatingHours[day].close || 'Close'}</Typography>
+              </TouchableOpacity>
             </View>
           )}
         </View>
       ))}
 
-      {/* Currently Open Switch */}
       <View style={{
         flexDirection: 'row',
         alignItems: 'center',
@@ -199,11 +179,6 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
         paddingHorizontal: 20,
         borderRadius: 12,
         marginTop: 8,
-        // shadowColor: colors.shadowColor,
-        // shadowOffset: colors.shadowOffset,
-        // shadowOpacity: 0.05,
-        // shadowRadius: 4,
-        // elevation: 2,
       }}>
         <Typography style={{
           fontSize: 16,
@@ -235,11 +210,6 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
                 height: 24,
                 borderRadius: 12,
                 backgroundColor: 'white',
-                shadowColor: colors.shadowColor,
-                // shadowOpacity: 0.2,
-                // shadowRadius: 3,
-                // shadowOffset: colors.shadowOffset,
-                // elevation: 3,
                 alignSelf: formData.isOpen ? 'flex-end' : 'flex-start',
               }}
             />
@@ -247,6 +217,15 @@ const OperatingDetailsStep: React.FC<IOperatingDetailsStepProps> = ({
         </TouchableOpacity>
       </View>
 
+      {showPicker && pickerConfig && (
+        <DateTimePicker
+          value={new Date()} // This will be updated to reflect the actual time
+          mode="time"
+          is24Hour={true}
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+          onChange={onTimeChange}
+        />
+      )}
     </Animated.View>
   );
 };
